@@ -12,7 +12,6 @@ module.exports = class ClubRepository extends AbstractCarRepository {
 
   /**
    * @param {import('../../car.entity')} car
-   * @returns {import('../../car.entity')}
    */
   create (car) {
     const statement = this.databaseAdapter.prepare(`
@@ -46,7 +45,6 @@ module.exports = class ClubRepository extends AbstractCarRepository {
 
   /**
    * @param {import('../../car.entity')} car
-   * @returns {import('../../car.entity')}
    */
   update (car) {
     const statement = this.databaseAdapter.prepare(`

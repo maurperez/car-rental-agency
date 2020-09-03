@@ -7,6 +7,7 @@ module.exports = class AbstractCarRepository {
 
   /**
    * @param {import('../car.entity')} car
+   * @returns {import('../car.entity')}
    */
   create (car) {
     throw new Error('method not implented')
@@ -14,6 +15,7 @@ module.exports = class AbstractCarRepository {
 
   /**
    * @param {import('../car.entity')} car
+   * @returns {import('../car.entity')}
    */
   update (car) {
     throw new Error('method not implented')

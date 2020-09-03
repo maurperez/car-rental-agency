@@ -6,16 +6,23 @@ module.exports = class AbstractCarRepository {
   }
 
   /**
-   * @param {import('../car.entity')}
+   * @param {import('../car.entity')} car
    */
-  async create (car) {
+  create (car) {
+    throw new Error('method not implented')
+  }
+
+  /**
+   * @param {import('../car.entity')} car
+   */
+  update (car) {
     throw new Error('method not implented')
   }
 
   /**
    * @param {Number} id
    */
-  async delete (id) {
+  delete (id) {
     throw new Error('method not implented')
   }
 
@@ -23,14 +30,14 @@ module.exports = class AbstractCarRepository {
    * @param {Number} id
    * @returns {import('../car.entity')}
    */
-  async getById (id) {
+  getById (id) {
     throw new Error('method not implented')
   }
 
   /**
    * @returns {Array<import('../car.entity')>}
    */
-  async getAll () {
+  getAll () {
     throw new Error('method not implented')
   }
 }

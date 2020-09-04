@@ -14,10 +14,11 @@ module.exports = class AbstractCarRepository {
   }
 
   /**
+   * @param {Number} id
    * @param {import('../car.entity')} car
    * @returns {import('../car.entity')}
    */
-  update (car) {
+  update (id, car) {
     throw new Error('method not implented')
   }
 

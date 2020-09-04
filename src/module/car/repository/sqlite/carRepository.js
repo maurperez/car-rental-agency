@@ -1,5 +1,5 @@
 const AbstractCarRepository = require('../abstractCarRepository')
-const fromDbToEntity = require('../../car.mapper')
+const { fromDbToEntity } = require('../../car.mapper')
 
 module.exports = class ClubRepository extends AbstractCarRepository {
   /**
@@ -44,9 +44,10 @@ module.exports = class ClubRepository extends AbstractCarRepository {
   }
 
   /**
+   * @param {Number} id
    * @param {import('../../car.entity')} car
    */
-  update (car) {
+  update (id, car) {
     const statement = this.databaseAdapter.prepare(`
       UPDATE cars SET
         brand = ?,
@@ -69,12 +70,12 @@ module.exports = class ClubRepository extends AbstractCarRepository {
       car.airConditioning,
       car.numberOfPassengers,
       car.automatic,
-      car.id
+      id
     ]
 
     statement.run(params)
 
-    return this.getById(car.id)
+    return this.getById(id)
   }
 
   /**

@@ -21,10 +21,9 @@ module.exports = class CarService {
   }
 
   /**
-   * @param {Number} id
    * @param {Car} car
    */
-  update (id, car) {
+  update (car) {
     if (!(car instanceof Car)) { throw new Error() }
 
     return this.carRepository.update(car)

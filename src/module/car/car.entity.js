@@ -1,9 +1,10 @@
 module.exports = class Car {
   /**
-   * @param {Number} id
+   * @param {Number} [id]
    * @param {String} brand
    * @param {String} model
    * @param {Number} yearOfModel
+   * @param {String} imageUrl
    * @param {Number} mileage
    * @param {String} color
    * @param {(1 | 0)} airConditioning
@@ -12,14 +13,15 @@ module.exports = class Car {
    * @param {(1 | 0)} active
    * @param {Number} pricePerWeekInCents
    * @param {Number} pricePerDayInCents
-   * @param {String} createdAt
-   * @param {String} updatedAt
+   * @param {String} [createdAt]
+   * @param {String} [updatedAt]
    */
   constructor (
     id,
     brand,
     model,
     yearOfModel,
+    imageUrl,
     mileage,
     color,
     airConditioning,
@@ -35,6 +37,7 @@ module.exports = class Car {
     this.brand = brand
     this.model = model
     this.yearOfModel = yearOfModel
+    this.imageUrl = imageUrl
     this.mileage = mileage
     this.color = color
     this.airConditioning = airConditioning

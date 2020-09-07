@@ -1,4 +1,5 @@
 const AbstractCarRepository = require('../abstractCarRepository')
+const NotFoundCarError = require('../error/not-found-car.error')
 const { fromDbToEntity } = require('../../car.mapper')
 
 module.exports = class ClubRepository extends AbstractCarRepository {
@@ -53,11 +54,13 @@ module.exports = class ClubRepository extends AbstractCarRepository {
         brand = ?,
         model = ?,
         model_year = ?,
+        image_url = ?,
         mileage = ?,
         color = ?,
         air_conditioning = ?,
         number_passengers = ?,
-        automatic = ?
+        automatic = ?,
+        active = ?
       WHERE id = ?
     `)
 
@@ -65,11 +68,13 @@ module.exports = class ClubRepository extends AbstractCarRepository {
       car.brand,
       car.model,
       car.yearOfModel,
+      car.imageUrl,
       car.mileage,
       car.color,
       car.airConditioning,
       car.numberOfPassengers,
       car.automatic,
+      car.active,
       id
     ]
 
@@ -109,7 +114,11 @@ module.exports = class ClubRepository extends AbstractCarRepository {
 
     const car = statement.get(id)
 
-    return fromDbToEntity(car)
+    if (car) {
+      return fromDbToEntity(car)
+    } else {
+      throw new NotFoundCarError(`not found car  with id: ${id}`)
+    }
   }
 
   getAll () {

@@ -20,34 +20,10 @@ module.exports = class CarController extends AbstractController {
    */
   configureRoutes (app) {
     app.post(`${this.ROUT_BASE}/create`, this.uploadMiddleware.single('image-url'), this.create.bind(this))
-    app.post(`${this.ROUT_BASE}/:id/update`, this.uploadMiddleware.single('image-url'), this.update.bind(this))
-    app.get(this.ROUT_BASE, this.getAllCars.bind(this))
-    app.get(`${this.ROUT_BASE}/:id/update`, this.validateId, this.renderForm.bind(this))
+    app.get(this.ROUT_BASE, this.getAllAvailableCars.bind(this))
+    app.get(`${this.ROUT_BASE}/rented`, this.getRentedCars.bind(this))
     app.get(`${this.ROUT_BASE}/create`, this.renderForm.bind(this))
-  }
-
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  update (req, res) {
-    const id = Number(req.params.id)
-
-    try {
-      this.validateId(id)
-      const carDto = this.validateCarRequest(req.body)
-      const carImagePath = req.file.path
-      const carInstanceUpdated = this.carService.update(
-        fromRequestToEntity(carDto, carImagePath, id)
-      )
-      res.json(carInstanceUpdated)
-    } catch (error) {
-      if (error instanceof Joi.ValidationError) {
-        res.json(error.details)
-      } else if (error instanceof InvalidId) {
-        res.send(error)
-      }
-    }
+    app.get(`${this.ROUT_BASE}/:id`, this.getById.bind(this))
   }
 
   create (req, res) {
@@ -61,7 +37,6 @@ module.exports = class CarController extends AbstractController {
       res.json(carInstanceCreated)
       res.end()
     } catch (error) {
-      console.log(error)
       if (error instanceof Joi.ValidationError) {
         res.json(error)
         res.end()
@@ -74,12 +49,33 @@ module.exports = class CarController extends AbstractController {
   /**
    * @param {import('express').Request} req
    * @param {import('express').Response} res
-   */
-  getAllCars (req, res) {
-    const cars = this.carService.getAll()
+  */
+  getAllAvailableCars (req, res) {
+    const cars = this.carService.getAllAvailableCars()
 
     res.render('car/view/car-list', {
       data: { cars }
+    })
+  }
+
+  getRentedCars (req, res) {
+    const cars = this.carService.getRentedCars()
+
+    res.render('car/view/car-list', {
+      data: { cars }
+    })
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+  */
+  getById (req, res) {
+    const id = Number(req.params.id)
+    const car = this.carService.getById(id)
+
+    res.render('car/view/view-one-car', {
+      data: { car }
     })
   }
 
@@ -92,25 +88,11 @@ module.exports = class CarController extends AbstractController {
 
     if (id) {
       const car = this.carService.getById(id)
-      res.render('car/view/add-car-form', {
+      res.render('car/view/car-form', {
         data: { car }
       })
     } else {
-      res.render('car/view/add-car-form')
-    }
-  }
-
-  validateId (req, res, next) {
-    const id = req.params.id
-    const idType = Joi.number().integer().required()
-
-    const { error } = idType.validate(id)
-
-    if (error) {
-      res.send(400)
-      res.redirect('/car')
-    } else {
-      next()
+      res.render('car/view/car-form')
     }
   }
 

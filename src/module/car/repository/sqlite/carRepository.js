@@ -108,17 +108,19 @@ module.exports = class ClubRepository extends AbstractCarRepository {
   getById (id) {
     const statement = this.databaseAdapter.prepare(`
       SELECT 
-        id,
+        id, 
         brand,
         model,
         model_year,
-        image_url
+        image_url,
         mileage,
         color,
         air_conditioning,
         number_passengers,
         automatic,
         active,
+        rented,
+        return_date,
         price_per_week_in_cents,
         price_per_day_in_cents,
         created_at,

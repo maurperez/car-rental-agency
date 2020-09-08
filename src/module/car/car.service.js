@@ -54,14 +54,25 @@ module.exports = class CarService {
   /**
    * @returns {Car[]}
    */
-  getActives () {
+  getAllAvailableCars () {
     const allCars = this.getAll()
     const allActiveCars = []
 
     allCars.forEach(car => {
-      if (car.active === 1) allActiveCars.push(car)
+      if (car.active === 1 && car.rented === 0) allActiveCars.push(car)
     })
 
     return allActiveCars
+  }
+
+  getRentedCars () {
+    const allCars = this.getAll()
+    const rentedCars = []
+
+    allCars.forEach(car => {
+      if (car.rented === 1) rentedCars.push(car)
+    })
+
+    return rentedCars
   }
 }

@@ -18,7 +18,7 @@ function fromDbToEntity (carDto) {
     carDto.color,
     carDto.air_conditioning,
     carDto.number_passengers,
-    carDto.autoamtic,
+    carDto.automatic,
     carDto.active,
     carDto.rented,
     carDto.return_date,

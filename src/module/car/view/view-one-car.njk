@@ -1,0 +1,57 @@
+{% extends "./layout/index.njk" %}
+
+{% block content %}
+  <div class="container">
+
+    <div class="card">
+
+      <div class="card-header">
+        <div class="card-header-title">{{ data.car.brand }} {{ data.car.model }}</div>
+      </div>
+
+      <div class="card-image">
+        <figure class="image">
+          <img src="/{{ data.car.imageUrl }}">
+        </figure>
+      </div>
+
+      <div class="card-content">
+        <div class="content">
+          <h4>Features:</h4>
+
+          <ul>
+            <li>Brand: {{ data.car.brand }} </li>
+            <li>Model: {{ data.car.model }} </li>
+            <li>Model year: {{ data.car.modelYear }} </li>
+            <li>Mileage: {{ data.car.mileage }} </li>
+            <li>Color: {{ data.car.color }} </li>
+            <li>Air conditioning: {{ data.car.airConditioning }} </li>
+            <li>Number of passengers: {{ data.car.numberOfPassengers }} </li>
+            <li>Automatic: {{ data.car.automatic }} </li>
+          </ul>
+
+          <h4>Prices:</h4>
+          <ul>
+            <li><p><strong>${{ data.car.pricePerDayInCents / 100 }}</strong> per day</p></li>
+            <li><p><strong>${{ data.car.pricePerWeekInCents / 100 }}</strong> per week</p></li>
+          </ul>
+        </div>
+      </div>
+
+      <footer class="card-footer">
+        {% if data.car.active === 1 and data.car.rented === 0 %}
+          <a href="#" class="card-footer-item button is-link">Rent</a>
+        {% elif data.car.active === 0 %}
+          <p class="card-footer-item">
+            <span>This car is inactive for the moment</span>
+          </p>
+        {% elif data.car.rented === 1 %}
+          <p class="card-footer-item">
+            <span>The car is rented. will be available from {{ data.car.returnDate }}</span>
+          </p>
+        {% endif %}
+      </footer>
+    </div>
+
+  </div>
+{% endblock %}

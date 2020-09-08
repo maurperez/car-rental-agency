@@ -8,10 +8,20 @@ module.exports = class CarController extends AbstractController {
   /**
    * @param {import('../car.service')} carService
    */
-  constructor (carService) {
+  constructor (uploadMiddleware, carService) {
     super()
+    this.uploadMiddleware = uploadMiddleware
     this.carService = carService
     this.ROUT_BASE = '/car'
+  }
+
+  /**
+   * @param {import('express').Application} app
+   */
+  configureRoutes (app) {
+    app.post(this.ROUT_BASE, this.uploadMiddleware.single('image-url'), this.create.bind(this))
+    app.post(`${this.ROUT_BASE}/:id/update`, this.uploadMiddleware.single('image-url'), this.update.bind(this))
+    app.get(this.ROUT_BASE, (req, res) => res.send('work'))
   }
 
   /**

@@ -27,10 +27,9 @@ module.exports = class ClubRepository extends AbstractCarRepository {
         air_conditioning,
         number_passengers,
         automatic,
-        active,
         price_per_week_in_cents,
         price_per_day_in_cents
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
 
     const params = [
@@ -43,7 +42,6 @@ module.exports = class ClubRepository extends AbstractCarRepository {
       car.airConditioning,
       car.numberOfPassengers,
       car.automatic,
-      car.active,
       car.pricePerWeekInCents,
       car.pricePerDayInCents
     ]
@@ -151,6 +149,8 @@ module.exports = class ClubRepository extends AbstractCarRepository {
         number_passengers,
         automatic,
         active,
+        rented,
+        return_date,
         price_per_week_in_cents,
         price_per_day_in_cents,
         created_at,

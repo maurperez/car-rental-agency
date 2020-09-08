@@ -1,35 +1,36 @@
 /**
  * @typedef {{
- *  id: Number,
- *  brand: String,
- *  model: String,
- *  model_year: Number,
- *  image_url: String,
- *  mileage: Number,
- *  color: String,
+ *  id: number,
+ *  brand: string,
+ *  model: string,
+ *  model_year: number,
+ *  image_url: string,
+ *  mileage: number,
+ *  color: string,
  *  air_conditioning: (1|0),
- *  number_passengers: Number,
+ *  number_passengers: number,
  *  automatic: (1|0),
  *  active: (1|0),
- *  price_per_week_in_cents: Number,
- *  price_per_day_in_cents: Number,
- *  created_at: String,
- *  updated_at: String
+ *  rented: (1|0),
+ *  return_date: (?string)
+ *  price_per_week_in_cents: number,
+ *  price_per_day_in_cents: number,
+ *  created_at: string,
+ *  updated_at: string
  * }} CarFromDbDto
  */
 
 /**
  * @typedef {{
- *  brand: String,
- *  model: String,
- *  model_year: Number,
- *  mileage: Number,
- *  color: String,
+ *  brand: string,
+ *  model: string,
+ *  model_year: number,
+ *  mileage: number,
+ *  color: string,
  *  air_conditioning: (1|0),
- *  number_passengers: Number,
+ *  number_passengers: number,
  *  automatic: (1|0),
- *  active: (1|0),
- *  price_per_week_in_dollars: Number,
- *  price_per_day_in_dollars: Number
+ *  price_per_week_in_dollars: number,
+ *  price_per_day_in_dollars: number
  * }} CarFromHttpDto
 */

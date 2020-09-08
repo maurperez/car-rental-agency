@@ -112,42 +112,6 @@
       </div>
 
       <div class="field">
-        <label class="label">Active:</label>
-        <div class="control">
-          {% if data.car %}
-            {% if data.car.active === 1 %}
-              <label class="radio">
-                <input type="radio" name="active" checked value="1" required>
-                Yes
-              </label>
-              <label class="radio">
-                <input type="radio" name="active" value="0" required>
-                No
-              </label>
-            {% else %}
-              <label class="radio">
-                <input type="radio" name="active" value="1" required>
-                Yes
-              </label>
-              <label class="radio">
-                <input type="radio" name="active" checked value="0" required>
-                No
-              </label>
-            {%endif%}
-          {% else %}
-            <label class="radio">
-              <input type="radio" name="active" value="1" required>
-              Yes
-            </label>
-            <label class="radio">
-              <input type="radio" name="active" value="0" required>
-              No
-            </label>
-          {% endif %}
-        </div>
-      </div>
-
-      <div class="field">
         <label class="label">Number of passengers:</label>
         <div class="control">
           <input type="number" class="input" name="number_passengers" value="{{ data.car.numberOfPassengers }}" required>

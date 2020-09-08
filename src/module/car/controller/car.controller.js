@@ -54,6 +54,7 @@ module.exports = class CarController extends AbstractController {
     try {
       const carDto = this.validateCarRequest(req.body)
       const carImagePath = req.file.path
+      console.log(fromRequestToEntity(carDto, carImagePath))
       const carInstanceCreated = this.carService.create(
         fromRequestToEntity(carDto, carImagePath)
       )
@@ -126,7 +127,6 @@ module.exports = class CarController extends AbstractController {
       air_conditioning: Joi.number().max(1).min(0),
       number_passengers: Joi.number().min(1).max(20),
       automatic: Joi.number().max(1).min(0),
-      active: Joi.number().max(1).min(0).default(1),
       price_per_week_in_dollars: Joi.number().min(1),
       price_per_day_in_dollars: Joi.number().min(1)
     })

@@ -1,6 +1,5 @@
 require('./types/car.dto')
 const Car = require('./car.entity')
-const Joi = require('joi')
 
 /**
  * @returns {Car}
@@ -21,6 +20,8 @@ function fromDbToEntity (carDto) {
     carDto.number_passengers,
     carDto.autoamtic,
     carDto.active,
+    carDto.rented,
+    carDto.return_date,
     carDto.price_per_week_in_cents,
     carDto.price_per_day_in_cents,
     carDto.created_at,
@@ -46,9 +47,11 @@ function fromRequestToEntity (carDto, imageUrl, id) {
     carDto.air_conditioning,
     carDto.number_passengers,
     carDto.automatic,
-    carDto.active,
-    Math.trunc(carDto.price_per_day_in_dollars * 100),
-    Math.trunc(carDto.price_per_week_in_dollars * 100)
+    undefined,
+    undefined,
+    undefined,
+    carDto.price_per_week_in_dollars * 100,
+    carDto.price_per_day_in_dollars * 100
   )
 }
 

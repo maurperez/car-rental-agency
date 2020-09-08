@@ -28,6 +28,8 @@ module.exports = class Car {
     numberOfPassengers,
     automatic,
     active,
+    rented,
+    returnDate,
     pricePerWeekInCents,
     pricePerDayInCents,
     createdAt,
@@ -44,6 +46,8 @@ module.exports = class Car {
     this.numberOfPassengers = numberOfPassengers
     this.automatic = automatic
     this.active = active
+    this.rented = rented
+    this.returnDate = returnDate
     this.pricePerWeekInCents = pricePerWeekInCents
     this.pricePerDayInCents = pricePerDayInCents
     this.createdAt = createdAt

@@ -1,0 +1,48 @@
+{% extends "./layout/index.njk" %}
+
+{% block content %}
+
+  <section class="section">
+    <div class="container">
+      <div class="columns is-multiline">
+
+        {% for car in data.cars %}
+
+          <div class="column is-3">
+              <div class="card">
+
+                <header class="card-header">
+                  <p class="card-header-title">{{ car.brand }} {{car.model}}</p>
+                </header>
+
+                <div class="card-image">
+                  <figure class="image is-16by9">
+                    <img src="{{ car.imageUrl }}">
+                  </figure>
+                </div>
+                
+                <div class="card-content">
+                  <div class="content">
+                    <h4>Prices:</h4>
+                    <ul>
+                      <li><p><strong>{{ car.pricePerDayInCents / 100 }}</strong> per day</p></li>
+                      <li><p><strong>{{ car.pricePerWeekInCents / 100 }}</strong> per week</p></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <footer class="card-footer">
+                  <a href="#" class="card-footer-item" type="button">See</a>
+                  <a href="#" class="card-footer-item" type="button">Rent</a>
+                </footer>
+
+              </div>
+            </div>
+
+        {% endfor %}
+
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

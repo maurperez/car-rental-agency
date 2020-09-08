@@ -15,28 +15,37 @@ module.exports = class ClubRepository extends AbstractCarRepository {
    * @param {import('../../car.entity')} car
    */
   create (car) {
+    console.log(1)
     const statement = this.databaseAdapter.prepare(`
       INSERT INTO cars (
-        brand = ?,
-        model = ?,
-        model_year = ?,
-        mileage = ?,
-        color = ?,
-        air_conditioning = ?,
-        number_passengers = ?,
-        automatic = ?,
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        brand,
+        model,
+        model_year,
+        image_url,
+        mileage,
+        color,
+        air_conditioning,
+        number_passengers,
+        automatic,
+        active,
+        price_per_week_in_cents,
+        price_per_day_in_cents
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
 
     const params = [
       car.brand,
       car.model,
       car.yearOfModel,
+      car.imageUrl,
       car.mileage,
       car.color,
       car.airConditioning,
       car.numberOfPassengers,
-      car.automatic
+      car.automatic,
+      car.active,
+      car.pricePerWeekInCents,
+      car.pricePerDayInCents
     ]
 
     const queryResult = statement.run(params)
@@ -101,14 +110,21 @@ module.exports = class ClubRepository extends AbstractCarRepository {
   getById (id) {
     const statement = this.databaseAdapter.prepare(`
       SELECT 
+        id,
         brand,
         model,
         model_year,
+        image_url
         mileage,
         color,
         air_conditioning,
         number_passengers,
-        automatic
+        automatic,
+        active,
+        price_per_week_in_cents,
+        price_per_day_in_cents,
+        created_at,
+        updated_at
       FROM cars WHERE id = ?
     `)
 
@@ -123,15 +139,22 @@ module.exports = class ClubRepository extends AbstractCarRepository {
 
   getAll () {
     const statement = this.databaseAdapter.prepare(`
-      SELECT 
+      SELECT
+        id, 
         brand,
         model,
         model_year,
+        image_url,
         mileage,
         color,
         air_conditioning,
         number_passengers,
-        automatic
+        automatic,
+        active,
+        price_per_week_in_cents,
+        price_per_day_in_cents,
+        created_at,
+        updated_at
       FROM cars
     `)
 

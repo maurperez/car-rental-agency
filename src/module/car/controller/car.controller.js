@@ -19,9 +19,11 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Application} app
    */
   configureRoutes (app) {
-    app.post(this.ROUT_BASE, this.uploadMiddleware.single('image-url'), this.create.bind(this))
+    app.post(`${this.ROUT_BASE}/create`, this.uploadMiddleware.single('image-url'), this.create.bind(this))
     app.post(`${this.ROUT_BASE}/:id/update`, this.uploadMiddleware.single('image-url'), this.update.bind(this))
-    app.get(this.ROUT_BASE, (req, res) => res.send('work'))
+    app.get(this.ROUT_BASE, this.getAllCars.bind(this))
+    app.get(`${this.ROUT_BASE}/:id/update`, this.validateId, this.renderForm.bind(this))
+    app.get(`${this.ROUT_BASE}/create`, this.renderForm.bind(this))
   }
 
   /**
@@ -56,20 +58,58 @@ module.exports = class CarController extends AbstractController {
         fromRequestToEntity(carDto, carImagePath)
       )
       res.json(carInstanceCreated)
+      res.end()
     } catch (error) {
+      console.log(error)
       if (error instanceof Joi.ValidationError) {
-        res.json(error.details)
+        res.json(error)
+        res.end()
+      } else {
+        res.end()
       }
     }
   }
 
-  validateId (id) {
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
+  getAllCars (req, res) {
+    const cars = this.carService.getAll()
+
+    res.render('car/view/car-list', {
+      data: { cars }
+    })
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
+  renderForm (req, res) {
+    const id = req.params.id
+
+    if (id) {
+      const car = this.carService.getById(id)
+      res.render('car/view/add-car-form', {
+        data: { car }
+      })
+    } else {
+      res.render('car/view/add-car-form')
+    }
+  }
+
+  validateId (req, res, next) {
+    const id = req.params.id
     const idType = Joi.number().integer().required()
 
     const { error } = idType.validate(id)
 
     if (error) {
-      throw new InvalidId('the id will be a integer')
+      res.send(400)
+      res.redirect('/car')
+    } else {
+      next()
     }
   }
 
@@ -80,25 +120,25 @@ module.exports = class CarController extends AbstractController {
     const carSchema = Joi.object({
       brand: Joi.string().max(100),
       model: Joi.string().max(100),
-      year_model: Joi.number().min(1886).max(new Date().getFullYear()).cast('number'),
-      mileage: Joi.number().min(0).cast('number'),
+      model_year: Joi.number().min(1886).max(new Date().getFullYear()),
+      mileage: Joi.number().min(0),
       color: Joi.string().max(100),
-      air_conditioning: Joi.number().max(1).min(0).cast('number'),
-      number_passengers: Joi.number().min(1).max(20).cast('number'),
-      autoamtic: Joi.number().max(1).min(0).cast('number'),
-      active: Joi.number().max(1).min(0).cast('number'),
-      price_per_week_in_dollars: Joi.number().min(1).cast('number'),
-      price_per_day_in_dollars: Joi.number().min(1).cast('number')
+      air_conditioning: Joi.number().max(1).min(0),
+      number_passengers: Joi.number().min(1).max(20),
+      automatic: Joi.number().max(1).min(0),
+      active: Joi.number().max(1).min(0).default(1),
+      price_per_week_in_dollars: Joi.number().min(1),
+      price_per_day_in_dollars: Joi.number().min(1)
     })
 
-    const { value, error } = carSchema.validate(bodyRequest, {
+    const { value, errors } = carSchema.validate(bodyRequest, {
       abortEarly: false,
       convert: true,
       presence: 'required'
     })
 
-    if (error) {
-      throw error
+    if (errors) {
+      throw errors
     } else {
       return value
     }

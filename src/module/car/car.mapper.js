@@ -13,7 +13,7 @@ function fromDbToEntity (carDto) {
     carDto.id,
     carDto.brand,
     carDto.model,
-    carDto.year_model,
+    carDto.model_year,
     carDto.image_url,
     carDto.mileage,
     carDto.color,

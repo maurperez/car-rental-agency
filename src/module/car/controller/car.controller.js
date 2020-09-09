@@ -1,6 +1,5 @@
 require('../types/car.dto')
 const AbstractController = require('../../abstractController')
-const {fromRequestToEntity} = require('../car.mapper')
 const Joi = require('joi')
 const InvalidId = require('./error/InvalidId')
 
@@ -19,14 +18,14 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Application} app
    */
   configureRoutes(app) {
+    app.get(this.ROUT_BASE, this.getAllAvailableCars.bind(this))
+    app.get(`${this.ROUT_BASE}/create`, this.create.bind(this))
     app.post(
       `${this.ROUT_BASE}/create`,
       this.uploadMiddleware.single('image-url'),
       this.create.bind(this)
     )
-    app.get(this.ROUT_BASE, this.getAllAvailableCars.bind(this))
     app.get(`${this.ROUT_BASE}/rented`, this.getRentedCars.bind(this))
-    app.get(`${this.ROUT_BASE}/create`, this.renderForm.bind(this))
     app.get(`${this.ROUT_BASE}/:id`, this.getById.bind(this))
     app.get(
       `${this.ROUT_BASE}/:id/update`,
@@ -46,21 +45,16 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   create(req, res) {
-    try {
+    const method = req.method
+
+    if (method === 'GET') {
+      res.render('car/view/car-form')
+    } else if (method === 'POST') {
       const carDto = this.validateCarRequest(req.body)
-      const carImagePath = req.file.path
-      const carInstanceCreated = this.carService.create(
-        fromRequestToEntity(carDto, carImagePath)
-      )
-      res.json(carInstanceCreated)
-      res.end()
-    } catch (error) {
-      if (error instanceof Joi.ValidationError) {
-        res.json(error)
-        res.end()
-      } else {
-        res.end()
-      }
+      const imagePath = req.file.path
+      const carInstance = this.carService.create(carDto, imagePath)
+
+      res.redirect(`/car/${carInstance.id}`)
     }
   }
 
@@ -116,23 +110,6 @@ module.exports = class CarController extends AbstractController {
     res.render('car/view/view-one-car', {
       data: {car},
     })
-  }
-
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  renderForm(req, res) {
-    const id = req.params.id
-
-    if (id) {
-      const car = this.carService.getById(id)
-      res.render('car/view/car-form', {
-        data: {car},
-      })
-    } else {
-      res.render('car/view/car-form')
-    }
   }
 
   validateExistentClub(req, res, next) {

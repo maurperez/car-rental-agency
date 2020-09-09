@@ -2,6 +2,7 @@
  * @typedef {import('./repository/abstractCarRepository')} AbstractCarRepository
  */
 const Car = require('./car.entity')
+const { fromRequestToEntity } = require('./car.mapper')
 
 module.exports = class CarService {
   /**
@@ -12,11 +13,11 @@ module.exports = class CarService {
   }
 
   /**
-   * @param {Car} car
+   * @param {CarFromHttpDto} carDto
+   * @param {string} imagePath
    */
-  create (car) {
-    if (!(car instanceof Car)) { throw new Error() }
-
+  create (carDto, imagePath) {
+    const car = fromRequestToEntity(carDto, imagePath)
     return this.carRepository.create(car)
   }
 

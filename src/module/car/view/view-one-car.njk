@@ -6,7 +6,12 @@
     <div class="card">
 
       <div class="card-header">
-        <div class="card-header-title">{{ data.car.brand }} {{ data.car.model }}</div>
+        <p class="card-header-title">{{ data.car.brand }} {{ data.car.model }}</p>
+        <a href="/car/{{data.car.id}}/update" class="card-header-icon" aria-label="edit">
+          <span class="icon">
+            <i class="fas fa-pen" aria-hidden="true"></i>
+          </span>
+        </a>
       </div>
 
       <div class="card-image">
@@ -22,7 +27,7 @@
           <ul>
             <li>Brand: {{ data.car.brand }} </li>
             <li>Model: {{ data.car.model }} </li>
-            <li>Model year: {{ data.car.modelYear }} </li>
+            <li>Model year: {{ data.car.yearOfModel }} </li>
             <li>Mileage: {{ data.car.mileage }} </li>
             <li>Color: {{ data.car.color }} </li>
             <li>Air conditioning: {{ data.car.airConditioning }} </li>

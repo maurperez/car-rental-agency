@@ -15,7 +15,6 @@ module.exports = class ClubRepository extends AbstractCarRepository {
    * @param {import('../../car.entity')} car
    */
   create (car) {
-    console.log(1)
     const statement = this.databaseAdapter.prepare(`
       INSERT INTO cars (
         brand,
@@ -55,7 +54,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
    * @param {Number} id
    * @param {import('../../car.entity')} car
    */
-  update (id, car) {
+  update (car) {
     const statement = this.databaseAdapter.prepare(`
       UPDATE cars SET
         brand = ?,
@@ -67,7 +66,11 @@ module.exports = class ClubRepository extends AbstractCarRepository {
         air_conditioning = ?,
         number_passengers = ?,
         automatic = ?,
-        active = ?
+        active = ?,
+        rented = ?,
+        return_date = ?,
+        price_per_week_in_cents = ?,
+        price_per_day_in_cents = ?
       WHERE id = ?
     `)
 
@@ -82,12 +85,14 @@ module.exports = class ClubRepository extends AbstractCarRepository {
       car.numberOfPassengers,
       car.automatic,
       car.active,
-      id
+      car.rented,
+      car.returnDate,
+      car.pricePerWeekInCents,
+      car.pricePerDayInCents,
+      car.id
     ]
 
     statement.run(params)
-
-    return this.getById(id)
   }
 
   /**

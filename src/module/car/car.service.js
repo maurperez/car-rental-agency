@@ -21,12 +21,19 @@ module.exports = class CarService {
   }
 
   /**
-   * @param {Car} car
+   * @param {number} id
+   * @param {CarFromHttpDto} carDto
+   * @param {string} imagePath
    */
-  update (car) {
-    if (!(car instanceof Car)) { throw new Error() }
+  update (id, carDto, imagePath) {
+    const car = this.getById(id)
 
-    return this.carRepository.update(car)
+    Object.keys(carDto).forEach(key => {
+      car[key] = carDto[key]
+    })
+    imagePath && (car.imageUrl = imagePath)
+
+    this.carRepository.update(car)
   }
 
   /**
@@ -42,7 +49,7 @@ module.exports = class CarService {
    * @param {Number} id
    */
   getById (id) {
-    if (typeof id !== 'number') { throw new Error() }
+    if (typeof id !== 'number') { throw new Error('id isnt number') }
 
     return this.carRepository.getById(id)
   }

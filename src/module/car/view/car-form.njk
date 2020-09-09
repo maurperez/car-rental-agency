@@ -122,7 +122,11 @@
         <label class="label">Image:</label>
         <div class="file is-fullwidth" id="car-image">
           <label class="file-label">
-            <input class="file-input" type="file" name="image-url" required>
+            {% if data.car %}
+              <input class="file-input" type="file" name="image-url">
+            {% else %}
+              <input class="file-input" type="file" name="image-url" required>
+            {% endif %}
             <span class="file-cta">
               <span class="file-icon">
                 <i class="fas fa-upload"></i>

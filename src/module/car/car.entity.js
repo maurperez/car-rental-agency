@@ -10,7 +10,9 @@ module.exports = class Car {
    * @param {(1 | 0)} airConditioning
    * @param {Number} numberOfPassengers
    * @param {(1 | 0)} automatic
-   * @param {(1 | 0)} active
+   * @param {(1 | 0)} [active]
+   * @param {(1 | 0)} [rented]
+   * @param {Date} [returnDate]
    * @param {Number} pricePerWeekInCents
    * @param {Number} pricePerDayInCents
    * @param {String} [createdAt]

@@ -50,14 +50,14 @@
 
       <footer class="card-footer">
         {% if data.car.active === 1 and data.car.rented === 0 %}
-          <a href="#" class="card-footer-item button is-link">Rent</a>
+          <a href="#" class="card-footer-item button is-link" id="rent-button">Rent</a>
         {% elif data.car.active === 0 %}
           <p class="card-footer-item">
             <span>This car is inactive for the moment</span>
           </p>
         {% elif data.car.rented === 1 %}
           <p class="card-footer-item">
-            <span>The car is rented. will be available from {{ data.car.returnDate }}</span>
+            <span id="return-date"></span>
           </p>
         {% endif %}
       </footer>
@@ -84,7 +84,75 @@
 
         <footer class="modal-card-foot">
           <button class="button is-danger" type="submit" form="delete-form">Delete</button>
-          <button class="button" id="cancel-modal">Cancel</button>
+          <button class="button" id="cancel-delete-modal">Cancel</button>
+        </footer>
+
+      </div>
+    </div>
+
+    <div class="modal" id="rent-car-modal">
+      <div class="modal-background"></div>
+      <div class="modal-card">
+
+        <header class="modal-card-head">
+          <p class="modal-card-title">Rent <strong>{{data.car.brand}} {{ data.car.model }}</strong></p>
+        </header>
+        
+        <section class="modal-card-body">
+          <form method="POST" action="/car/{{data.car.id}}/rent" id="rent-form">
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Days to rent</label>
+              </div>
+              <div class="field-body">
+                <div class="field is-narrow">
+                  <div class="control">
+                    <div class="select is-fullwidth">
+                      <select id="rent-days" name="rent-days">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Price: </label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <p class="control is-expanded has-icons-left">
+                    <input class="input" type="text" disabled value="{{ data.car.pricePerDayInCents / 100 }}" id="price">
+                    <span class="icon is-small is-left">
+                      <i class="fas fa-dollar-sign"></i>
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </form>
+        </section>
+
+        <footer class="modal-card-foot">
+          <button class="button is-primary" type="submit" form="rent-form">Rent</button>
+          <button class="button" id="cancel-rent-modal">Cancel</button>
         </footer>
 
       </div>
@@ -93,14 +161,47 @@
   </div>
   
   <script>
-    document.querySelector('#delete-icon').onclick = event => {
-      document.querySelector('#delete-car-modal').classList.add('is-active')
+    const returnDate = '{{ data.car.returnDate }}'
+
+    if(returnDate){
+      document.querySelector('#return-date').textContent = `
+        The car is rented. will be available from ${Intl.DateTimeFormat('es-AR').format(new Date(returnDate))}
+      `
     }
-    document.querySelector('#cancel-modal').onclick = (event) => {
-      document.querySelector('#delete-car-modal').classList.remove('is-active')
-    }
-    document.querySelector('.modal-background').onclick = (event) => {
-      document.querySelector('#delete-car-modal').classList.remove('is-active')
+  </script>
+
+  <script>
+    const isRented = {{ data.car.rented }}
+    const isActive = {{ data.car.active }}
+
+    if(isRented === 0 && isActive === 1){
+      const $deleteModal = document.querySelector('#delet-car-modal')
+      const $rentModal = document.querySelector('#rent-car-modal')
+      const $selectDaysRent = document.querySelector('#rent-days')
+
+      document.querySelector('#delete-icon').onclick = event => {
+        $deleteModal.classList.add('is-active')
+      }
+      document.querySelector('#rent-button').onclick = () => {
+        $rentModal.classList.add('is-active')
+      }
+      document.querySelector('#cancel-delete-modal').onclick = (event) => {
+        $deleteModal.classList.remove('is-active')
+      }
+      document.querySelector('#cancel-rent-modal').onclick = () => {
+        $rentModal.classList.remove('is-active')
+      }
+      document.querySelector('.modal-background').onclick = () => {
+        document.querySelector('.is-active').classList.remove('is-active')
+      }
+
+      $selectDaysRent.onchange = (event) => {
+        const pricePerDay = {{data.car.pricePerDayInCents / 100 }}
+        const pricePerWeek = {{data.car.pricePerWeekInCents / 100 }}
+        const days = event.target.value
+
+        document.querySelector('#price').value = days % 7 === 0 ? (days / 7) * pricePerWeek : days * pricePerDay
+      }
     }
   </script>
 {% endblock %}

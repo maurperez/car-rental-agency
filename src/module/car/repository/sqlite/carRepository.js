@@ -51,7 +51,6 @@ module.exports = class ClubRepository extends AbstractCarRepository {
   }
 
   /**
-   * @param {Number} id
    * @param {import('../../car.entity')} car
    */
   update (car) {

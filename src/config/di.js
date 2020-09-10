@@ -1,5 +1,6 @@
 const { default: DIContainer, object, get, factory } = require('rsdi')
 const multer = require('multer')
+const bodyParser = require('body-parser')
 const Sqlite3Database = require('better-sqlite3')
 
 const { CarController, CarService, CarRepository } = require('../module/car/module')
@@ -21,13 +22,22 @@ function configureMulter () {
   return multer({ storage })
 }
 
+function configureUrlEncodedParser () {
+  const urlencodedParser = bodyParser.urlencoded({
+    extended: false
+  })
+
+  return urlencodedParser
+}
+
 /**
  * @param {DIContainer} container
  */
 function addCommonDefinitions (container) {
   container.addDefinitions({
     MainDatabaseAdapter: factory(configureMainDatabaseAdapter),
-    Multer: factory(configureMulter)
+    Multer: factory(configureMulter),
+    UrlencodedParser: factory(configureUrlEncodedParser)
   })
 }
 
@@ -36,7 +46,7 @@ function addCommonDefinitions (container) {
  */
 function addCarModuleDefinitions (container) {
   container.addDefinitions({
-    CarController: object(CarController).construct(get('Multer'), get('CarService')),
+    CarController: object(CarController).construct(get('Multer'), get('UrlencodedParser'), get('CarService')),
     CarService: object(CarService).construct(get('CarRepository')),
     CarRepository: object(CarRepository).construct(get('MainDatabaseAdapter'))
   })

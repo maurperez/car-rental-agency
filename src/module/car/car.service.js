@@ -44,6 +44,32 @@ module.exports = class CarService {
 
     this.carRepository.delete(id)
   }
+  
+  /**
+   * @param {number} id 
+   * @param {number} daysToRent 
+   */
+  rent(id, daysToRent){
+    if(typeof id !== 'number') { throw new Error('id isnt number')}
+
+    const carInstance = this.carRepository.getById(id)
+
+    carInstance.rented = 1
+    carInstance.returnDate = this.addDaysToDate(Date.now(), daysToRent).toISOString()
+    
+    this.carRepository.update(carInstance)
+  }
+
+  /**
+   * @param {Date | string | number} date 
+   * @param {number} days 
+   * @returns {Date}
+   */
+  addDaysToDate(date, days){
+    const resultDate = new Date(date)
+    resultDate.setDate(resultDate.getDate() + days)
+    return resultDate
+  }
 
   /**
    * @param {Number} id

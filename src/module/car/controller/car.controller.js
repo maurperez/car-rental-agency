@@ -7,9 +7,10 @@ module.exports = class CarController extends AbstractController {
   /**
    * @param {import('../car.service')} carService
    */
-  constructor(uploadMiddleware, carService) {
+  constructor(uploadMultipartMiddleware, urlencodedParser, carService) {
     super()
-    this.uploadMiddleware = uploadMiddleware
+    this.uploadMultipartMiddleware = uploadMultipartMiddleware
+    this.urlencodedParser = urlencodedParser
     this.carService = carService
     this.ROUT_BASE = '/car'
   }
@@ -20,7 +21,7 @@ module.exports = class CarController extends AbstractController {
     app.get(`${this.ROUT_BASE}/create`, this.create.bind(this))
     app.post(
       `${this.ROUT_BASE}/create`,
-      this.uploadMiddleware.single('image-url'),
+      this.uploadMultipartMiddleware.single('image-url'),
       this.create.bind(this)
     )
     app.get(`${this.ROUT_BASE}/rented`, this.getRentedCars.bind(this))
@@ -33,13 +34,19 @@ module.exports = class CarController extends AbstractController {
     app.post(
       `${this.ROUT_BASE}/:id/update`,
       this.validateExistentClub.bind(this),
-      this.uploadMiddleware.single('image-url'),
+      this.uploadMultipartMiddleware.single('image-url'),
       this.update.bind(this)
     )
     app.post(
       `${this.ROUT_BASE}/:id/delete`,
       this.validateExistentClub.bind(this),
       this.delete.bind(this)
+    )
+    app.post(
+      `${this.ROUT_BASE}/:id/rent`,
+      this.validateExistentClub.bind(this),
+      this.urlencodedParser,
+      this.rent.bind(this)
     )
   }
 
@@ -92,6 +99,18 @@ module.exports = class CarController extends AbstractController {
 
     res.status(202)
     res.redirect('/car')
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
+  rent(req, res) {
+    const id = Number(req.params.id)
+    const daysToRent = Number(req.body['rent-days'])
+
+    this.carService.rent(id, daysToRent)
+    res.redirect('/car/rented')
   }
 
   /**

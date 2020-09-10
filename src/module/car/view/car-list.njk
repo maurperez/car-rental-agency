@@ -17,7 +17,7 @@
 
                 <div class="card-image">
                   <figure class="image is-16by9">
-                    <img src="{{ car.imageUrl }}">
+                    <img src="/{{ car.imageUrl }}">
                   </figure>
                 </div>
                 
@@ -25,15 +25,14 @@
                   <div class="content">
                     <h4>Prices:</h4>
                     <ul>
-                      <li><p><strong>{{ car.pricePerDayInCents / 100 }}</strong> per day</p></li>
-                      <li><p><strong>{{ car.pricePerWeekInCents / 100 }}</strong> per week</p></li>
+                      <li><p><strong>$ {{ car.pricePerDayInCents / 100 }}</strong> per day</p></li>
+                      <li><p><strong>$ {{ car.pricePerWeekInCents / 100 }}</strong> per week</p></li>
                     </ul>
                   </div>
                 </div>
 
                 <footer class="card-footer">
-                  <a href="car/{{ car.id }}" class="card-footer-item" type="button">See</a>
-                  <a href="#" class="card-footer-item" type="button">Rent</a>
+                  <a href="/car/{{ car.id }}" class="card-footer-item" type="button">See</a>
                 </footer>
 
               </div>

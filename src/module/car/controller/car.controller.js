@@ -14,9 +14,7 @@ module.exports = class CarController extends AbstractController {
     this.ROUT_BASE = '/car'
   }
 
-  /**
-   * @param {import('express').Application} app
-   */
+  /** @param {import('express').Application} app */
   configureRoutes(app) {
     app.get(this.ROUT_BASE, this.getAllAvailableCars.bind(this))
     app.get(`${this.ROUT_BASE}/create`, this.create.bind(this))
@@ -37,6 +35,11 @@ module.exports = class CarController extends AbstractController {
       this.validateExistentClub.bind(this),
       this.uploadMiddleware.single('image-url'),
       this.update.bind(this)
+    )
+    app.post(
+      `${this.ROUT_BASE}/:id/delete`,
+      this.validateExistentClub.bind(this),
+      this.delete.bind(this)
     )
   }
 
@@ -77,6 +80,18 @@ module.exports = class CarController extends AbstractController {
       this.carService.update(id, carDto, carImagePath)
       res.redirect(`/car/${id}`)
     }
+  }
+
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
+  delete(req, res) {
+    const id = Number(req.params.id)
+    this.carService.delete(id)
+
+    res.status(202)
+    res.redirect('/car')
   }
 
   /**
@@ -124,9 +139,7 @@ module.exports = class CarController extends AbstractController {
     }
   }
 
-  /**
-   * @returns {CarFromHttpDto}
-   */
+  /** @returns {CarFromHttpDto} */
   validateCarRequest(bodyRequest) {
     const carSchema = Joi.object({
       brand: Joi.string().max(100),

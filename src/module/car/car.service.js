@@ -1,7 +1,6 @@
 /**
  * @typedef {import('./repository/abstractCarRepository')} AbstractCarRepository
  */
-const Car = require('./car.entity')
 const { fromRequestToEntity } = require('./car.mapper')
 
 module.exports = class CarService {
@@ -41,7 +40,7 @@ module.exports = class CarService {
    * @param {Number} id
    */
   delete (id) {
-    if (typeof id !== 'number') { throw new Error() }
+    if (typeof id !== 'number') { throw new Error('id isnt number') }
 
     this.carRepository.delete(id)
   }

@@ -1,4 +1,4 @@
-const AbstractCarRepository = require('../abstractCarRepository')
+const AbstractCarRepository = require('../abstract-repository')
 const NotFoundCarError = require('../error/not-found-car.error')
 const { fromDbToEntity } = require('../../car.mapper')
 

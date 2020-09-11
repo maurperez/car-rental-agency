@@ -1,5 +1,5 @@
 require('../types/car.dto')
-const AbstractController = require('../../abstractController')
+const AbstractController = require('../../abstract-controller')
 const Joi = require('joi')
 const InvalidId = require('./error/InvalidId')
 
@@ -19,32 +19,27 @@ module.exports = class CarController extends AbstractController {
   configureRoutes(app) {
     app.get('/', this.renderHome.bind(this))
     app.get(`${this.ROUT_BASE}/create`, this.create.bind(this))
-    app.post(
-      `${this.ROUT_BASE}/create`,
+    app.post(`${this.ROUT_BASE}/create`,
       this.uploadMultipartMiddleware.single('image-url'),
       this.create.bind(this)
     )
     app.get(`${this.ROUT_BASE}/rented`, this.getRentedCars.bind(this))
     app.get(`${this.ROUT_BASE}/available`, this.getAvailableCars.bind(this))
     app.get(`${this.ROUT_BASE}/:id`, this.getById.bind(this))
-    app.get(
-      `${this.ROUT_BASE}/:id/update`,
+    app.get(`${this.ROUT_BASE}/:id/update`,
       this.validateExistentClub.bind(this),
       this.update.bind(this)
     )
-    app.post(
-      `${this.ROUT_BASE}/:id/update`,
+    app.post(`${this.ROUT_BASE}/:id/update`,
       this.validateExistentClub.bind(this),
       this.uploadMultipartMiddleware.single('image-url'),
       this.update.bind(this)
     )
-    app.post(
-      `${this.ROUT_BASE}/:id/delete`,
+    app.post(`${this.ROUT_BASE}/:id/delete`,
       this.validateExistentClub.bind(this),
       this.delete.bind(this)
     )
-    app.post(
-      `${this.ROUT_BASE}/:id/rent`,
+    app.post(`${this.ROUT_BASE}/:id/rent`,
       this.validateExistentClub.bind(this),
       this.urlencodedParser,
       this.rent.bind(this)
@@ -74,7 +69,7 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   update(req, res) {
-    const id = Number(req.params.id)
+    const id = req.params.id
 
     if (req.method === 'GET') {
       const car = this.carService.getById(id)
@@ -95,7 +90,7 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   delete(req, res) {
-    const id = Number(req.params.id)
+    const id = req.params.id
     this.carService.delete(id)
 
     res.status(202)
@@ -107,15 +102,19 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   rent(req, res) {
-    const id = Number(req.params.id)
+    const id = req.params.id
     const daysToRent = Number(req.body['rent-days'])
 
     this.carService.rent(id, daysToRent)
     res.redirect('/car/rented')
   }
 
+  /**
+   * @param {import('express').Request} req
+   * @param {import('express').Response} res
+   */
   renderHome(req, res) {
-    const cars = this.carService.getAll()
+    const cars = this.carService.getAllAvailableCars()
 
     res.render('car/view/home', {
       data: { cars }
@@ -147,7 +146,7 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   getById(req, res) {
-    const id = Number(req.params.id)
+    const id = req.params.id
     const car = this.carService.getById(id)
 
     res.render('car/view/view-one-car', {
@@ -156,7 +155,7 @@ module.exports = class CarController extends AbstractController {
   }
 
   validateExistentClub(req, res, next) {
-    const id = Number(req.params.id)
+    const id = req.params.id
 
     try {
       this.carService.getById(id)
@@ -166,7 +165,7 @@ module.exports = class CarController extends AbstractController {
     }
   }
 
-  /** @returns {CarFromHttpDto} */
+  /** @returns {CarFromHttpRequestDto} */
   validateCarRequest(bodyRequest) {
     const carSchema = Joi.object({
       brand: Joi.string().max(100),

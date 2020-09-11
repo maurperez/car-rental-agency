@@ -1,4 +1,3 @@
-require('./types/car.dto')
 const Car = require('./car.entity')
 
 /**
@@ -30,12 +29,12 @@ function fromDbToEntity (carDto) {
 }
 
 /**
- * @param {CarFromHttpDto} carDto
+ * @param {CarFromHttpRequestDto} carDto
  * @param {String} imageUrl
  * @param {number} [id]
  * @returns {Car}
  */
-function fromRequestToEntity (carDto, imageUrl, id) {
+function fromHttpRequestToEntity (carDto, imageUrl, id) {
   return new Car(
     id,
     carDto.brand,
@@ -56,6 +55,6 @@ function fromRequestToEntity (carDto, imageUrl, id) {
 }
 
 module.exports = {
-  fromRequestToEntity,
+  fromHttpRequestToEntity,
   fromDbToEntity
 }

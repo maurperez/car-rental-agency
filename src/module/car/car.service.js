@@ -1,32 +1,29 @@
-/**
- * @typedef {import('./repository/abstractCarRepository')} AbstractCarRepository
- */
-const { fromRequestToEntity } = require('./car.mapper')
+const { fromHttpRequestToEntity } = require('./car.mapper')
 
 module.exports = class CarService {
   /**
-   * @param {AbstractCarRepository} carRepository
+   * @param {import('./repository/abstract-repository')} carRepository
    */
   constructor (carRepository) {
     this.carRepository = carRepository
   }
 
   /**
-   * @param {CarFromHttpDto} carDto
+   * @param {CarFromHttpRequestDto} carDto
    * @param {string} imagePath
    */
   create (carDto, imagePath) {
-    const car = fromRequestToEntity(carDto, imagePath)
+    const car = fromHttpRequestToEntity(carDto, imagePath)
     return this.carRepository.create(car)
   }
 
   /**
    * @param {number} id
-   * @param {CarFromHttpDto} carDto
+   * @param {CarFromHttpRequestDto} carDto
    * @param {string} imagePath
    */
   update (id, carDto, imagePath) {
-    const carUpdate = fromRequestToEntity(carDto, imagePath, id)
+    const carUpdate = fromHttpRequestToEntity(carDto, imagePath, id)
     const carInstance = this.getById(id)
     
     Object.keys(carUpdate).forEach(key => {
@@ -40,8 +37,6 @@ module.exports = class CarService {
    * @param {Number} id
    */
   delete (id) {
-    if (typeof id !== 'number') { throw new Error('id isnt number') }
-
     this.carRepository.delete(id)
   }
   
@@ -50,8 +45,6 @@ module.exports = class CarService {
    * @param {number} daysToRent 
    */
   rent(id, daysToRent){
-    if(typeof id !== 'number') { throw new Error('id isnt number')}
-
     const carInstance = this.carRepository.getById(id)
 
     carInstance.rented = 1
@@ -75,11 +68,13 @@ module.exports = class CarService {
    * @param {Number} id
    */
   getById (id) {
-    if (typeof id !== 'number') { throw new Error('id isnt number') }
-
     return this.carRepository.getById(id)
   }
 
+  /**
+   * @description return all cars: availables, rented, and inactives
+   * @returns {Car[]}
+   */
   getAll () {
     return this.carRepository.getAll()
   }

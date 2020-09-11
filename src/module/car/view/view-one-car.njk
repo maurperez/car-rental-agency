@@ -64,103 +64,17 @@
     </div>
 
 
-    <div class="modal" id="delete-car-modal">
-      <div class="modal-background"></div>
-      <div class="modal-card">
+    {% include "./partials/delete-modal.njk" %}
 
-        <header class="modal-card-head">
-          <p class="modal-card-title">Delete {{data.car.brand}} {{ data.car.model }}</p>
-        </header>
-        
-        <section class="modal-card-body">
-          <form method="POST" action="/car/{{data.car.id}}/delete" id="delete-form">
-            <article class="message is-danger">
-              <div class="message-body">
-                Are you sure you want to delete the car?
-              </div>
-            </article>
-          </form>
-        </section>
-
-        <footer class="modal-card-foot">
-          <button class="button is-danger" type="submit" form="delete-form">Delete</button>
-          <button class="button" id="cancel-delete-modal">Cancel</button>
-        </footer>
-
-      </div>
-    </div>
-
-    <div class="modal" id="rent-car-modal">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-
-        <header class="modal-card-head">
-          <p class="modal-card-title">Rent <strong>{{data.car.brand}} {{ data.car.model }}</strong></p>
-        </header>
-        
-        <section class="modal-card-body">
-          <form method="POST" action="/car/{{data.car.id}}/rent" id="rent-form">
-
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">Days to rent</label>
-              </div>
-              <div class="field-body">
-                <div class="field is-narrow">
-                  <div class="control">
-                    <div class="select is-fullwidth">
-                      <select id="rent-days" name="rent-days">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="field is-horizontal">
-              <div class="field-label is-normal">
-                <label class="label">Price: </label>
-              </div>
-              <div class="field-body">
-                <div class="field">
-                  <p class="control is-expanded has-icons-left">
-                    <input class="input" type="text" disabled value="{{ data.car.pricePerDayInCents / 100 }}" id="price">
-                    <span class="icon is-small is-left">
-                      <i class="fas fa-dollar-sign"></i>
-                    </span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-          </form>
-        </section>
-
-        <footer class="modal-card-foot">
-          <button class="button is-primary" type="submit" form="rent-form">Rent</button>
-          <button class="button" id="cancel-rent-modal">Cancel</button>
-        </footer>
-
-      </div>
-    </div>
+    {% include "./partials/rent-modal.njk" %}
 
   </div>
-  
-  <script>
+{% endblock %}
+
+{% block scripts %}
+
+  {# return date handler #}
+  <script type="text/javascript">
     const returnDate = '{{ data.car.returnDate }}'
 
     if(returnDate){
@@ -170,29 +84,20 @@
     }
   </script>
 
-  <script>
+  {# rent modal handler #}
+  <script type="text/javascript">
     const isRented = {{ data.car.rented }}
     const isActive = {{ data.car.active }}
 
     if(isRented === 0 && isActive === 1){
-      const $deleteModal = document.querySelector('#delet-car-modal')
       const $rentModal = document.querySelector('#rent-car-modal')
       const $selectDaysRent = document.querySelector('#rent-days')
 
-      document.querySelector('#delete-icon').onclick = event => {
-        $deleteModal.classList.add('is-active')
-      }
       document.querySelector('#rent-button').onclick = () => {
         $rentModal.classList.add('is-active')
       }
-      document.querySelector('#cancel-delete-modal').onclick = (event) => {
-        $deleteModal.classList.remove('is-active')
-      }
       document.querySelector('#cancel-rent-modal').onclick = () => {
         $rentModal.classList.remove('is-active')
-      }
-      document.querySelector('.modal-background').onclick = () => {
-        document.querySelector('.is-active').classList.remove('is-active')
       }
 
       $selectDaysRent.onchange = (event) => {
@@ -204,4 +109,19 @@
       }
     }
   </script>
+
+  {# delete modal handler #}
+  <script type="text/javascript">
+    const $deleteModal = document.querySelector('#delete-car-modal')
+
+    document.querySelector('#delete-icon').onclick = event => {
+      $deleteModal.classList.add('is-active')
+    }
+    document.querySelector('#cancel-delete-modal').onclick = (event) => {
+      $deleteModal.classList.remove('is-active')
+    }
+  </script>
+
+  <script src="/public/js/modal-handler.js" type="text/javascript"></script>
+
 {% endblock %}

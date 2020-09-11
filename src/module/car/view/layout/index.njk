@@ -6,6 +6,8 @@
     <title>Car Rental Agency</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+    {% block imports %}
+    {% endblock %}
   </head>
 
   <body>
@@ -13,7 +15,7 @@
 
       <div class="container">
         <div class="navbar-brand">
-          <a class="navbar-item" href="#">
+          <a class="navbar-item" href="/">
             <span class="icon is-medium">
               <i class="fas fa-car fa-2x"></i>
             </span>
@@ -29,24 +31,9 @@
         <div class="navbar-menu" id="navbarMenu">
 
           <div class="navbar-start">
-            <a href="/car" class="navbar-item">Home</a>
-            <a href="/car/create" class="navbar-item">Add</a>
+            <a href="/car/available" class="navbar-item">Availables</a>
             <a href="/car/rented" class="navbar-item">Rented</a>
-          </div>
-
-          <div class="navbar-end">
-            <div class="navbar-item">
-              <div class="field has-addons">
-                <div class="control">
-                  <input class="input is-rounded" type="text" placeholder="Find your car">
-                </div>
-                <div class="control">
-                  <a class="button is-link">
-                    Search
-                  </a>
-                </div>
-              </div>
-            </div>
+            <a href="/car/create" class="navbar-item">Add</a>
           </div>
 
         </div>

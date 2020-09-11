@@ -17,7 +17,7 @@ module.exports = class CarController extends AbstractController {
 
   /** @param {import('express').Application} app */
   configureRoutes(app) {
-    app.get(this.ROUT_BASE, this.getAllAvailableCars.bind(this))
+    app.get('/', this.renderHome.bind(this))
     app.get(`${this.ROUT_BASE}/create`, this.create.bind(this))
     app.post(
       `${this.ROUT_BASE}/create`,
@@ -25,6 +25,7 @@ module.exports = class CarController extends AbstractController {
       this.create.bind(this)
     )
     app.get(`${this.ROUT_BASE}/rented`, this.getRentedCars.bind(this))
+    app.get(`${this.ROUT_BASE}/available`, this.getAvailableCars.bind(this))
     app.get(`${this.ROUT_BASE}/:id`, this.getById.bind(this))
     app.get(
       `${this.ROUT_BASE}/:id/update`,
@@ -113,11 +114,19 @@ module.exports = class CarController extends AbstractController {
     res.redirect('/car/rented')
   }
 
+  renderHome(req, res) {
+    const cars = this.carService.getAll()
+
+    res.render('car/view/home', {
+      data: { cars }
+    })
+  }
+
   /**
    * @param {import('express').Request} req
    * @param {import('express').Response} res
    */
-  getAllAvailableCars(req, res) {
+  getAvailableCars(req, res) {
     const cars = this.carService.getAllAvailableCars()
 
     res.render('car/view/car-list', {

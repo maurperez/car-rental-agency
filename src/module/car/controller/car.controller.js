@@ -157,7 +157,6 @@ module.exports = class CarController extends AbstractController {
 
   validateExistentClub(req, res, next) {
     const id = Number(req.params.id)
-    console.log(id)
 
     try {
       this.carService.getById(id)

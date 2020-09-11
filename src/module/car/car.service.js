@@ -26,14 +26,14 @@ module.exports = class CarService {
    * @param {string} imagePath
    */
   update (id, carDto, imagePath) {
-    const car = this.getById(id)
-
-    Object.keys(carDto).forEach(key => {
-      car[key] = carDto[key]
+    const carUpdate = fromRequestToEntity(carDto, imagePath, id)
+    const carInstance = this.getById(id)
+    
+    Object.keys(carUpdate).forEach(key => {
+      carUpdate[key] && (carInstance[key] = carUpdate[key])
     })
-    imagePath && (car.imageUrl = imagePath)
 
-    this.carRepository.update(car)
+    this.carRepository.update(carInstance)
   }
 
   /**

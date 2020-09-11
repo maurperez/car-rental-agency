@@ -6,9 +6,7 @@ const Sqlite3Database = require('better-sqlite3')
 const { CarController, CarService, CarRepository } = require('../module/car/module')
 
 function configureMainDatabaseAdapter () {
-  return new Sqlite3Database(process.env.DB_PATH, {
-    verbose: console.log
-  })
+  return new Sqlite3Database(process.env.DB_PATH)
 }
 
 

@@ -1,0 +1,67 @@
+<div class="modal" id="rent-car-modal">
+  <div class="modal-background"></div>
+  <div class="modal-card">
+
+    <header class="modal-card-head">
+      <p class="modal-card-title">Rent <strong>{{data.car.brand}} {{ data.car.model }}</strong></p>
+    </header>
+    
+    <section class="modal-card-body">
+      <form method="POST" action="/car/{{data.car.id}}/rent" id="rent-form">
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Days to rent</label>
+          </div>
+          <div class="field-body">
+            <div class="field is-narrow">
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select id="rent-days" name="rent-days">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Price: </label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control is-expanded has-icons-left">
+                <input class="input" type="text" disabled value="{{ data.car.pricePerDayInCents / 100 }}" id="price">
+                <span class="icon is-small is-left">
+                  <i class="fas fa-dollar-sign"></i>
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </section>
+
+    <footer class="modal-card-foot">
+      <button class="button is-primary" type="submit" form="rent-form">Rent</button>
+      <button class="button" id="cancel-rent-modal">Cancel</button>
+    </footer>
+
+  </div>
+</div>

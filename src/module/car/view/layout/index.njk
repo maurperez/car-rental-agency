@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Car Rental Agency</title>
+    <link rel="stylesheet" href="/public/css/bulma.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+    {% block styles %}
+    {% endblock %}
+  </head>
+
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+
+      <div class="container">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="/">
+            <span class="icon is-medium">
+              <i class="fas fa-car fa-2x"></i>
+            </span>
+          </a>
+  
+          <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </a>
+        </div>
+  
+        <div class="navbar-menu" id="navbarMenu">
+
+          <div class="navbar-start">
+            <a href="/car/available" class="navbar-item">Availables</a>
+            <a href="/car/rented" class="navbar-item">Rented</a>
+            <a href="/car/create" class="navbar-item">Add</a>
+          </div>
+
+        </div>
+      </div>
+
+    </nav>
+
+    <section class="section">
+      
+      {% block content %}
+      {% endblock %}
+    
+      
+    </section>
+    
+  </body>
+
+  <script src="/public/js/navbar.js" type="text/javascript"></script>
+  {% block scripts %}
+  {% endblock %}
+</html>

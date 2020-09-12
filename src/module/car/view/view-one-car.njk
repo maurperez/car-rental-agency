@@ -1,0 +1,127 @@
+{% extends "./layout/index.njk" %}
+
+{% block content %}
+  <div class="container">
+
+    <div class="card">
+
+      <div class="card-header">
+        <p class="card-header-title">{{ data.car.brand }} {{ data.car.model }}</p>
+        <a href="/car/{{data.car.id}}/update" class="card-header-icon" aria-label="edit">
+          <span class="icon">
+            <i class="fas fa-pen" aria-hidden="true"></i>
+          </span>
+        </a>
+        <a type="button" class="card-header-icon" aria-label="edit" id="delete-icon">
+          <span class="icon has-text-danger">
+            <i class="fas fa-trash-alt" aria-hidden="true"></i>
+          </span>
+        </a>
+      </div>
+
+      <div class="card-image">
+        <figure class="image">
+          <img src="/{{ data.car.imageUrl }}">
+        </figure>
+      </div>
+
+      <div class="card-content">
+        <div class="content">
+          <h4>Features:</h4>
+
+          <ul>
+            <li>Brand: {{ data.car.brand }} </li>
+            <li>Model: {{ data.car.model }} </li>
+            <li>Model year: {{ data.car.yearOfModel }} </li>
+            <li>Mileage: {{ data.car.mileage }} </li>
+            <li>Color: {{ data.car.color }} </li>
+            <li>Air conditioning: {{ data.car.airConditioning }} </li>
+            <li>Number of passengers: {{ data.car.numberOfPassengers }} </li>
+            <li>Automatic: {{ data.car.automatic }} </li>
+          </ul>
+
+          <h4>Prices:</h4>
+          <ul>
+            <li><p><strong>${{ data.car.pricePerDayInCents / 100 }}</strong> per day</p></li>
+            <li><p><strong>${{ data.car.pricePerWeekInCents / 100 }}</strong> per week</p></li>
+          </ul>
+        </div>
+      </div>
+
+      <footer class="card-footer">
+        {% if data.car.active === 1 and data.car.rented === 0 %}
+          <a href="#" class="card-footer-item button is-link" id="rent-button">Rent</a>
+        {% elif data.car.active === 0 %}
+          <p class="card-footer-item">
+            <span>This car is inactive for the moment</span>
+          </p>
+        {% elif data.car.rented === 1 %}
+          <p class="card-footer-item">
+            <span id="return-date"></span>
+          </p>
+        {% endif %}
+      </footer>
+    </div>
+
+
+    {% include "./partials/delete-modal.njk" %}
+
+    {% include "./partials/rent-modal.njk" %}
+
+  </div>
+{% endblock %}
+
+{% block scripts %}
+
+  {# return date handler #}
+  <script type="text/javascript">
+    const returnDate = '{{ data.car.returnDate }}'
+
+    if(returnDate){
+      document.querySelector('#return-date').textContent = `
+        The car is rented. will be available from ${Intl.DateTimeFormat('es-AR').format(new Date(returnDate))}
+      `
+    }
+  </script>
+
+  {# rent modal handler #}
+  <script type="text/javascript">
+    const isRented = {{ data.car.rented }}
+    const isActive = {{ data.car.active }}
+
+    if(isRented === 0 && isActive === 1){
+      const $rentModal = document.querySelector('#rent-car-modal')
+      const $selectDaysRent = document.querySelector('#rent-days')
+
+      document.querySelector('#rent-button').onclick = () => {
+        $rentModal.classList.add('is-active')
+      }
+      document.querySelector('#cancel-rent-modal').onclick = () => {
+        $rentModal.classList.remove('is-active')
+      }
+
+      $selectDaysRent.onchange = (event) => {
+        const pricePerDay = {{data.car.pricePerDayInCents / 100 }}
+        const pricePerWeek = {{data.car.pricePerWeekInCents / 100 }}
+        const days = event.target.value
+
+        document.querySelector('#price').value = days % 7 === 0 ? (days / 7) * pricePerWeek : days * pricePerDay
+      }
+    }
+  </script>
+
+  {# delete modal handler #}
+  <script type="text/javascript">
+    const $deleteModal = document.querySelector('#delete-car-modal')
+
+    document.querySelector('#delete-icon').onclick = event => {
+      $deleteModal.classList.add('is-active')
+    }
+    document.querySelector('#cancel-delete-modal').onclick = (event) => {
+      $deleteModal.classList.remove('is-active')
+    }
+  </script>
+
+  <script src="/public/js/modal-handler.js" type="text/javascript"></script>
+
+{% endblock %}

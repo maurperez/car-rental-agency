@@ -1,0 +1,179 @@
+{% extends "./layout/index.njk"%}
+
+{% block content %}
+  <div class="container">
+    <form id="add-car-form" method="POST" enctype="multipart/form-data">
+
+      <div class="field">
+        <label class="label">Brand:</label>
+        <div class="control">
+          <input type="text" class="input" name="brand" value="{{ data.car.brand }}" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Model:</label>
+        <div class="control">
+          <input type="text" class="input" name="model" value="{{ data.car.model }}" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Year Model:</label>
+        <div class="control">
+          <input type="number" class="input" name="model_year" value="{{ data.car.yearOfModel }}" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Color:</label>
+        <div class="control">
+          <input type="text" class="input" name="color" value="{{ data.car.color }}" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Mileage (km):</label>
+        <div class="control">
+          <input type="number" class="input" name="mileage" value="{{ data.car.mileage }}" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Air conditioning:</label>
+        <div class="control">
+          {% if data.car %}
+            {% if data.car.airConditioning === 1 %}
+              <label class="radio">
+                <input type="radio" name="air_conditioning" checked value="1" required>
+                Yes
+              </label>
+              <label class="radio">
+                <input type="radio" name="air_conditioning" value="0" required>
+                No
+              </label>
+            {% else %}
+              <label class="radio">
+                <input type="radio" name="air_conditioning" value="1" required>
+                Yes
+              </label>
+              <label class="radio">
+                <input type="radio" name="air_conditioning" value="0" checked required>
+                No
+              </label>
+            {% endif %}
+          {% else %}
+            <label class="radio">
+              <input type="radio" name="air_conditioning" value="1" required>
+              Yes
+            </label>
+            <label class="radio">
+              <input type="radio" name="air_conditioning" value="0" required>
+              No
+            </label>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Automatic:</label>
+        <div class="control">
+          {% if data.car%}
+            {% if data.car.automatic === 1 %}
+              <label class="radio">
+                <input type="radio" name="automatic" checked value="1" required>
+                Yes
+              </label>
+              <label class="radio">
+                <input type="radio" name="automatic" value="0" required>
+                No
+              </label>
+            {% else %}
+              <label class="radio">
+                <input type="radio" name="automatic" value="1" required>
+                Yes
+              </label>
+              <label class="radio">
+                <input type="radio" name="automatic" checked value="0" required>
+                No
+              </label>
+            {%endif%}
+          {% else %}
+            <label class="radio">
+              <input type="radio" name="automatic" value="1" required>
+              Yes
+            </label>
+            <label class="radio">
+              <input type="radio" name="automatic" value="0" required>
+              No
+            </label>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Number of passengers:</label>
+        <div class="control">
+          <input type="number" class="input" name="number_passengers" value="{{ data.car.numberOfPassengers }}" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Image:</label>
+        <div class="file is-fullwidth" id="car-image">
+          <label class="file-label">
+            {% if data.car %}
+              <input class="file-input" type="file" name="image-url">
+            {% else %}
+              <input class="file-input" type="file" name="image-url" required>
+            {% endif %}
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-upload"></i>
+              </span>
+              <span class="file-label">
+                Choose a file…
+              </span>
+            </span>
+            <span class="file-name">
+              {{ data.car.imageUrl }}
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Price per day:</label>
+        <div class="control has-icons-left">
+          <input class="input" type="number" name="price_per_day_in_dollars" value="{{ data.car.pricePerDayInCents / 100 }}" required>
+          <span class="icon is-left">
+            <i class="fas fa-dollar-sign"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Price per week:</label>
+        <div class="control has-icons-left">
+          <input class="input" type="number" name="price_per_week_in_dollars" value="{{ data.car.pricePerWeekInCents / 100 }}" required>
+          <span class="icon is-left">
+            <i class="fas fa-dollar-sign"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control">
+          <button class="button is-link is-fullwidth" type="submit" form="add-car-form">Submit</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <script></script>
+{% endblock %}
+
+{% block scripts %}
+  <script src="/public/js/file-input.js"></script>
+{% endblock %}

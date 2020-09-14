@@ -1,6 +1,7 @@
 const { default: DIContainer, object, get, factory } = require('rsdi')
 const multer = require('multer')
 const bodyParser = require('body-parser')
+const session = require('express-session')
 const Sqlite3Database = require('better-sqlite3')
 
 const { CarController, CarService, CarRepository } = require('../module/car/module')
@@ -8,7 +9,6 @@ const { CarController, CarService, CarRepository } = require('../module/car/modu
 function configureMainDatabaseAdapter () {
   return new Sqlite3Database(process.env.DB_PATH)
 }
-
 
 function configureMulter () {
   const storage = multer.diskStorage({
@@ -28,6 +28,18 @@ function configureUrlEncodedParser () {
   return urlencodedParser
 }
 
+function configureSession() {
+  const ONE_WEEK_IN_SECONDS = 604800000;
+
+  const sessionOptions = {
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { maxAge: ONE_WEEK_IN_SECONDS },
+  };
+  return session(sessionOptions)
+}
+
 /**
  * @param {DIContainer} container
  */
@@ -35,7 +47,8 @@ function addCommonDefinitions (container) {
   container.addDefinitions({
     MainDatabaseAdapter: factory(configureMainDatabaseAdapter),
     Multer: factory(configureMulter),
-    UrlencodedParser: factory(configureUrlEncodedParser)
+    UrlencodedParser: factory(configureUrlEncodedParser),
+    Session: factory(configureSession)
   })
 }
 

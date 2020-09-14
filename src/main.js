@@ -22,6 +22,7 @@ nunjucks.configure('src/module', {
 })
 
 const container = configureDependencyInjection()
+app.use(container.get('Session'))
 
 initCarModule(app, container)
 

@@ -1,11 +1,5 @@
 const nunjucks = require('nunjucks')
 
-function setCustomFilters (env) {
-  env.addFilter('isarray', obj => {
-    return Array.isArray(obj)
-  })
-}
-
 /**
  * @param {import('express').Application} expressApp 
  */
@@ -22,4 +16,10 @@ module.exports = function configureNunjucks(expressApp) {
   env.express(expressApp)
   expressApp.set('view engine', 'njk')
   setCustomFilters(env)
+}
+
+function setCustomFilters (env) {
+  env.addFilter('isarray', obj => {
+    return Array.isArray(obj)
+  })
 }

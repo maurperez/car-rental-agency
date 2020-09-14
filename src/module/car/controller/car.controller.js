@@ -62,7 +62,6 @@ module.exports = class CarController extends AbstractController {
           message: session.message
         }
       })
-      this.cleanSessionErrorsAndMessages(session)
       
     } else if (method === 'POST') {
       try {
@@ -77,6 +76,7 @@ module.exports = class CarController extends AbstractController {
         if(error instanceof Joi.ValidationError){ session.error = error.details.map(error => error.message)}
         else { session.error = 'Internal Server Error, please try later'}
         res.redirect(path)
+        this.cleanSessionErrorsAndMessages(session)
       }
     }
   }
@@ -99,8 +99,6 @@ module.exports = class CarController extends AbstractController {
         error: session.error
       })
 
-      this.cleanSessionErrorsAndMessages(session)
-
     } else if (method === 'POST') {
 
       try {
@@ -110,9 +108,10 @@ module.exports = class CarController extends AbstractController {
         res.redirect(`/car/${id}`)
 
       } catch (error) {
-        console.error(error)
-        req.session.error = error.message
+        if(error instanceof Joi.ValidationError){ session.error = error.details.map(error => error.message)}
+        else { session.error = 'Internal Server Error, please try later'}
         res.redirect(path)
+        this.cleanSessionErrorsAndMessages(session)
       }
     }
   }
@@ -123,10 +122,15 @@ module.exports = class CarController extends AbstractController {
    */
   delete(req, res) {
     const id = req.params.id
+    const session = req.session
+
     this.carService.delete(id)
 
     res.status(202)
-    res.redirect(`/${this.ROUT_BASE}/available`)
+    session.message = `car with id ${id} deleted sucessfully`
+    res.redirect(`${this.ROUT_BASE}/available`)
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   /**
@@ -134,17 +138,21 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   rent(req, res) {
+    const session = req.session
     const id = req.params.id
     const daysToRent = Number(req.body['rent-days'])
 
     try {
       this.carService.rent(id, daysToRent)
-      res.redirect('/car/rented')
+      session.message = 'car rented sucessfully'
+      res.redirect(`${this.ROUT_BASE}/${id}`)
+
+      this.cleanSessionErrorsAndMessages(session)
 
     } catch (error) {
-      console.error(error)
-      req.session.error = error.message
-      res.redirect(`/car/${id}`)
+      req.session.error = 'Internal server error, plese try later'
+      res.redirect(`${this.ROUT_BASE}/${id}`)
+      this.cleanSessionErrorsAndMessages(req.session)
     }
   }
 
@@ -163,8 +171,6 @@ module.exports = class CarController extends AbstractController {
         message: session.message
       }
     })
-
-    this.cleanSessionErrorsAndMessages(session)
   }
 
   /**
@@ -182,8 +188,6 @@ module.exports = class CarController extends AbstractController {
         message: session.message
       },
     })
-
-    this.cleanSessionErrorsAndMessages(session)
   }
 
   getRentedCars(req, res) {
@@ -197,8 +201,6 @@ module.exports = class CarController extends AbstractController {
         message: session.message
       },
     })
-
-    this.cleanSessionErrorsAndMessages(session)
   }
 
   /**
@@ -217,8 +219,6 @@ module.exports = class CarController extends AbstractController {
         message: session.message
       },
     })
-
-    this.cleanSessionErrorsAndMessages(session)
   }
 
   validateExistentClub(req, res, next) {

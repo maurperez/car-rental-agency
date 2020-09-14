@@ -51,16 +51,33 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   create(req, res) {
+    const path = req.path
     const method = req.method
+    const session = req.session
 
     if (method === 'GET') {
-      res.render('car/view/car-form')
+      res.render('car/view/car-form', {
+        data: {
+          error: session.error,
+          message: session.message
+        }
+      })
+      this.cleanSessionErrorsAndMessages(session)
+      
     } else if (method === 'POST') {
-      const carDto = this.validateCarRequest(req.body)
-      const imagePath = req.file.path
-      const carInstance = this.carService.create(carDto, imagePath)
+      try {
 
-      res.redirect(`/car/${carInstance.id}`)
+        const carDto = this.validateCarRequest(req.body)
+        const imagePath = req.file.path
+        const carInstance = this.carService.create(carDto, imagePath)
+        res.redirect(`/car/${carInstance.id}`)
+
+      } catch (error) {
+        
+        if(error instanceof Joi.ValidationError){ session.error = error.details.map(error => error.message)}
+        else { session.error = 'Internal Server Error, please try later'}
+        res.redirect(path)
+      }
     }
   }
 
@@ -70,18 +87,33 @@ module.exports = class CarController extends AbstractController {
    */
   update(req, res) {
     const id = req.params.id
+    const path = req.path
+    const method = req.method
+    const session = req.session
 
-    if (req.method === 'GET') {
+    if (method === 'GET') {
       const car = this.carService.getById(id)
 
       res.render('car/view/car-form', {
         data: {car},
+        error: session.error
       })
-    } else if (req.method === 'POST') {
-      const carDto = this.validateCarRequest(req.body)
-      const carImagePath = req.file?.path
-      this.carService.update(id, carDto, carImagePath)
-      res.redirect(`/car/${id}`)
+
+      this.cleanSessionErrorsAndMessages(session)
+
+    } else if (method === 'POST') {
+
+      try {
+        const carDto = this.validateCarRequest(req.body)
+        const carImagePath = req.file?.path
+        this.carService.update(id, carDto, carImagePath)
+        res.redirect(`/car/${id}`)
+
+      } catch (error) {
+        console.error(error)
+        req.session.error = error.message
+        res.redirect(path)
+      }
     }
   }
 
@@ -94,7 +126,7 @@ module.exports = class CarController extends AbstractController {
     this.carService.delete(id)
 
     res.status(202)
-    res.redirect('/car')
+    res.redirect(`/${this.ROUT_BASE}/available`)
   }
 
   /**
@@ -105,8 +137,15 @@ module.exports = class CarController extends AbstractController {
     const id = req.params.id
     const daysToRent = Number(req.body['rent-days'])
 
-    this.carService.rent(id, daysToRent)
-    res.redirect('/car/rented')
+    try {
+      this.carService.rent(id, daysToRent)
+      res.redirect('/car/rented')
+
+    } catch (error) {
+      console.error(error)
+      req.session.error = error.message
+      res.redirect(`/car/${id}`)
+    }
   }
 
   /**
@@ -114,11 +153,18 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   renderHome(req, res) {
+    const session = req.session
     const cars = this.carService.getAllAvailableCars()
 
     res.render('car/view/home', {
-      data: { cars }
+      data: {
+        cars,
+        error: session.error,
+        message: session.message
+      }
     })
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   /**
@@ -126,19 +172,33 @@ module.exports = class CarController extends AbstractController {
    * @param {import('express').Response} res
    */
   getAvailableCars(req, res) {
+    const session = req.session
     const cars = this.carService.getAllAvailableCars()
 
     res.render('car/view/car-list', {
-      data: {cars},
+      data: {
+        cars,
+        error: session.error,
+        message: session.message
+      },
     })
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   getRentedCars(req, res) {
+    const session = req.session
     const cars = this.carService.getRentedCars()
 
     res.render('car/view/car-list', {
-      data: {cars},
+      data: {
+        cars,
+        error: session.error,
+        message: session.message
+      },
     })
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   /**
@@ -147,11 +207,18 @@ module.exports = class CarController extends AbstractController {
    */
   getById(req, res) {
     const id = req.params.id
+    const session = req.session
     const car = this.carService.getById(id)
 
     res.render('car/view/view-one-car', {
-      data: {car},
+      data: {
+        car,
+        error: session.error,
+        message: session.message
+      },
     })
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   validateExistentClub(req, res, next) {
@@ -167,29 +234,47 @@ module.exports = class CarController extends AbstractController {
 
   /** @returns {CarFromHttpRequestDto} */
   validateCarRequest(bodyRequest) {
+    const actualYear = new Date().getFullYear()
+
+    const errorsDescriptions = {
+      brand: 'the brand cannot have more than 100 characters',
+      model: 'the model cannot have more than 100 characters',
+      model_year: `The model year cannot be less than 1886, nor greater than ${actualYear}`,
+      mileage: 'The milleage cant be less than zero',
+      color: 'the color cannot have more than 100 characters',
+      number_passengers: 'the number of passengers cannot be greater than 20',
+      price_per_week_in_dollars: 'the price per week must be greater than or equal to 1',
+      price_per_day_in_dollars: 'the price per day must be greater than or equal to 1'
+    }
+
     const carSchema = Joi.object({
-      brand: Joi.string().max(100),
-      model: Joi.string().max(100),
-      model_year: Joi.number().min(1886).max(new Date().getFullYear()),
-      mileage: Joi.number().min(0),
-      color: Joi.string().max(100),
+      brand: Joi.string().max(100).message(errorsDescriptions.brand),
+      model: Joi.string().max(100).message(errorsDescriptions.model),
+      model_year: Joi.number().min(1886).max(actualYear).message(errorsDescriptions.model_year),
+      mileage: Joi.number().min(0).message(errorsDescriptions.mileage),
+      color: Joi.string().max(100).message(errorsDescriptions.color),
       air_conditioning: Joi.number().max(1).min(0),
-      number_passengers: Joi.number().min(1).max(20),
+      number_passengers: Joi.number().min(1).max(20).message(errorsDescriptions.number_passengers),
       automatic: Joi.number().max(1).min(0),
-      price_per_week_in_dollars: Joi.number().min(1),
-      price_per_day_in_dollars: Joi.number().min(1),
+      price_per_week_in_dollars: Joi.number().min(1).message(errorsDescriptions.price_per_week_in_dollars),
+      price_per_day_in_dollars: Joi.number().min(1).message(errorsDescriptions.price_per_day_in_dollars),
     })
 
-    const {value, errors} = carSchema.validate(bodyRequest, {
+    const {value, error} = carSchema.validate(bodyRequest, {
       abortEarly: false,
       convert: true,
       presence: 'required',
     })
 
-    if (errors) {
-      throw errors
+    if (error) {
+      throw error
     } else {
       return value
     }
+  }
+
+  cleanSessionErrorsAndMessages (session) {
+    session.error = null
+    session.message = null
   }
 }

@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express')
-const nunjucks = require('nunjucks')
+const configureNunjucks = require('./config/nunjucks')
 
 const configureDependencyInjection = require('./config/di')
 const { init: initCarModule } = require('./module/car/module')
@@ -12,14 +12,8 @@ app.use('/public', express.static('public'))
 app.use('/public/css', express.static('node_modules/bulma-carousel/dist/css'))
 app.use('/public/css', express.static('node_modules/bulma/css'))
 app.use('/public/js', express.static('node_modules/bulma-carousel/dist/js'))
-app.set('view engine', 'njk')
 
-
-
-nunjucks.configure('src/module', {
-  autoescape: true,
-  express: app
-})
+configureNunjucks(app)
 
 const container = configureDependencyInjection()
 app.use(container.get('Session'))

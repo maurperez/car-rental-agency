@@ -62,6 +62,8 @@ module.exports = class CarController extends AbstractController {
           message: session.message
         }
       })
+
+      this.cleanSessionErrorsAndMessages(session)
       
     } else if (method === 'POST') {
       try {
@@ -69,6 +71,7 @@ module.exports = class CarController extends AbstractController {
         const carDto = this.validateCarRequest(req.body)
         const imagePath = req.file.path
         const carInstance = this.carService.create(carDto, imagePath)
+        session.message = 'Car created sucessfully'
         res.redirect(`/car/${carInstance.id}`)
 
       } catch (error) {
@@ -76,7 +79,6 @@ module.exports = class CarController extends AbstractController {
         if(error instanceof Joi.ValidationError){ session.error = error.details.map(error => error.message)}
         else { session.error = 'Internal Server Error, please try later'}
         res.redirect(path)
-        this.cleanSessionErrorsAndMessages(session)
       }
     }
   }
@@ -95,9 +97,14 @@ module.exports = class CarController extends AbstractController {
       const car = this.carService.getById(id)
 
       res.render('car/view/car-form', {
-        data: {car},
-        error: session.error
+        data: {
+          car,
+          error: session.error,
+          message: session.message
+        }
       })
+
+      this.cleanSessionErrorsAndMessages(session)
 
     } else if (method === 'POST') {
 
@@ -105,13 +112,15 @@ module.exports = class CarController extends AbstractController {
         const carDto = this.validateCarRequest(req.body)
         const carImagePath = req.file?.path
         this.carService.update(id, carDto, carImagePath)
+        session.message = 'Car updated sucessfully'
         res.redirect(`/car/${id}`)
 
       } catch (error) {
+        
         if(error instanceof Joi.ValidationError){ session.error = error.details.map(error => error.message)}
         else { session.error = 'Internal Server Error, please try later'}
         res.redirect(path)
-        this.cleanSessionErrorsAndMessages(session)
+        
       }
     }
   }
@@ -126,11 +135,11 @@ module.exports = class CarController extends AbstractController {
 
     this.carService.delete(id)
 
-    res.status(202)
     session.message = `car with id ${id} deleted sucessfully`
+    res.status(202)
     res.redirect(`${this.ROUT_BASE}/available`)
 
-    this.cleanSessionErrorsAndMessages(session)
+    
   }
 
   /**
@@ -147,12 +156,11 @@ module.exports = class CarController extends AbstractController {
       session.message = 'car rented sucessfully'
       res.redirect(`${this.ROUT_BASE}/${id}`)
 
-      this.cleanSessionErrorsAndMessages(session)
+      
 
     } catch (error) {
       req.session.error = 'Internal server error, plese try later'
       res.redirect(`${this.ROUT_BASE}/${id}`)
-      this.cleanSessionErrorsAndMessages(req.session)
     }
   }
 
@@ -162,7 +170,9 @@ module.exports = class CarController extends AbstractController {
    */
   renderHome(req, res) {
     const session = req.session
-    const cars = this.carService.getAllAvailableCars()
+    const cars = this.carService.getAll()
+
+    console.log(cars)
 
     res.render('car/view/home', {
       data: {
@@ -171,6 +181,8 @@ module.exports = class CarController extends AbstractController {
         message: session.message
       }
     })
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   /**
@@ -188,6 +200,8 @@ module.exports = class CarController extends AbstractController {
         message: session.message
       },
     })
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   getRentedCars(req, res) {
@@ -201,6 +215,8 @@ module.exports = class CarController extends AbstractController {
         message: session.message
       },
     })
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   /**
@@ -219,6 +235,8 @@ module.exports = class CarController extends AbstractController {
         message: session.message
       },
     })
+
+    this.cleanSessionErrorsAndMessages(session)
   }
 
   validateExistentClub(req, res, next) {
@@ -248,16 +266,40 @@ module.exports = class CarController extends AbstractController {
     }
 
     const carSchema = Joi.object({
-      brand: Joi.string().max(100).message(errorsDescriptions.brand),
-      model: Joi.string().max(100).message(errorsDescriptions.model),
-      model_year: Joi.number().min(1886).max(actualYear).message(errorsDescriptions.model_year),
-      mileage: Joi.number().min(0).message(errorsDescriptions.mileage),
-      color: Joi.string().max(100).message(errorsDescriptions.color),
-      air_conditioning: Joi.number().max(1).min(0),
-      number_passengers: Joi.number().min(1).max(20).message(errorsDescriptions.number_passengers),
-      automatic: Joi.number().max(1).min(0),
-      price_per_week_in_dollars: Joi.number().min(1).message(errorsDescriptions.price_per_week_in_dollars),
-      price_per_day_in_dollars: Joi.number().min(1).message(errorsDescriptions.price_per_day_in_dollars),
+      brand: Joi.string()
+        .max(100)
+        .message(errorsDescriptions.brand),
+      model: Joi.string()
+        .max(100)
+        .message(errorsDescriptions.model),
+      model_year: Joi.number()
+        .min(1886)
+        .message(errorsDescriptions.model_year)
+        .max(actualYear)
+        .message(errorsDescriptions.model_year),
+      mileage: Joi.number()
+        .min(0)
+        .message(errorsDescriptions.mileage),
+      color: Joi.string()
+        .max(100)
+        .message(errorsDescriptions.color),
+      air_conditioning: Joi.number()
+        .max(1)
+        .min(0),
+      number_passengers: Joi.number()
+        .min(1)
+        .message(errorsDescriptions.number_passengers)
+        .max(20)
+        .message(errorsDescriptions.number_passengers),
+      automatic: Joi.number()
+        .max(1)
+        .min(0),
+      price_per_week_in_dollars: Joi.number()
+        .min(1)
+        .message(errorsDescriptions.price_per_week_in_dollars),
+      price_per_day_in_dollars: Joi.number()
+        .min(1)
+        .message(errorsDescriptions.price_per_day_in_dollars),
     })
 
     const {value, error} = carSchema.validate(bodyRequest, {

@@ -3,5 +3,6 @@ bulmaCarousel.attach('#carousel-cars', {
   slidesToShow: 1,
   infinite: true,
   loop: true,
-  autoplay: true
+  autoplay: true,
+  pagination: false
 });

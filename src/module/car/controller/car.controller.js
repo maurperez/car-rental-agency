@@ -1,7 +1,7 @@
 require('../types/car.dto')
 const AbstractController = require('../../abstract-controller')
 const Joi = require('joi')
-const NotFoundCarError = require('../repository/error/not-found-car.error')
+const { NonExistentCar, CarAlredyRented, CarInactive } = require('../error/general-errors')
 
 module.exports = class CarController extends AbstractController {
   /**
@@ -157,9 +157,12 @@ module.exports = class CarController extends AbstractController {
       res.redirect(`${this.ROUT_BASE}/${id}`)
 
       
-
     } catch (error) {
-      req.session.error = 'Internal server error, plese try later'
+      
+      if(error instanceof CarAlredyRented){ session.error = error.message }
+      else if (error instanceof CarInactive){ session.error = error.message }
+      else { session.error = 'Internal Server Error, please try later' }
+
       res.redirect(`${this.ROUT_BASE}/${id}`)
     }
   }
@@ -244,7 +247,7 @@ module.exports = class CarController extends AbstractController {
       this.carService.getById(id)
       next()
     } catch (error) {
-      if (error instanceof NotFoundCarError) {
+      if (error instanceof NonExistentCar) {
         res.status(404).render('car/view/not-found-404')
       }
     }

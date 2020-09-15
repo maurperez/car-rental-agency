@@ -1,4 +1,5 @@
 const { fromHttpRequestToEntity } = require('./car.mapper')
+const { CarAlredyRented, CarInactive } = require('./error/general-errors')
 
 module.exports = class CarService {
   /**
@@ -47,9 +48,12 @@ module.exports = class CarService {
   rent(id, daysToRent){
     const carInstance = this.carRepository.getById(id)
 
+    if(carInstance.rented === 1) {throw new CarAlredyRented()}
+    else if(carInstance.active === 0) {throw new CarInactive()}
+
     carInstance.rented = 1
     carInstance.returnDate = this.addDaysToDate(Date.now(), daysToRent).toISOString()
-    
+  
     this.carRepository.update(carInstance)
   }
 

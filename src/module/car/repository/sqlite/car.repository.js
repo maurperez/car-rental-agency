@@ -1,5 +1,5 @@
 const AbstractCarRepository = require('../abstract-repository')
-const NotFoundCarError = require('../error/not-found-car.error')
+const { NonExistentCar } = require('../../error/general-errors')
 const { fromDbToEntity } = require('../../car.mapper')
 
 module.exports = class ClubRepository extends AbstractCarRepository {
@@ -137,7 +137,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
     if (car) {
       return fromDbToEntity(car)
     } else {
-      throw new NotFoundCarError(`not found car  with id: ${id}`)
+      throw new NonExistentCar(`not found car  with id: ${id}`)
     }
   }
 

@@ -17,7 +17,9 @@ configureNunjucks(app)
 
 const container = configureDependencyInjection()
 app.use(container.get('Session'))
-
 initCarModule(app, container)
+app.use((req, res) => {
+  res.status(404).render('car/view/not-found-404')
+})
 
 app.listen(port, () => console.log(`Server listening at http://localhost:${port}`))

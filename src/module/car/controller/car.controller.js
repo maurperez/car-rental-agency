@@ -1,7 +1,7 @@
 require('../types/car.dto')
 const AbstractController = require('../../abstract-controller')
 const Joi = require('joi')
-const InvalidId = require('./error/InvalidId')
+const NotFoundCarError = require('../repository/error/not-found-car.error')
 
 module.exports = class CarController extends AbstractController {
   /**
@@ -25,7 +25,7 @@ module.exports = class CarController extends AbstractController {
     )
     app.get(`${this.ROUT_BASE}/rented`, this.getRentedCars.bind(this))
     app.get(`${this.ROUT_BASE}/available`, this.getAvailableCars.bind(this))
-    app.get(`${this.ROUT_BASE}/:id`, this.getById.bind(this))
+    app.get(`${this.ROUT_BASE}/:id`,this.validateExistentClub.bind(this), this.getById.bind(this))
     app.get(`${this.ROUT_BASE}/:id/update`,
       this.validateExistentClub.bind(this),
       this.update.bind(this)
@@ -172,8 +172,6 @@ module.exports = class CarController extends AbstractController {
     const session = req.session
     const cars = this.carService.getAll()
 
-    console.log(cars)
-
     res.render('car/view/home', {
       data: {
         cars,
@@ -246,7 +244,9 @@ module.exports = class CarController extends AbstractController {
       this.carService.getById(id)
       next()
     } catch (error) {
-      if (error instanceof InvalidId) res.redirect('/car')
+      if (error instanceof NotFoundCarError) {
+        res.render('car/view/not-found-404')
+      }
     }
   }
 

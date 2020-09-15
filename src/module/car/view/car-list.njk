@@ -4,6 +4,14 @@
 
   <section class="section">
     <div class="container">
+
+      {% if data.error %}
+        {% include "./partials/notifications/error.njk" %}
+      {% endif %}
+      {% if data.message %}
+        {% include "./partials/notifications/message.njk" %}
+      {% endif %}
+
       <div class="columns is-multiline">
 
         {% for car in data.cars %}

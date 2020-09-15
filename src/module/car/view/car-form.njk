@@ -2,6 +2,14 @@
 
 {% block content %}
   <div class="container">
+
+    {% if data.error %}
+      {% include "./partials/notifications/error.njk" %}
+    {% endif %}
+    {% if data.message %}
+      {% include "./partials/notifications/message.njk" %}
+    {% endif %}
+
     <form id="add-car-form" method="POST" enctype="multipart/form-data">
 
       <div class="field">
@@ -140,6 +148,9 @@
             </span>
           </label>
         </div>
+        {% if data.car %}
+        <p class="help">If you dont upload new image, the old will be kept</p>
+        {% endif %}
       </div>
 
       <div class="field">

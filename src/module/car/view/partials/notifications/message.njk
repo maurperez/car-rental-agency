@@ -1,0 +1,9 @@
+<div class="notification is-primary">
+  <button class="delete" id="delete-message"></button>
+  {{ data.message }}
+</div>
+<script>
+  document.querySelector('#delete-message').onclick = (event) => {
+    event.target.parentNode.remove()
+  }
+</script>

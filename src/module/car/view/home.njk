@@ -8,22 +8,33 @@
 
   <div class="container">
 
+    {% if data.error %}
+      {% include "./partials/notifications/error.njk" %}
+    {% endif %}
+    {% if data.message %}
+      {% include "./partials/notifications/message.njk" %}
+    {% endif %}
+
     <h1 class="title is-1 has-text-centered">Car Rental Agency</h1>
 
-    <div id="carousel-cars" class="carousel">
-      
-      {% for car in data.cars %}
+    {% if data.cars|length > 1 %}
+      <div id="carousel-cars" class="carousel">
+        
+        {% for car in data.cars %}
 
-      <div class="item">
-        <a href="/car/{{ car.id }}">
-          <figure class="image is-16by9">
-            <img src="/{{ car.imageUrl }}">  
-          <figure>
-        </a>
+          <div class="item">
+            <a href="/car/{{ car.id }}">
+              <figure class="image is-16by9">
+                <img src="/{{ car.imageUrl }}">  
+              <figure>
+            </a>
+          </div>
+
+        {% endfor %}
+
       </div>
+    {% endif %}
 
-      {% endfor %}
-    </div>
   </div> 
 
 {% endblock %}

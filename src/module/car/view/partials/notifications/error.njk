@@ -1,0 +1,17 @@
+<div class="notification is-danger" id="error-notification">
+  <button class="delete" id="error-delete"></button>
+  {% if data.error|isarray %}
+    <ul>
+      {% for error in data.error %}
+        <li>{{error}}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    {{ data.error }}
+  {% endif %}
+</div>
+<script>
+  document.querySelector('#error-delete').onclick = (event) => {
+    event.target.parentNode.remove()
+  }
+</script>

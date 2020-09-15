@@ -3,6 +3,13 @@
 {% block content %}
   <div class="container">
 
+    {% if data.error %}
+      {% include "./partials/notifications/error.njk" %}
+    {% endif %}
+    {% if data.message %}
+      {% include "./partials/notifications/message.njk" %}
+    {% endif %}
+
     <div class="card">
 
       <div class="card-header">

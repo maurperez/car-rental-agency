@@ -6,11 +6,11 @@ const Sqlite3Database = require('better-sqlite3')
 
 const { CarController, CarService, CarRepository } = require('../module/car/module')
 
-function configureMainDatabaseAdapter () {
+function initializeDatabaseAdapter () {
   return new Sqlite3Database(process.env.DB_PATH)
 }
 
-function configureMulter () {
+function initializeMulter () {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, process.env.IMAGE_UPLOAD_DIR)
@@ -20,7 +20,7 @@ function configureMulter () {
   return multer({ storage })
 }
 
-function configureUrlEncodedParser () {
+function initializeUrlEncodedParser () {
   const urlencodedParser = bodyParser.urlencoded({
     extended: false
   })
@@ -28,7 +28,7 @@ function configureUrlEncodedParser () {
   return urlencodedParser
 }
 
-function configureSession() {
+function initializeSession() {
   const ONE_WEEK_IN_SECONDS = 604800000;
 
   const sessionOptions = {
@@ -45,10 +45,10 @@ function configureSession() {
  */
 function addCommonDefinitions (container) {
   container.addDefinitions({
-    MainDatabaseAdapter: factory(configureMainDatabaseAdapter),
-    Multer: factory(configureMulter),
-    UrlencodedParser: factory(configureUrlEncodedParser),
-    Session: factory(configureSession)
+    MainDatabaseAdapter: factory(initializeDatabaseAdapter),
+    Multer: factory(initializeMulter),
+    UrlencodedParser: factory(initializeUrlEncodedParser),
+    Session: factory(initializeSession)
   })
 }
 

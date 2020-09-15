@@ -245,7 +245,7 @@ module.exports = class CarController extends AbstractController {
       next()
     } catch (error) {
       if (error instanceof NotFoundCarError) {
-        res.render('car/view/not-found-404')
+        res.status(404).render('car/view/not-found-404')
       }
     }
   }

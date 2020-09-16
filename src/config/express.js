@@ -22,7 +22,7 @@ module.exports = {
    * @param {import('express').Application} app
    * @param {import('rsdi').IDIContainer} container
    */
-  configureSession: (app, container) => {
+  configureExpressSession: (app, container) => {
     app.use(container.get('Session'))
   },
   /**

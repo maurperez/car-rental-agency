@@ -10,7 +10,7 @@ const container = configureDependencyInjection()
 
 configureSession(app, container)
 configureStaticsFiles(app)
-configureNunjucks(app)
+configureNunjucks(app, container)
 initCarModule(app, container)
 configureHomePage(app, container)
 configureNotFoundPage(app)

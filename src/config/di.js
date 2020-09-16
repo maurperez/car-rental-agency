@@ -1,5 +1,6 @@
 const { default: DIContainer, object, get, factory } = require('rsdi')
 const multer = require('multer')
+const nunjucks = require('nunjucks')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const Sqlite3Database = require('better-sqlite3')
@@ -40,6 +41,22 @@ function initializeSession() {
   return session(sessionOptions)
 }
 
+function initializeNunjucksFileSystemLoader () {
+  return new nunjucks.FileSystemLoader('src/module', {
+    watch: true,
+    noCache: true
+  })
+}
+
+/**
+ * @returns {import('nunjucks').ConfigureOptions}
+ */
+function configurationNunjucksEnvironment () {
+  return {
+    autoescape: true
+  }
+}
+
 /**
  * @param {DIContainer} container
  */
@@ -49,6 +66,16 @@ function addCommonDefinitions (container) {
     Multer: factory(initializeMulter),
     UrlencodedParser: factory(initializeUrlEncodedParser),
     Session: factory(initializeSession)
+  })
+}
+
+/**
+ * @param {DIContainer} container
+ */
+function addNunjucksDefinitions (container) {
+  container.addDefinitions({
+    NunjucksFSL: factory(initializeNunjucksFileSystemLoader),
+    NunjucksEnv: object(nunjucks.Environment).construct(get('NunjucksFSL'), factory(configurationNunjucksEnvironment))
   })
 }
 
@@ -66,6 +93,7 @@ function addCarModuleDefinitions (container) {
 module.exports = function configureDi () {
   const container = new DIContainer()
   addCommonDefinitions(container)
+  addNunjucksDefinitions(container)
   addCarModuleDefinitions(container)
 
   return container

@@ -1,8 +1,8 @@
 const Joi = require('joi')
 
 /**
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
 function update(req, res) {
@@ -42,5 +42,5 @@ function update(req, res) {
 }
 
 module.exports = {
-  update
+  update,
 }

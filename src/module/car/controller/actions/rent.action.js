@@ -1,9 +1,8 @@
-const  { CarAlredyRented, CarInactive } = require('../../error/general-errors')
-
+const {CarAlredyRented, CarInactive} = require('../../error/general-errors')
 
 /**
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
 function rent(req, res) {
@@ -27,5 +26,5 @@ function rent(req, res) {
 }
 
 module.exports = {
-  rent
+  rent,
 }

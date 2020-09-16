@@ -38,4 +38,3 @@ module.exports = {
     app.get('/', carController.index)
   },
 }
-

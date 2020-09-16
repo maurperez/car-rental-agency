@@ -1,8 +1,8 @@
 const Joi = require('joi')
 
 /**
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
 function create(req, res) {
@@ -37,7 +37,6 @@ function create(req, res) {
   }
 }
 
-
 module.exports = {
-  create
+  create,
 }

@@ -1,11 +1,16 @@
-const AbstractController = require("../../abstract-controller")
-const  { NonExistentCar } = require('../error/general-errors')
+const AbstractController = require('../../abstract-controller')
+const {NonExistentCar} = require('../error/general-errors')
 const Joi = require('joi')
-const { create } = require('./actions/create.action')
-const { index, getById, getRented, getAvailable } = require('./actions/get.action')
-const { update } = require('./actions/update.action')
-const { deleteCar } = require('./actions/delete.action')
-const { rent } = require('./actions/rent.action')
+const {create} = require('./actions/create.action')
+const {
+  index,
+  getById,
+  getRented,
+  getAvailable,
+} = require('./actions/get.action')
+const {update} = require('./actions/update.action')
+const {deleteCar} = require('./actions/delete.action')
+const {rent} = require('./actions/rent.action')
 
 module.exports = class CarController extends AbstractController {
   constructor(uploadMultipartMiddleware, urlencodedParser, carService) {
@@ -26,9 +31,9 @@ module.exports = class CarController extends AbstractController {
   }
 
   /**
-   * @param {import('express').Application} app 
+   * @param {import('express').Application} app
    */
-  configureRoutes(app){
+  configureRoutes(app) {
     app.get(this.ROUT_BASE, this.index)
     app.get(`${this.ROUT_BASE}/rented`, this.getRented)
     app.get(`${this.ROUT_BASE}/available`, this.getAvailable)
@@ -65,7 +70,6 @@ module.exports = class CarController extends AbstractController {
       this.urlencodedParser,
       this.rent
     )
-
   }
 
   validateExistentClub(req, res, next) {
@@ -140,5 +144,4 @@ module.exports = class CarController extends AbstractController {
     session.error = null
     session.message = null
   }
-
 }

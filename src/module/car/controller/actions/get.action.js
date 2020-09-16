@@ -1,6 +1,6 @@
 /**
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
 function index(req, res) {
@@ -19,8 +19,8 @@ function index(req, res) {
 }
 
 /**
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
 function getAvailable(req, res) {
@@ -39,8 +39,8 @@ function getAvailable(req, res) {
 }
 
 /**
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
 function getRented(req, res) {
@@ -59,8 +59,8 @@ function getRented(req, res) {
 }
 
 /**
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
 function getById(req, res) {
@@ -83,5 +83,5 @@ module.exports = {
   index,
   getAvailable,
   getRented,
-  getById
+  getById,
 }

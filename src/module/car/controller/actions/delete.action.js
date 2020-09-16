@@ -1,6 +1,6 @@
 /**
- * @param {import('express').Request} req 
- * @param {import('express').Response} res 
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
 function deleteCar(req, res) {
@@ -15,5 +15,5 @@ function deleteCar(req, res) {
 }
 
 module.exports = {
-  deleteCar
+  deleteCar,
 }

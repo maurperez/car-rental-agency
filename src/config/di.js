@@ -1,71 +1,110 @@
-const { default: DIContainer, object, get, factory } = require('rsdi')
+const {default: DIContainer, object, get, factory} = require('rsdi')
 const multer = require('multer')
+const nunjucks = require('nunjucks')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const Sqlite3Database = require('better-sqlite3')
 
-const { CarController, CarService, CarRepository } = require('../module/car/module')
+const {
+  CarController,
+  CarService,
+  CarRepository,
+} = require('../module/car/module')
 
-function configureMainDatabaseAdapter () {
+function initializeDatabaseAdapter() {
   return new Sqlite3Database(process.env.DB_PATH)
 }
 
-function configureMulter () {
+function initializeMulter() {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, process.env.IMAGE_UPLOAD_DIR)
-    }
+    },
   })
 
-  return multer({ storage })
+  return multer({storage})
 }
 
-function configureUrlEncodedParser () {
+function initializeUrlEncodedParser() {
   const urlencodedParser = bodyParser.urlencoded({
-    extended: false
+    extended: false,
   })
 
   return urlencodedParser
 }
 
-function configureSession() {
-  const ONE_WEEK_IN_SECONDS = 604800000;
+function initializeSession() {
+  const ONE_WEEK_IN_SECONDS = 604800000
 
   const sessionOptions = {
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: ONE_WEEK_IN_SECONDS },
-  };
+    cookie: {maxAge: ONE_WEEK_IN_SECONDS},
+  }
   return session(sessionOptions)
 }
 
+function initializeNunjucksFileSystemLoader() {
+  return new nunjucks.FileSystemLoader('src/module', {
+    watch: true,
+    noCache: true,
+  })
+}
+
+/**
+ * @returns {import('nunjucks').ConfigureOptions}
+ */
+function configurationNunjucksEnvironment() {
+  return {
+    autoescape: true,
+  }
+}
+
 /**
  * @param {DIContainer} container
  */
-function addCommonDefinitions (container) {
+function addCommonDefinitions(container) {
   container.addDefinitions({
-    MainDatabaseAdapter: factory(configureMainDatabaseAdapter),
-    Multer: factory(configureMulter),
-    UrlencodedParser: factory(configureUrlEncodedParser),
-    Session: factory(configureSession)
+    MainDatabaseAdapter: factory(initializeDatabaseAdapter),
+    Multer: factory(initializeMulter),
+    UrlencodedParser: factory(initializeUrlEncodedParser),
+    Session: factory(initializeSession),
   })
 }
 
 /**
  * @param {DIContainer} container
  */
-function addCarModuleDefinitions (container) {
+function addNunjucksDefinitions(container) {
   container.addDefinitions({
-    CarController: object(CarController).construct(get('Multer'), get('UrlencodedParser'), get('CarService')),
+    NunjucksFSL: factory(initializeNunjucksFileSystemLoader),
+    NunjucksEnv: object(nunjucks.Environment).construct(
+      get('NunjucksFSL'),
+      factory(configurationNunjucksEnvironment)
+    ),
+  })
+}
+
+/**
+ * @param {DIContainer} container
+ */
+function addCarModuleDefinitions(container) {
+  container.addDefinitions({
+    CarController: object(CarController).construct(
+      get('Multer'),
+      get('UrlencodedParser'),
+      get('CarService')
+    ),
     CarService: object(CarService).construct(get('CarRepository')),
-    CarRepository: object(CarRepository).construct(get('MainDatabaseAdapter'))
+    CarRepository: object(CarRepository).construct(get('MainDatabaseAdapter')),
   })
 }
 
-module.exports = function configureDi () {
+module.exports = function configureDi() {
   const container = new DIContainer()
   addCommonDefinitions(container)
+  addNunjucksDefinitions(container)
   addCarModuleDefinitions(container)
 
   return container

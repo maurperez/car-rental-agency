@@ -33,4 +33,4 @@
  *  price_per_week_in_dollars: number,
  *  price_per_day_in_dollars: number
  * }} CarFromHttpRequestDto
-*/
+ */

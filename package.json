@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon src/main"
+    "start:dev": "nodemon src/main",
+    "start": "node src/main",
+    "format": "npx prettier --config ./.prettierrc --write \"src/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -21,7 +23,6 @@
     "body-parser": "^1.19.0",
     "bulma": "^0.9.0",
     "bulma-carousel": "^4.0.4",
-    "chokidar": "^3.4.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
@@ -31,11 +32,13 @@
     "rsdi": "^1.0.5"
   },
   "devDependencies": {
+    "chokidar": "^3.4.2",
     "eslint": "^7.8.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "jest": "^26.4.2",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "prettier": "^2.1.2"
   }
 }

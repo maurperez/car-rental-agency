@@ -18,7 +18,7 @@ module.exports = class Car {
    * @param {String} [createdAt]
    * @param {String} [updatedAt]
    */
-  constructor (
+  constructor(
     id,
     brand,
     model,

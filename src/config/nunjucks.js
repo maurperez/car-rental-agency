@@ -1,24 +1,18 @@
 const nunjucks = require('nunjucks')
 
 /**
- * @param {import('express').Application} expressApp 
+ * @param {import('express').Application} expressApp
+ * @param {import('rsdi').IDIContainer} container
  */
-module.exports = function configureNunjucks(expressApp) {
-  const env = new nunjucks.Environment(
-    new nunjucks.FileSystemLoader('src/module', {
-      watch: true,
-      noCache: true
-    }),
-    {
-      autautoescape: true
-    }
-  )
-  env.express(expressApp)
+module.exports = function configureNunjucks(expressApp, container) {
+  const nunjucksEnv = container.get('NunjucksEnv')
+
+  nunjucksEnv.express(expressApp)
   expressApp.set('view engine', 'njk')
-  setCustomFilters(env)
+  setCustomFilters(nunjucksEnv)
 }
 
-function setCustomFilters (env) {
+function setCustomFilters(env) {
   env.addFilter('isarray', obj => {
     return Array.isArray(obj)
   })

@@ -7,7 +7,7 @@ const CarRepository = require('./repository/sqlite/car.repository')
  * @param {import('express').Application} app
  * @param {import('rsdi').IDIContainer} container
  */
-function init (app, container) {
+function init(app, container) {
   /**
    * @type {CarController} controller;
    */
@@ -19,5 +19,5 @@ module.exports = {
   init,
   CarController,
   CarService,
-  CarRepository
+  CarRepository,
 }

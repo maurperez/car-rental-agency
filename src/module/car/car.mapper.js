@@ -4,8 +4,10 @@ const Car = require('./car.entity')
  * @returns {Car}
  * @param {CarFromDbDto} carDto
  */
-function fromDbToEntity (carDto) {
-  if (!carDto) { throw new Error('empty car data') }
+function fromDbToEntity(carDto) {
+  if (!carDto) {
+    throw new Error('empty car data')
+  }
 
   return new Car(
     carDto.id,
@@ -34,7 +36,7 @@ function fromDbToEntity (carDto) {
  * @param {number} [id]
  * @returns {Car}
  */
-function fromHttpRequestToEntity (carDto, imageUrl, id) {
+function fromHttpRequestToEntity(carDto, imageUrl, id) {
   return new Car(
     id,
     carDto.brand,
@@ -56,5 +58,5 @@ function fromHttpRequestToEntity (carDto, imageUrl, id) {
 
 module.exports = {
   fromHttpRequestToEntity,
-  fromDbToEntity
+  fromDbToEntity,
 }

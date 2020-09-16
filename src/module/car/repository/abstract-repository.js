@@ -2,9 +2,9 @@ const AbstractCarRepositoryError = require('./error/abstract-car-repository')
 const MethodNotImplementedError = require('./error/method-not-implemented')
 
 module.exports = class AbstractCarRepository {
-  constructor () {
+  constructor() {
     if (new.target === AbstractCarRepository) {
-      throw new AbstractCarRepositoryError
+      throw new AbstractCarRepositoryError()
     }
   }
 
@@ -12,7 +12,7 @@ module.exports = class AbstractCarRepository {
    * @param {import('../car.entity')} car
    * @returns {import('../car.entity')}
    */
-  create (car) {
+  create(car) {
     throw new MethodNotImplementedError()
   }
 
@@ -20,14 +20,14 @@ module.exports = class AbstractCarRepository {
    * @param {import('../car.entity')} car
    * @returns {import('../car.entity')}
    */
-  update (car) {
+  update(car) {
     throw new MethodNotImplementedError()
   }
 
   /**
    * @param {number} id
    */
-  delete (id) {
+  delete(id) {
     throw new MethodNotImplementedError()
   }
 
@@ -35,14 +35,14 @@ module.exports = class AbstractCarRepository {
    * @param {number} id
    * @returns {import('../car.entity')}
    */
-  getById (id) {
+  getById(id) {
     throw new Error('method not implented')
   }
 
   /**
    * @returns {Array<import('../car.entity')>}
    */
-  getAll () {
+  getAll() {
     throw new MethodNotImplementedError()
   }
 }

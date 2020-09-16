@@ -1,17 +1,17 @@
-class NonExistentCar extends Error{
-  constructor(){
+class NonExistentCar extends Error {
+  constructor() {
     super()
     this.message = 'This car does not exist'
   }
 }
 class CarAlredyRented extends Error {
-  constructor(){
+  constructor() {
     super()
     this.message = 'This car is already rented'
   }
 }
 class CarInactive extends Error {
-  constructor(){
+  constructor() {
     super()
     this.message = 'This car is inactive at the moment'
   }
@@ -20,5 +20,5 @@ class CarInactive extends Error {
 module.exports = {
   NonExistentCar,
   CarAlredyRented,
-  CarInactive
+  CarInactive,
 }

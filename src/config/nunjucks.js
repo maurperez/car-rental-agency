@@ -1,7 +1,7 @@
 const nunjucks = require('nunjucks')
 
 /**
- * @param {import('express').Application} expressApp 
+ * @param {import('express').Application} expressApp
  * @param {import('rsdi').IDIContainer} container
  */
 module.exports = function configureNunjucks(expressApp, container) {
@@ -12,7 +12,7 @@ module.exports = function configureNunjucks(expressApp, container) {
   setCustomFilters(nunjucksEnv)
 }
 
-function setCustomFilters (env) {
+function setCustomFilters(env) {
   env.addFilter('isarray', obj => {
     return Array.isArray(obj)
   })

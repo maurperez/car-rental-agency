@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon src/main"
+    "start:dev": "nodemon src/main",
+    "start": "node src/main",
+    "format": "npx prettier --config ./.prettierrc --write \"src/**/*.js\""
   },
   "repository": {
     "type": "git",

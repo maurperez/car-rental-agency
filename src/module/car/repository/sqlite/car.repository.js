@@ -1,12 +1,12 @@
 const AbstractCarRepository = require('../abstract-repository')
-const { NonExistentCar } = require('../../error/general-errors')
-const { fromDbToEntity } = require('../../car.mapper')
+const {NonExistentCar} = require('../../error/general-errors')
+const {fromDbToEntity} = require('../../car.mapper')
 
 module.exports = class ClubRepository extends AbstractCarRepository {
   /**
    * @param {import('better-sqlite3').Database} databaseAdapter
    */
-  constructor (databaseAdapter) {
+  constructor(databaseAdapter) {
     super()
     this.databaseAdapter = databaseAdapter
   }
@@ -14,7 +14,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
   /**
    * @param {import('../../car.entity')} car
    */
-  create (car) {
+  create(car) {
     const statement = this.databaseAdapter.prepare(`
       INSERT INTO cars (
         brand,
@@ -42,7 +42,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
       car.numberOfPassengers,
       car.automatic,
       car.pricePerWeekInCents,
-      car.pricePerDayInCents
+      car.pricePerDayInCents,
     ]
 
     const queryResult = statement.run(params)
@@ -53,7 +53,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
   /**
    * @param {import('../../car.entity')} car
    */
-  update (car) {
+  update(car) {
     const statement = this.databaseAdapter.prepare(`
       UPDATE cars SET
         brand = ?,
@@ -88,7 +88,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
       car.returnDate,
       car.pricePerWeekInCents,
       car.pricePerDayInCents,
-      car.id
+      car.id,
     ]
 
     statement.run(params)
@@ -97,7 +97,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
   /**
    * @param {Number} id
    */
-  delete (id) {
+  delete(id) {
     const statement = this.databaseAdapter.prepare(`
       DELETE FROM cars
       WHERE id = ?
@@ -109,7 +109,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
   /**
    * @param {Number} id
    */
-  getById (id) {
+  getById(id) {
     const statement = this.databaseAdapter.prepare(`
       SELECT 
         id, 
@@ -141,7 +141,7 @@ module.exports = class ClubRepository extends AbstractCarRepository {
     }
   }
 
-  getAll () {
+  getAll() {
     const statement = this.databaseAdapter.prepare(`
       SELECT
         id, 

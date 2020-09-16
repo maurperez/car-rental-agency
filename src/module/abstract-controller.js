@@ -1,5 +1,5 @@
 module.exports = class AbstractController {
-  constructor () {
+  constructor() {
     if (new.target === AbstractController) {
       throw new Error('this is not instantiable')
     }

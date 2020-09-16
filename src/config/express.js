@@ -4,9 +4,12 @@ module.exports = {
   /**
    * @param {import('express').Application} app
    */
-  configureStaticsFiles : app => {
+  configureStaticsFiles: app => {
     app.use('/public', express.static('public'))
-    app.use('/public/css', express.static('node_modules/bulma-carousel/dist/css'))
+    app.use(
+      '/public/css',
+      express.static('node_modules/bulma-carousel/dist/css')
+    )
     app.use('/public/css', express.static('node_modules/bulma/css'))
     app.use('/public/js', express.static('node_modules/bulma-carousel/dist/js'))
   },
@@ -33,5 +36,5 @@ module.exports = {
     const carController = container.get('CarController')
 
     app.get('/', carController.renderHome.bind(carController))
-  }
+  },
 }

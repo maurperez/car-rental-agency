@@ -1,5 +1,5 @@
 module.exports = class MethodNotImplemented extends Error {
-  constructor(){
+  constructor() {
     super()
     this.message = 'method not implemented'
   }

@@ -2,8 +2,13 @@ require('dotenv').config()
 const express = require('express')
 const configureNunjucks = require('./config/nunjucks')
 const configureDependencyInjection = require('./config/di')
-const { configureStaticsFiles, configureNotFoundPage, configureExpressSession, configureHomePage } = require('./config/express')
-const { init: initCarModule } = require('./module/car/module')
+const {
+  configureStaticsFiles,
+  configureNotFoundPage,
+  configureExpressSession,
+  configureHomePage,
+} = require('./config/express')
+const {init: initCarModule} = require('./module/car/module')
 
 const app = express()
 const container = configureDependencyInjection()

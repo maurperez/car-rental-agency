@@ -1,252 +1,71 @@
-require('../types/car.dto')
-const AbstractController = require('../../abstract-controller')
+const AbstractController = require("../../abstract-controller")
+const  { NonExistentCar } = require('../error/general-errors')
 const Joi = require('joi')
-const {
-  NonExistentCar,
-  CarAlredyRented,
-  CarInactive,
-} = require('../error/general-errors')
+const { create } = require('./actions/create.action')
+const { index, getById, getRented, getAvailable } = require('./actions/get.action')
+const { update } = require('./actions/update.action')
+const { deleteCar } = require('./actions/delete.action')
+const { rent } = require('./actions/rent.action')
 
 module.exports = class CarController extends AbstractController {
-  /**
-   * @param {import('../car.service')} carService
-   */
   constructor(uploadMultipartMiddleware, urlencodedParser, carService) {
     super()
     this.uploadMultipartMiddleware = uploadMultipartMiddleware
     this.urlencodedParser = urlencodedParser
     this.carService = carService
     this.ROUT_BASE = '/car'
+
+    this.index = index.bind(this)
+    this.create = create.bind(this)
+    this.getById = getById.bind(this)
+    this.getRented = getRented.bind(this)
+    this.getAvailable = getAvailable.bind(this)
+    this.update = update.bind(this)
+    this.delete = deleteCar.bind(this)
+    this.rent = rent.bind(this)
   }
 
-  /** @param {import('express').Application} app */
-  configureRoutes(app) {
-    app.get(`${this.ROUT_BASE}`, this.renderHome.bind(this))
-    app.get(`${this.ROUT_BASE}/create`, this.create.bind(this))
+  /**
+   * @param {import('express').Application} app 
+   */
+  configureRoutes(app){
+    app.get(this.ROUT_BASE, this.index)
+    app.get(`${this.ROUT_BASE}/rented`, this.getRented)
+    app.get(`${this.ROUT_BASE}/available`, this.getAvailable)
+    app.get(`${this.ROUT_BASE}/create`, this.create)
     app.post(
       `${this.ROUT_BASE}/create`,
       this.uploadMultipartMiddleware.single('image-url'),
-      this.create.bind(this)
+      this.create
     )
-    app.get(`${this.ROUT_BASE}/rented`, this.getRentedCars.bind(this))
-    app.get(`${this.ROUT_BASE}/available`, this.getAvailableCars.bind(this))
     app.get(
       `${this.ROUT_BASE}/:id`,
       this.validateExistentClub.bind(this),
-      this.getById.bind(this)
+      this.getById
     )
     app.get(
       `${this.ROUT_BASE}/:id/update`,
       this.validateExistentClub.bind(this),
-      this.update.bind(this)
+      this.update
     )
     app.post(
       `${this.ROUT_BASE}/:id/update`,
       this.validateExistentClub.bind(this),
       this.uploadMultipartMiddleware.single('image-url'),
-      this.update.bind(this)
+      this.update
     )
     app.post(
       `${this.ROUT_BASE}/:id/delete`,
       this.validateExistentClub.bind(this),
-      this.delete.bind(this)
+      this.delete
     )
     app.post(
       `${this.ROUT_BASE}/:id/rent`,
       this.validateExistentClub.bind(this),
       this.urlencodedParser,
-      this.rent.bind(this)
+      this.rent
     )
-  }
 
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  create(req, res) {
-    const path = req.path
-    const method = req.method
-    const session = req.session
-
-    if (method === 'GET') {
-      res.render('car/view/car-form', {
-        data: {
-          error: session.error,
-          message: session.message,
-        },
-      })
-
-      this.cleanSessionErrorsAndMessages(session)
-    } else if (method === 'POST') {
-      try {
-        const carDto = this.validateCarRequest(req.body)
-        const imagePath = req.file.path
-        const carInstance = this.carService.create(carDto, imagePath)
-        session.message = 'Car created sucessfully'
-        res.redirect(`${this.ROUT_BASE}/${carInstance.id}`)
-      } catch (error) {
-        if (error instanceof Joi.ValidationError) {
-          session.error = error.details.map(error => error.message)
-        } else {
-          session.error = 'Internal Server Error, please try later'
-        }
-        res.redirect(path)
-      }
-    }
-  }
-
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  update(req, res) {
-    const id = req.params.id
-    const path = req.path
-    const method = req.method
-    const session = req.session
-
-    if (method === 'GET') {
-      const car = this.carService.getById(id)
-
-      res.render('car/view/car-form', {
-        data: {
-          car,
-          error: session.error,
-          message: session.message,
-        },
-      })
-
-      this.cleanSessionErrorsAndMessages(session)
-    } else if (method === 'POST') {
-      try {
-        const carDto = this.validateCarRequest(req.body)
-        const carImagePath = req.file?.path
-        this.carService.update(id, carDto, carImagePath)
-        session.message = 'Car updated sucessfully'
-        res.redirect(`${this.ROUT_BASE}/${id}`)
-      } catch (error) {
-        if (error instanceof Joi.ValidationError) {
-          session.error = error.details.map(error => error.message)
-        } else {
-          session.error = 'Internal Server Error, please try later'
-        }
-        res.redirect(path)
-      }
-    }
-  }
-
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  delete(req, res) {
-    const id = req.params.id
-    const session = req.session
-
-    this.carService.delete(id)
-
-    session.message = `car with id ${id} deleted sucessfully`
-    res.status(202)
-    res.redirect(`${this.ROUT_BASE}/available`)
-  }
-
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  rent(req, res) {
-    const session = req.session
-    const id = req.params.id
-    const daysToRent = Number(req.body['rent-days'])
-
-    try {
-      this.carService.rent(id, daysToRent)
-      session.message = 'car rented sucessfully'
-      res.redirect(`${this.ROUT_BASE}/${id}`)
-    } catch (error) {
-      if (error instanceof CarAlredyRented) {
-        session.error = error.message
-      } else if (error instanceof CarInactive) {
-        session.error = error.message
-      } else {
-        session.error = 'Internal Server Error, please try later'
-      }
-
-      res.redirect(`${this.ROUT_BASE}/${id}`)
-    }
-  }
-
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  renderHome(req, res) {
-    const session = req.session
-    const cars = this.carService.getAll()
-
-    res.render('car/view/home', {
-      data: {
-        cars,
-        error: session.error,
-        message: session.message,
-      },
-    })
-
-    this.cleanSessionErrorsAndMessages(session)
-  }
-
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  getAvailableCars(req, res) {
-    const session = req.session
-    const cars = this.carService.getAllAvailableCars()
-
-    res.render('car/view/car-list', {
-      data: {
-        cars,
-        error: session.error,
-        message: session.message,
-      },
-    })
-
-    this.cleanSessionErrorsAndMessages(session)
-  }
-
-  getRentedCars(req, res) {
-    const session = req.session
-    const cars = this.carService.getRentedCars()
-
-    res.render('car/view/car-list', {
-      data: {
-        cars,
-        error: session.error,
-        message: session.message,
-      },
-    })
-
-    this.cleanSessionErrorsAndMessages(session)
-  }
-
-  /**
-   * @param {import('express').Request} req
-   * @param {import('express').Response} res
-   */
-  getById(req, res) {
-    const id = req.params.id
-    const session = req.session
-    const car = this.carService.getById(id)
-
-    res.render('car/view/view-one-car', {
-      data: {
-        car,
-        error: session.error,
-        message: session.message,
-      },
-    })
-
-    this.cleanSessionErrorsAndMessages(session)
   }
 
   validateExistentClub(req, res, next) {
@@ -321,4 +140,5 @@ module.exports = class CarController extends AbstractController {
     session.error = null
     session.message = null
   }
+
 }

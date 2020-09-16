@@ -35,6 +35,7 @@ module.exports = {
   configureHomePage: (app, container) => {
     const carController = container.get('CarController')
 
-    app.get('/', carController.renderHome.bind(carController))
+    app.get('/', carController.index)
   },
 }
+

@@ -17,15 +17,24 @@ module.exports = class CarController extends AbstractController {
 
   /** @param {import('express').Application} app */
   configureRoutes(app) {
-    app.get('/', this.renderHome.bind(this))
-    app.get(`${this.ROUT_BASE}/create`, this.create.bind(this))
+    app.get(`${this.ROUT_BASE}`, this.renderHome.bind(this))
+    app.get(`${this.ROUT_BASE}/create`,
+      this.create.bind(this)
+    )
     app.post(`${this.ROUT_BASE}/create`,
       this.uploadMultipartMiddleware.single('image-url'),
       this.create.bind(this)
     )
-    app.get(`${this.ROUT_BASE}/rented`, this.getRentedCars.bind(this))
-    app.get(`${this.ROUT_BASE}/available`, this.getAvailableCars.bind(this))
-    app.get(`${this.ROUT_BASE}/:id`,this.validateExistentClub.bind(this), this.getById.bind(this))
+    app.get(`${this.ROUT_BASE}/rented`,
+     this.getRentedCars.bind(this)
+    )
+    app.get(`${this.ROUT_BASE}/available`,
+     this.getAvailableCars.bind(this)
+    )
+    app.get(`${this.ROUT_BASE}/:id`,
+      this.validateExistentClub.bind(this),
+      this.getById.bind(this)
+    )
     app.get(`${this.ROUT_BASE}/:id/update`,
       this.validateExistentClub.bind(this),
       this.update.bind(this)
@@ -72,7 +81,7 @@ module.exports = class CarController extends AbstractController {
         const imagePath = req.file.path
         const carInstance = this.carService.create(carDto, imagePath)
         session.message = 'Car created sucessfully'
-        res.redirect(`/car/${carInstance.id}`)
+        res.redirect(`${this.ROUT_BASE}/${carInstance.id}`)
 
       } catch (error) {
         
@@ -113,7 +122,7 @@ module.exports = class CarController extends AbstractController {
         const carImagePath = req.file?.path
         this.carService.update(id, carDto, carImagePath)
         session.message = 'Car updated sucessfully'
-        res.redirect(`/car/${id}`)
+        res.redirect(`${this.ROUT_BASE}/${id}`)
 
       } catch (error) {
         

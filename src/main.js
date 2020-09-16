@@ -2,7 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const configureNunjucks = require('./config/nunjucks')
 const configureDependencyInjection = require('./config/di')
-const { configureStaticsFiles, configureNotFoundPage, configureSession } = require('./config/express')
+const { configureStaticsFiles, configureNotFoundPage, configureSession, configureHomePage } = require('./config/express')
 const { init: initCarModule } = require('./module/car/module')
 
 const app = express()
@@ -12,6 +12,7 @@ configureSession(app, container)
 configureStaticsFiles(app)
 configureNunjucks(app)
 initCarModule(app, container)
+configureHomePage(app, container)
 configureNotFoundPage(app)
 
 const port = process.env.PORT || 3000

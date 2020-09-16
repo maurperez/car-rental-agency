@@ -24,5 +24,14 @@ module.exports = {
    */
   configureSession: (app, container) => {
     app.use(container.get('Session'))
+  },
+  /**
+   * @param {import('express').Application} app
+   * @param {import('rsdi').IDIContainer} container
+   */
+  configureHomePage: (app, container) => {
+    const carController = container.get('CarController')
+
+    app.get('/', carController.renderHome.bind(carController))
   }
 }

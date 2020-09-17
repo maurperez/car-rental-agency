@@ -18,7 +18,7 @@ describe('create method', () => {
     jest.resetAllMocks()
   })
 
-  describe('GET: suceesfully request', () => {
+  describe('GET: get form', () => {
     const render = jest.fn()
     const req = {
       method: 'GET',
@@ -74,6 +74,10 @@ describe('create method', () => {
       expect(mockThisCarController.carService.create).toBeCalledWith(validationResult, req.file.path)
     })
 
+    it('set notification message', () => {
+      expect(typeof req.session.message).toBe('string')
+    })
+
     it('redirect to the car page', () => {
       expect(redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${idOfNewCar}`)
     })
@@ -91,10 +95,14 @@ describe('create method', () => {
       redirect: jest.fn(),
       status: jest.fn()
     }
+    const validationError = new Joi.ValidationError('', [
+      new Error('oneValidationError'),
+      new Error('anotherValidationError')
+    ])
 
     beforeEach(() => {
       mockThisCarController.validateCarRequest.mockImplementation(() => {
-        throw new Joi.ValidationError('', [])
+        throw validationError
       })
 
       return createMethod(req, res)
@@ -103,6 +111,12 @@ describe('create method', () => {
     it('set status code to 400 and redirect to the url path', () => {
       expect(res.status).toBeCalledWith(400)
       expect(res.redirect).toBeCalledWith(req.path)
+    })
+
+    it('set error notification', () => {
+      expect(Array.isArray(req.session.error)).toBe(true)
+      expect(req.session.error.includes('oneValidationError'))
+      expect(req.session.error.includes('anotherValidationError'))
     })
   })
 
@@ -130,6 +144,10 @@ describe('create method', () => {
     it('set status code to 500 and redirect to the url path', () => {
       expect(res.status).toBeCalledWith(500)
       expect(res.redirect).toBeCalledWith(req.path)
+    })
+
+    it('set the error notification', () => {
+      expect(typeof req.session.error).toBe('string')
     })
   })
 

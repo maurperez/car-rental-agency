@@ -128,7 +128,7 @@ describe('get methods', () => {
     const oneCarFakeResult = 'car'
     const req = {
       params: {
-        id: 1
+        id: carId
       },
       session: {
         error: 'test error',
@@ -146,7 +146,7 @@ describe('get methods', () => {
     })
 
     it('call getById car service method', () => {
-      expect(mockThisCarController.carService.getById).toBeCalledTimes(1)
+      expect(mockThisCarController.carService.getById).toBeCalledWith(carId)
     })
 
     it('render view-one-car with notifications', () => {

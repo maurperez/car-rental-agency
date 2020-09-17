@@ -3,7 +3,7 @@ const Joi = require('joi')
 /**
  * @param {import('express').Request} req
  * @param {import('express').Response} res
- * @this {import('./car.controller')}
+ * @this {import('../car.controller')}
  */
 function create(req, res) {
   const path = req.path
@@ -15,7 +15,7 @@ function create(req, res) {
       data: {
         error: session.error,
         message: session.message,
-      },
+      }
     })
 
     this.cleanSessionErrorsAndMessages(session)
@@ -28,8 +28,10 @@ function create(req, res) {
       res.redirect(`${this.ROUT_BASE}/${carInstance.id}`)
     } catch (error) {
       if (error instanceof Joi.ValidationError) {
+        res.status(400)
         session.error = error.details.map(error => error.message)
       } else {
+        res.status(500)
         session.error = 'Internal Server Error, please try later'
       }
       res.redirect(path)

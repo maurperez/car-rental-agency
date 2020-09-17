@@ -16,8 +16,10 @@ function rent(req, res) {
     res.redirect(`${this.ROUT_BASE}/${id}`)
   } catch (error) {
     if (error instanceof CarAlredyRented || error instanceof CarInactive) {
+      res.status(405)
       session.error = error.message
     } else {
+      res.status(500)
       session.error = 'Internal Server Error, please try later'
     }
 

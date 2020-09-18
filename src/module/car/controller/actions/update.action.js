@@ -29,7 +29,7 @@ function update(req, res) {
       const carImagePath = req.file?.path
       this.carService.update(id, carDto, carImagePath)
       session.message = 'Car updated sucessfully'
-      res.redirect(`${this.ROUT_BASE}/${id}`)
+      res.redirect(path)
     } catch (error) {
       if (error instanceof Joi.ValidationError) {
         session.error = error.details.map(error => error.message)

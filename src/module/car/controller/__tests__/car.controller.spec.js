@@ -22,9 +22,6 @@ const mockExpressApp = {
 }
 
 describe('car controller', () => {
-  /* beforeEach(() => {
-    jest.resetAllMocks()
-  }) */
 
   describe('constructor', () => {
 

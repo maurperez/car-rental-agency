@@ -21,7 +21,7 @@ function create(req, res) {
     this.cleanSessionErrorsAndMessages(session)
   } else if (method === 'POST') {
     try {
-      const carDto = this.validateCarRequest(req.body)
+      const carDto = this.validateAndParseCarRequest(req.body)
       const imagePath = req.file.path
       const carInstance = this.carService.create(carDto, imagePath)
       session.message = 'Car created sucessfully'

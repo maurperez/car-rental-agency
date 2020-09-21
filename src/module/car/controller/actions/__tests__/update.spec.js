@@ -4,7 +4,7 @@ const Joi = require('joi')
 const mockThisCarController = {
   ROUT_BASE: '/car',
   cleanSessionErrorsAndMessages : jest.fn(),
-  validateCarRequest: jest.fn(),
+  validateAndParseCarRequest: jest.fn(),
   carService: {
     getById: jest.fn(),
     update: jest.fn()
@@ -78,13 +78,13 @@ describe('update method', () => {
     const res = { redirect: jest.fn() }
 
     beforeEach(() => {
-      mockThisCarController.validateCarRequest.mockImplementation(req => req)
+      mockThisCarController.validateAndParseCarRequest.mockImplementation(req => req)
 
       return updateMethod(req, res)
     })
 
     it('validate the request', () => {
-      expect(mockThisCarController.validateCarRequest).toBeCalledWith(req.body)
+      expect(mockThisCarController.validateAndParseCarRequest).toBeCalledWith(req.body)
     })
 
     it('call the update method of car service with the correct parameters', () => {
@@ -122,7 +122,7 @@ describe('update method', () => {
     ])
 
     beforeEach(() => {
-      mockThisCarController.validateCarRequest.mockImplementation(() => {
+      mockThisCarController.validateAndParseCarRequest.mockImplementation(() => {
         throw validationError
       })
 
@@ -158,7 +158,7 @@ describe('update method', () => {
     const res = { redirect: jest.fn() }
 
     beforeEach(() => {
-      mockThisCarController.validateCarRequest.mockImplementation(() => {
+      mockThisCarController.validateAndParseCarRequest.mockImplementation(() => {
         throw new Error('unkown error')
       })
 

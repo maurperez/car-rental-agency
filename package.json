@@ -6,7 +6,8 @@
   "scripts": {
     "start:dev": "nodemon src/main",
     "start": "node src/main",
-    "format": "npx prettier --config ./.prettierrc --write \"src/**/*.js\""
+    "format": "npx prettier --config ./.prettierrc --write \"src/**/*.js\"",
+    "test:cov": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -42,5 +43,10 @@
     "jest-cli": "^26.4.2",
     "nodemon": "^2.0.4",
     "prettier": "^2.1.2"
+  },
+  "jest": {
+    "moduleFileExtensions": ["js"],
+    "testRegex": ".spec.js$",
+    "testEnvironment": "node"
   }
 }

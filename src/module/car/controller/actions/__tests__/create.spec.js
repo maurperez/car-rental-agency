@@ -4,7 +4,7 @@ const  {create} = require('../create.action')
 const mockThisCarController = {
   ROUT_BASE: '/car',
   cleanSessionErrorsAndMessages : jest.fn(),
-  validateCarRequest: jest.fn(),
+  validateAndParseCarRequest: jest.fn(),
   carService: {
     create: jest.fn()
   }
@@ -60,14 +60,14 @@ describe('create method', () => {
     }
 
     beforeEach(() => {
-      mockThisCarController.validateCarRequest.mockReturnValue(validationResult)
+      mockThisCarController.validateAndParseCarRequest.mockReturnValue(validationResult)
       mockThisCarController.carService.create.mockReturnValue({id: idOfNewCar})
 
       return createMethod(req, {redirect})
     })
 
     it('validates the request', () => {
-      expect(mockThisCarController.validateCarRequest).toBeCalledWith(req.body)
+      expect(mockThisCarController.validateAndParseCarRequest).toBeCalledWith(req.body)
     })
 
     it('call car service to create', () => {
@@ -101,7 +101,7 @@ describe('create method', () => {
     ])
 
     beforeEach(() => {
-      mockThisCarController.validateCarRequest.mockImplementation(() => {
+      mockThisCarController.validateAndParseCarRequest.mockImplementation(() => {
         throw validationError
       })
 

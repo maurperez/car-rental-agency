@@ -45,7 +45,7 @@ module.exports = class CarController extends AbstractController {
     )
     app.get(
       `${this.ROUT_BASE}/:id`,
-      this.validateExistentClub.bind(this),
+     this.validateExistentClub.bind(this),
       this.getById
     )
     app.get(
@@ -80,13 +80,14 @@ module.exports = class CarController extends AbstractController {
       next()
     } catch (error) {
       if (error instanceof NonExistentCar) {
-        res.status(404).render('car/view/not-found-404')
+        res.status(404)
+        res.render('car/view/not-found-404')
       }
     }
   }
 
   /** @returns {CarFromHttpRequestDto} */
-  validateCarRequest(bodyRequest) {
+  validateAndParseCarRequest(bodyRequest) {
     const actualYear = new Date().getFullYear()
 
     const errorsDescriptions = {

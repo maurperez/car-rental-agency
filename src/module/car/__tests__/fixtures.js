@@ -93,10 +93,31 @@ const carDto = {
   price_per_day_in_dollars: 100
 }
 
+const carFromDbDto = {
+  id: 1,
+  brand: 'Honda',
+  model: 'Civic',
+  model_year: 2019,
+  image_url: 'fake/image/url',
+  mileage: 500,
+  color: 'Black',
+  air_conditioning: 1,
+  number_passengers: 4,
+  automatic: 0,
+  active: 1,
+  rented: 0,
+  return_date: null,
+  price_per_week_in_cents: 50000,
+  price_per_day_in_cents: 10000,
+  created_at: '2020-09-08 16:56:34',
+  updated_at: '2020-09-08 16:56:34'
+}
+
 module.exports = {
   carExistentInstance,
   carDto,
   nonRentedCar,
   rentedCar,
-  inactiveCar
+  inactiveCar,
+  carFromDbDto
 }

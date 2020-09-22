@@ -36,7 +36,7 @@ module.exports = class AbstractCarRepository {
    * @returns {import('../car.entity')}
    */
   getById(id) {
-    throw new Error('method not implented')
+    throw new MethodNotImplementedError()
   }
 
   /**

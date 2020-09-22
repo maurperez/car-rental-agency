@@ -113,11 +113,31 @@ const carFromDbDto = {
   updated_at: '2020-09-08 16:56:34'
 }
 
+const carCreation = new Car(
+  null,
+  'Peugeot',
+  '208',
+  2018,
+  'image/path',
+  630,
+  'White',
+  1,
+  4,
+  0,
+  1,
+  0,
+  null,
+  40000,
+  7500
+)
+
+
 module.exports = {
   carExistentInstance,
   carDto,
   nonRentedCar,
   rentedCar,
   inactiveCar,
-  carFromDbDto
+  carFromDbDto,
+  carCreation
 }

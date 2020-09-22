@@ -7,6 +7,7 @@
     "start:dev": "nodemon src/main",
     "start": "node src/main",
     "format": "npx prettier --config ./.prettierrc --write \"src/**/*.js\"",
+    "test": "jest",
     "test:cov": "jest --coverage"
   },
   "repository": {

@@ -1,4 +1,3 @@
-const Joi = require('joi')
 const { getAvailable, getById, getRented, index } = require('../get.action')
 
 const mockThisCarController = {
@@ -13,9 +12,6 @@ const mockThisCarController = {
 }
 
 describe('get methods', () => {
-  afterEach(() => {
-    jest.resetAllMocks()
-  })
 
   describe('GET: get index car page', () => {
     const allCarsFakeResult = 'cars'
@@ -27,17 +23,16 @@ describe('get methods', () => {
     }
     const res = { render: jest.fn() }
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.carService.getAll.mockReturnValue(allCarsFakeResult)
-
-      return index.bind(mockThisCarController)(req, res)
+      index.apply(mockThisCarController, [req, res])
     })
 
-    it('call getAll car service method', () => {
+    it('calls getAll method of car service', () => {
       expect(mockThisCarController.carService.getAll).toBeCalledTimes(1)
     })
 
-    it('render the home page with notifications', () => {
+    it('renders the home page with notifications', () => {
       expect(res.render).toBeCalledWith('car/view/home', {
         data: {
           cars: allCarsFakeResult,
@@ -47,9 +42,11 @@ describe('get methods', () => {
       })
     })
 
-    it('clean the session', () => {
+    it('cleans the session', () => {
       expect(mockThisCarController.cleanSessionErrorsAndMessages).toBeCalledWith(req.session)
     })
+
+    afterAll(jest.resetAllMocks)
   })
 
   describe('GET: get all availables cars', () => {
@@ -62,17 +59,16 @@ describe('get methods', () => {
     }
     const res = { render: jest.fn() }
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.carService.getAllAvailableCars.mockReturnValue(allAvailablesCarsFakeResult)
-
-      return getAvailable.bind(mockThisCarController)(req, res)
+      getAvailable.apply(mockThisCarController, [req, res])
     })
 
-    it('call getAllAvailableCars car service method', () => {
+    it('calls getAllAvailableCars method of car service', () => {
       expect(mockThisCarController.carService.getAllAvailableCars).toBeCalledTimes(1)
     })
 
-    it('render car-list with notifications', () => {
+    it('renders car-list with notifications', () => {
       expect(res.render).toBeCalledWith('car/view/car-list', {
         data: {
           cars: allAvailablesCarsFakeResult,
@@ -82,9 +78,11 @@ describe('get methods', () => {
       })
     })
 
-    it('clean the session', () => {
+    it('cleans the session', () => {
       expect(mockThisCarController.cleanSessionErrorsAndMessages).toBeCalledWith(req.session)
     })
+
+    afterAll(jest.clearAllMocks)
   })
 
   describe('GET: get all rented cars', () => {
@@ -97,17 +95,16 @@ describe('get methods', () => {
     }
     const res = { render: jest.fn() }
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.carService.getRentedCars.mockReturnValue(allRentedCarsFakeResult)
-
-      return getRented.bind(mockThisCarController)(req, res)
+      getRented.apply(mockThisCarController, [req, res])
     })
 
-    it('call getRentedCars car service method', () => {
+    it('calls getRentedCars method of car service', () => {
       expect(mockThisCarController.carService.getRentedCars).toBeCalledTimes(1)
     })
 
-    it('render car-list with notifications', () => {
+    it('renders car-list with notifications', () => {
       expect(res.render).toBeCalledWith('car/view/car-list', {
         data: {
           cars: allRentedCarsFakeResult,
@@ -117,9 +114,11 @@ describe('get methods', () => {
       })
     })
 
-    it('clean the session', () => {
+    it('cleans the session', () => {
       expect(mockThisCarController.cleanSessionErrorsAndMessages).toBeCalledWith(req.session)
     })
+
+    afterAll(jest.clearAllMocks)
 
   })
 
@@ -139,17 +138,16 @@ describe('get methods', () => {
       render: jest.fn()
     }
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.carService.getById.mockReturnValue(oneCarFakeResult)
-
-      return getById.bind(mockThisCarController)(req, res)
+      getById.apply(mockThisCarController, [req, res])
     })
 
-    it('call getById car service method', () => {
+    it('calls getById method of car service', () => {
       expect(mockThisCarController.carService.getById).toBeCalledWith(carId)
     })
 
-    it('render view-one-car with notifications', () => {
+    it('renders view-one-car with notifications', () => {
       expect(res.render).toBeCalledWith('car/view/view-one-car', {
         data: {
           car: oneCarFakeResult,
@@ -159,8 +157,10 @@ describe('get methods', () => {
       })
     })
 
-    it('clean the session', () => {
+    it('cleans the session', () => {
       expect(mockThisCarController.cleanSessionErrorsAndMessages).toBeCalledWith(req.session)
     })
+
+    afterAll(jest.resetAllMocks)
   })
 })

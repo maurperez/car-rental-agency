@@ -6,7 +6,7 @@ describe('Car mappers', () => {
     const { carFromDbDto } = require('./fixtures')
     const carInstance = fromDbToEntity(carFromDbDto)
 
-    it('return an instance of Car', () => {
+    it('returns an instance of Car', () => {
       expect(carInstance).toBeInstanceOf(Car)
     })
 
@@ -22,7 +22,7 @@ describe('Car mappers', () => {
 
     const carInstance = fromHttpRequestToEntity(carDto, imagePath, carId)
 
-    it('return an instance of Car', () => {
+    it('returns an instance of Car', () => {
       expect(carInstance).toBeInstanceOf(Car)
     })
 

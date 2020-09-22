@@ -10,10 +10,6 @@ const mockThisCarController = {
 }
 
 describe('rent method', () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
-
   describe('POST: rent car sucessfully', () => {
     const carID = 1
     const req = {
@@ -29,24 +25,26 @@ describe('rent method', () => {
       redirect: jest.fn()
     }
 
-    beforeEach(() => {
-      return rent.bind(mockThisCarController)(req, res)
+    beforeAll(() => {
+      rent.apply(mockThisCarController, [req, res])
     })
 
-    it('call rent method of car service with the id and days to rent',() => {
+    it('calls rent method of car service with the id and days to rent',() => {
       expect(mockThisCarController.carService.rent).toBeCalledWith(carID, Number(req.body["rent-days"]))
     })
 
-    it('set the message notification', () => {
+    it('sets the message notification', () => {
       expect(typeof req.session.message).toBe('string')
     })
 
-    it('redirect to the car page', () => {
+    it('redirects to the car page', () => {
       expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
     })
+
+    afterAll(jest.resetAllMocks)
   })
 
-  describe('POST: faill when try to rent a car alredy rented', () => {
+  describe('POST: throw an error when try to rent a car alredy rented', () => {
     const carID = 5
     const req = {
       params: {
@@ -63,28 +61,29 @@ describe('rent method', () => {
     }
     const carAlredyRentedError = new CarAlredyRented()
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.carService.rent.mockImplementation(() => {
         throw carAlredyRentedError
       })
-
-      return rent.bind(mockThisCarController)(req, res)
+      rent.apply(mockThisCarController, [req, res])
     })
 
-    it('set error notification', () => {
+    it('sets error notification', () => {
       expect(req.session.error).toBe(carAlredyRentedError.message)
     })
 
-    it('set status code correctly', () => {
+    it('sets status code correctly', () => {
       expect(res.status).toBeCalledWith(405)
     })
 
-    it('redirect to the car page', () => {
+    it('redirects to the car page', () => {
       expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
     })
+
+    afterAll(jest.clearAllMocks)
   })
 
-  describe('POST: faill when try to rent a inactive car', () => {
+  describe('POST: throw an error when try to rent a inactive car', () => {
     const carID = 5
     const req = {
       params: {
@@ -101,25 +100,26 @@ describe('rent method', () => {
     }
     const carInactiveError = new CarInactive()
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.carService.rent.mockImplementation(() => {
         throw carInactiveError
       })
-
-      return rent.bind(mockThisCarController)(req, res)
+      rent.apply(mockThisCarController, [req, res])
     })
 
-    it('set error notification', () => {
+    it('sets error notification', () => {
       expect(req.session.error).toBe(carInactiveError.message)
     })
 
-    it('set status code correctly', () => {
+    it('sets status code correctly', () => {
       expect(res.status).toBeCalledWith(405)
     })
 
-    it('redirect to the car page', () => {
+    it('redirects to the car page', () => {
       expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
     })
+
+    afterAll(jest.resetAllMocks)
   })
 
   describe('POST: internal server error', () => {
@@ -138,26 +138,27 @@ describe('rent method', () => {
       status: jest.fn()
     }
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.carService.rent.mockImplementation(() => {
         throw new Error('unkown error')
       })
 
-      return rent.bind(mockThisCarController)(req, res)
+      rent.apply(mockThisCarController, [req, res])
     })
 
-    it('set error notification', () => {
+    it('sets error notification', () => {
       expect(typeof req.session.error).toBe('string')
     })
 
-    it('set status code correctly', () => {
+    it('sets status code correctly', () => {
       expect(res.status).toBeCalledWith(500)
     })
 
-    it('redirect to the car page', () => {
+    it('redirects to the car page', () => {
       expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
     })
 
+    afterAll(jest.resetAllMocks)
 
   })
 })

@@ -9,9 +9,6 @@ const mockThisCarController = {
 }
 
 describe('delete method', () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
 
   describe('POST: delete car', () => {
     const carID = 1
@@ -26,24 +23,24 @@ describe('delete method', () => {
       redirect: jest.fn()
     }
 
-    beforeEach(() => {
-      return deleteCar.bind(mockThisCarController)(req, res)
+    beforeAll(() => {
+      deleteCar.apply(mockThisCarController, [req, res])
     })
 
-    it('call delete car service method with the id', () => {
+    it('calls delete method of car service with the id', () => {
       expect(mockThisCarController.carService.delete).toBeCalledWith(carID)
     })
 
-    it('set the correct status code', () => {
+    it('sets the correct status code', () => {
       expect(res.status).toBeCalledWith(204)
     })
 
-    it('sets message notifaction', () => {
+    it('sets the message notifaction', () => {
       expect(req.session.message).toBeDefined()
       expect(typeof req.session.message).toBe('string')
     })
 
-    it('redirect to the availables cars', () => {
+    it('redirects to the availables cars page', () => {
       expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/available`)
     })
   })

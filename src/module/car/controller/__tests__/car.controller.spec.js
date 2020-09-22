@@ -1,8 +1,6 @@
-
 const CarController = require('../car.controller')
 const { NonExistentCar } = require('../../error/general-errors')
 const Joi = require('joi')
-
 
 const mockUploadMultipartMiddleware = {single: jest.fn()}
 const mockUrlEncodedParser = jest.fn()
@@ -48,11 +46,11 @@ describe('car controller', () => {
       return carController.configureRoutes(mockExpressApp)
     })
 
-    it('set the index route', () => {
+    it('sets the index route', () => {
       expect(mockExpressApp.get).nthCalledWith(1, carController.ROUT_BASE, carController.index)
     })
 
-    it('set the rented cars route', () => {
+    it('sets the rented cars route', () => {
       expect(mockExpressApp.get).nthCalledWith(
         2,
         `${carController.ROUT_BASE}/rented`,
@@ -60,7 +58,7 @@ describe('car controller', () => {
       )
     })
 
-    it('set the available cars route', () => {
+    it('sets the available cars route', () => {
       expect(mockExpressApp.get).nthCalledWith(
         3,
         `${carController.ROUT_BASE}/available`,
@@ -68,7 +66,7 @@ describe('car controller', () => {
       )
     })
 
-    it('set the create car route', () => {
+    it('sets the create car route', () => {
       expect(mockExpressApp.get).nthCalledWith(
         4,
         `${carController.ROUT_BASE}/create`,
@@ -83,7 +81,7 @@ describe('car controller', () => {
       )
     })
 
-    it('set the unique car page', () => {
+    it('sets the unique car page', () => {
       expect(mockExpressApp.get).nthCalledWith(
         5,
         `${carController.ROUT_BASE}/:id`,
@@ -94,7 +92,7 @@ describe('car controller', () => {
       expect(mockExpressApp.get.mock.calls[4][1].name).toBe('bound validateExistentClub')
     })
 
-    it('set the update car route', () => {
+    it('sets the update car route', () => {
       expect(mockExpressApp.get).nthCalledWith(
         6,
         `${carController.ROUT_BASE}/:id/update`,
@@ -114,7 +112,7 @@ describe('car controller', () => {
       expect(mockExpressApp.get.mock.calls[5][1].name).toBe('bound validateExistentClub')
     })
 
-    it('set the delete route', () => {
+    it('sets the delete route', () => {
       expect(mockExpressApp.post).nthCalledWith(
         3,
         `${carController.ROUT_BASE}/:id/delete`,
@@ -124,7 +122,7 @@ describe('car controller', () => {
       expect(mockExpressApp.post.mock.calls[2][1].name).toBe('bound validateExistentClub')
     })
 
-    it('set the rent route', () => {
+    it('sets the rent route', () => {
       expect(mockExpressApp.post).nthCalledWith(
         4,
         `${carController.ROUT_BASE}/:id/rent`,
@@ -135,11 +133,12 @@ describe('car controller', () => {
       expect(mockExpressApp.post.mock.calls[3][1].name).toBe('bound validateExistentClub')
     })
 
+    afterAll(jest.clearAllMocks)
   })
 
   describe('validateExistentClub', () => {
 
-    describe('gets a club that exists', () => {
+    describe('get a club that exists', () => {
       const carID = 1
       const req = {
         params: {
@@ -150,16 +149,18 @@ describe('car controller', () => {
       const next = jest.fn()
 
       beforeAll(() => {
-        return carController.validateExistentClub(req, res, next)
+        carController.validateExistentClub(req, res, next)
       })
 
-      it('call the getById method of car service', () => {
+      it('calls the getById method of car service', () => {
         expect(mockCarService.getById).toBeCalledWith(carID)
       })
 
-      it('call next function', () => {
+      it('calls next function', () => {
         expect(next).toBeCalledTimes(1)
       })
+
+      afterAll(jest.clearAllMocks)
     })
 
     describe('get non-existent car', () => {
@@ -180,18 +181,19 @@ describe('car controller', () => {
           throw new NonExistentCar()
         })
 
-        return carController.validateExistentClub(req, res, next)
+        carController.validateExistentClub(req, res, next)
       })
 
-      it('render not-found-404 and set status code to 404',() => {
+      it('renders not-found-404 and set status code to 404',() => {
         expect(res.status).toBeCalledWith(404)
         expect(res.render).toBeCalledWith('car/view/not-found-404')
       })
 
-      it('dont call next function', () => {
+      it('dont calls next function', () => {
         expect(next).not.toBeCalled()
       })
 
+      afterAll(jest.clearAllMocks)
     })
     
   })
@@ -200,14 +202,14 @@ describe('car controller', () => {
     const joiObjectSpy = jest.spyOn(Joi, 'object')
     const { validCarHttpReq, invalidCarHttpReq } = require('./car-http-request.fixture')
 
-    afterEach(() => {joiObjectSpy.mockClear()})
+    afterEach(joiObjectSpy.mockClear)
 
     describe('general operation', () => {
       beforeAll(() => {
         carController.validateAndParseCarRequest(validCarHttpReq)
       })
 
-      it('call Joi.object method with the correct properties',()=>{
+      it('calls Joi.object with the corresponding properties',()=>{
         const objectToValidate = joiObjectSpy.mock.calls[0][0]
         expect(joiObjectSpy).toBeCalledTimes(1)
 
@@ -224,7 +226,7 @@ describe('car controller', () => {
       })
     })
 
-    describe('pass the validation with valid car request', () => {
+    describe('passes the validation with valid car request', () => {
       let validatedCarReq
 
       beforeEach(() => {
@@ -246,7 +248,7 @@ describe('car controller', () => {
       })
     })
 
-    describe('dont pass the validation with invalid car request', () => {
+    describe('doesnt pass the validation with invalid car request', () => {
       let errorThrowed
       beforeAll(() => {
         try{
@@ -256,10 +258,12 @@ describe('car controller', () => {
         }
       })
 
-      it('throw an Joi.ValidationError instance', () => {
+      it('throws an Joi.ValidationError instance', () => {
         expect(errorThrowed).toBeInstanceOf(Joi.ValidationError)
       })
     })
+  
+    afterAll(jest.clearAllMocks)
   })
 
   describe('cleanSessionErrorsAndMessages', () => {
@@ -269,7 +273,7 @@ describe('car controller', () => {
     }
 
     beforeAll(() => {
-      return carController.cleanSessionErrorsAndMessages(someSession)
+      carController.cleanSessionErrorsAndMessages(someSession)
     })
 
     it('sets error and messages to null', () => {
@@ -277,6 +281,4 @@ describe('car controller', () => {
       expect(someSession.message).toBeNull()
     })
   })
-
-
 })

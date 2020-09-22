@@ -14,10 +14,6 @@ const mockThisCarController = {
 const updateMethod = update.bind(mockThisCarController)
 
 describe('update method', () => {
-  beforeEach(() => {
-    jest.resetAllMocks()
-  })
-
   describe('GET: get the update form', () => {
     const carID = 1
     const req = {
@@ -34,17 +30,16 @@ describe('update method', () => {
     const res = { render: jest.fn() }
     const oneCarResult = 'car'
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.carService.getById.mockReturnValue(oneCarResult)
-
-      return updateMethod(req, res)
+      updateMethod(req, res)
     })
 
-    it('call getById method of car service with the id', () => {
+    it('calls getById method of car service with the id', () => {
       expect(mockThisCarController.carService.getById).toBeCalledWith(carID)
     })
 
-    it('render the car-form with notifications', () => {
+    it('renders the car-form with notifications', () => {
       expect(res.render).toBeCalledWith('car/view/car-form', {
         data: {
           car: oneCarResult,
@@ -54,9 +49,11 @@ describe('update method', () => {
       })
     })
 
-    it('clean the session after the render', () => {
+    it('cleans the session after the render', () => {
       expect(mockThisCarController.cleanSessionErrorsAndMessages).toBeCalledWith(req.session)
     })
+
+    afterAll(jest.resetAllMocks)
   })
 
   describe('POST: update sucessfully', () => {
@@ -77,27 +74,28 @@ describe('update method', () => {
     }
     const res = { redirect: jest.fn() }
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.validateAndParseCarRequest.mockImplementation(req => req)
-
-      return updateMethod(req, res)
+      updateMethod(req, res)
     })
 
-    it('validate the request', () => {
+    it('validates the request', () => {
       expect(mockThisCarController.validateAndParseCarRequest).toBeCalledWith(req.body)
     })
 
-    it('call the update method of car service with the correct parameters', () => {
+    it('calls the update method of car service with the correct parameters', () => {
       expect(mockThisCarController.carService.update).toBeCalledWith(carID, req.body, req.file.path)
     })
 
-    it('set the message notification', () => {
+    it('sets the message notification', () => {
       expect(typeof req.session.message).toBe('string')
     })
 
-    it('after update redirect to the car page', () => {
+    it('redirects to the car page after update', () => {
       expect(res.redirect).toBeCalledWith(req.path)
     })
+
+    afterAll(jest.resetAllMocks)
   })
 
   describe('POST: bad request update', () => {
@@ -121,12 +119,11 @@ describe('update method', () => {
       new Error('mileage invalid')
     ])
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.validateAndParseCarRequest.mockImplementation(() => {
         throw validationError
       })
-
-      return updateMethod(req, res)
+      updateMethod(req, res)
     })
 
     it('sets the error notification correctly', () => {
@@ -134,9 +131,11 @@ describe('update method', () => {
       expect(req.session.error.includes('mileage invalid')).toBe(true)
     })
 
-    it('redirect to the car page', () => {
+    it('redirects to the car page', () => {
       expect(res.redirect).toBeCalledWith(req.path)
     })
+
+    afterAll(jest.resetAllMocks)
   })
 
   describe('POST: internal server error', () => {
@@ -157,20 +156,21 @@ describe('update method', () => {
     }
     const res = { redirect: jest.fn() }
 
-    beforeEach(() => {
+    beforeAll(() => {
       mockThisCarController.validateAndParseCarRequest.mockImplementation(() => {
         throw new Error('unkown error')
       })
-
-      return updateMethod(req, res)
+      updateMethod(req, res)
     })
 
-    it('set the error notification correctly', () => {
+    it('sets the error notification correctly', () => {
       expect(typeof req.session.error).toBe('string')
     })
 
-    it('redirect to the car page', () => {
+    it('redirects to the car page', () => {
       expect(res.redirect).toBeCalledWith(req.path)
     })
+
+    afterAll(jest.resetAllMocks)
   })
 })

@@ -13,7 +13,7 @@ const carRepository = new CarRepository(mockDb)
 
 describe('CarRepository', () => {
   describe('constructor', () => {
-    it('set the database adapter', () => {
+    it('sets the database adapter', () => {
       expect(carRepository.databaseAdapter).toBe(mockDb)
     })
   })
@@ -25,7 +25,7 @@ describe('CarRepository', () => {
       car = carRepository.create(carCreation)
     })
 
-    it('apply the id and timestamps to new club', () => {
+    it('applies the id and timestamps to the new club', () => {
       expect(car.id).toBe(1)
       expect(typeof car.createdAt).toBe('string')
       expect(typeof car.updatedAt).toBe('string')
@@ -39,7 +39,7 @@ describe('CarRepository', () => {
       car = carRepository.create(carCreation)
     })
 
-    it('update the model year of the car', () => {
+    it('updates the model year of the car', () => {
       car.yearOfModel = 2015
       carRepository.update(car)
       const carUpdated = carRepository.getById(car.id)
@@ -55,7 +55,7 @@ describe('CarRepository', () => {
       car = carRepository.create(carCreation)
     })
 
-    it('delete the created car', () => {
+    it('deletes the created car', () => {
       carRepository.delete(car.id)
       
       try {
@@ -73,19 +73,19 @@ describe('CarRepository', () => {
       car = carRepository.create(carCreation)
     })
 
-    it('get the created car', () => {
+    it('gets the created car', () => {
       const carCreated = carRepository.getById(car.id)
       expect(carCreated.id).toBe(car.id)
     })
 
-    it('return a instance of Car class', () => {
+    it('returns a instance of Car class', () => {
       const carCreated = carRepository.getById(car.id)
       expect(carCreated).toBeInstanceOf(Car)
     })
 
-    it('try to get non-exsitent car throw an error', () => {
+    it('tries to get non-exsitent car throw an error', () => {
       try {
-        carRepository.getById(500)
+        carRepository.getById(-500)
       } catch (error) {
         expect(error).toBeInstanceOf(NonExistentCar)
       }
@@ -110,7 +110,7 @@ describe('CarRepository', () => {
       expect(carsCreated.length).toBe(carsToCreate)
     })
  
-    it('every element in the returnded array should be an instance of Car class', () => {
+    it('every element in the returned array it is an instance of Car class', () => {
       expect(carsCreated.every(car => car instanceof Car)).toBe(true)
     })
   })

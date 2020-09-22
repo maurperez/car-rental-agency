@@ -41,7 +41,7 @@ describe('CarService', () => {
       expect(mockCarRepository.create).toBeCalledWith(carInstace)
     })
 
-    afterAll(() => jest.resetAllMocks())
+    afterAll(jest.resetAllMocks)
   })
 
   describe('update', () => {
@@ -62,15 +62,15 @@ describe('CarService', () => {
       carService.update(carID, carDto, imagePath)
     })
 
-    it('transform to entity', () => {
+    it('transforms to entity', () => {
       expect(fromHttpRequestToEntity).toBeCalledWith(carDto, imagePath, carID)
     })
 
-    it('get the existent car instance', () => {
+    it('gets the previous instance of the car', () => {
       expect(mockCarRepository.getById).toBeCalledWith(carID)
     })
 
-    it('call to update method of car repository with updated information', () => {
+    it('calls to update method of car repository with updated information', () => {
       const carPassed = mockCarRepository.update.mock.calls[0][0]
 
       expect(carPassed).toBeDefined()
@@ -83,18 +83,18 @@ describe('CarService', () => {
       expect(carPassed.id).toBe(carExistentInstance.id)
     })
 
-    afterAll(() => jest.resetAllMocks())
+    afterAll(jest.resetAllMocks)
   })
 
   describe('delete', () => {
     const carId = 5
     beforeAll(() => carService.delete(carId))
 
-    it('call the delete method of carRepository with the id passed', () => {
+    it('calls the delete method of car repository with the id passed', () => {
       expect(mockCarRepository.delete).toBeCalledWith(carId)
     })
 
-    afterAll(() => jest.resetAllMocks())
+    afterAll(jest.resetAllMocks)
   })
 
   describe('rent', () => {
@@ -108,7 +108,7 @@ describe('CarService', () => {
         carService.rent(carId, 3)
       })
 
-      it('get an instance of the car', () => {
+      it('gets an instance of the car', () => {
         expect(mockCarRepository.getById).toBeCalledWith(carId)
       })
 
@@ -116,7 +116,7 @@ describe('CarService', () => {
         expect(mockCarRepository.update).toBeCalledTimes(1)
       })
 
-      it('set the rented state to 1 and return date', () => {
+      it('sets the rented state to 1 and return date', () => {
         const dateISOformatRegex = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/
         const carPassedToUpdate = mockCarRepository.update.mock.calls[0][0]
 
@@ -131,7 +131,7 @@ describe('CarService', () => {
         mockCarRepository.getById.mockReturnValue(rentedCar)
       })
 
-      it('throw CarAlredyRented exception', () => {
+      it('throws CarAlredyRented exception', () => {
         expect(carService.rent.bind(carService, carId, 5)).toThrow(CarAlredyRented)
       })
 
@@ -143,7 +143,7 @@ describe('CarService', () => {
         mockCarRepository.getById.mockReturnValue(inactiveCar)
       })
 
-      it('throw CarInactive exception', () => {
+      it('throws CarInactive exception', () => {
         expect(carService.rent.bind(carService, carId, 5)).toThrow(CarInactive)
       })
 
@@ -160,7 +160,7 @@ describe('CarService', () => {
       carReturned = carService.getById(carId)
     })
 
-    it('call the getById method of carRepository with the id', () => {
+    it('calls the getById method of car repository with the id', () => {
       expect(mockCarRepository.getById).toBeCalledWith(carId)
     })
 
@@ -178,7 +178,7 @@ describe('CarService', () => {
       carsReturned = carService.getAll()
     })
 
-    it('call the getAll method of carRepository with the id', () => {
+    it('calls the getAll method of car repository', () => {
       expect(mockCarRepository.getAll).toBeCalled()
     })
 
@@ -198,7 +198,7 @@ describe('CarService', () => {
       carsReturned = carService.getAllAvailableCars()
     })
 
-    it('call the getAll method of carRepository with the id', () => {
+    it('calls the getAll method of carRepository', () => {
       expect(mockCarRepository.getAll).toBeCalled()
     })
 
@@ -220,7 +220,7 @@ describe('CarService', () => {
       carsReturned = carService.getRentedCars()
     })
 
-    it('call the getAll method of carRepository with the id', () => {
+    it('call the getAll method of carRepositor', () => {
       expect(mockCarRepository.getAll).toBeCalled()
     })
 

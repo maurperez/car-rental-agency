@@ -16,11 +16,11 @@ describe('Car mappers', () => {
   })
 
   describe('fromHttpRequestToEntity', () => {
-    const {carDto} = require('./fixtures')
+    const {carFromHttpDto} = require('./fixtures')
     const carId = 3
     const imagePath = 'fake/image/path'
 
-    const carInstance = fromHttpRequestToEntity(carDto, imagePath, carId)
+    const carInstance = fromHttpRequestToEntity(carFromHttpDto, imagePath, carId)
 
     it('returns an instance of Car', () => {
       expect(carInstance).toBeInstanceOf(Car)

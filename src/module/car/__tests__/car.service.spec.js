@@ -44,9 +44,9 @@ describe('CarService', () => {
   })
 
   describe('update', () => {
-    const {carExistentInstance} = require('./fixtures')
+    const {car} = require('./fixtures')
 
-    const updatedInstance = carExistentInstance
+    const updatedInstance = car
     updatedInstance.mileage = 9000
     updatedInstance.numberOfPassengers = 5
 
@@ -55,7 +55,7 @@ describe('CarService', () => {
     const carDto = 'someone car dto'
 
     beforeAll(() => {
-      mockCarRepository.getById.mockReturnValue(carExistentInstance)
+      mockCarRepository.getById.mockReturnValue(car)
       fromHttpRequestToEntity.mockReturnValue(updatedInstance)
 
       carService.update(carID, carDto, imagePath)
@@ -81,7 +81,7 @@ describe('CarService', () => {
 
     it('doesnt alter the id', () => {
       const carPassed = mockCarRepository.update.mock.calls[0][0]
-      expect(carPassed.id).toBe(carExistentInstance.id)
+      expect(carPassed.id).toBe(car.id)
     })
 
     afterAll(jest.resetAllMocks)
@@ -100,11 +100,11 @@ describe('CarService', () => {
 
   describe('rent', () => {
     const carId = 1
-    const {nonRentedCar, rentedCar, inactiveCar} = require('./fixtures')
+    const {carAvailable, carRented, carInactive} = require('./fixtures')
 
     describe('rent sucessfully', () => {
       beforeAll(() => {
-        mockCarRepository.getById.mockReturnValue(nonRentedCar)
+        mockCarRepository.getById.mockReturnValue(carAvailable)
         carService.rent(carId, 3)
       })
 
@@ -128,7 +128,7 @@ describe('CarService', () => {
 
     describe('try to update alredy rented car', () => {
       beforeAll(() => {
-        mockCarRepository.getById.mockReturnValue(rentedCar)
+        mockCarRepository.getById.mockReturnValue(carRented)
       })
 
       it('throws CarAlredyRented exception', () => {
@@ -142,7 +142,7 @@ describe('CarService', () => {
 
     describe('try to update inactive car', () => {
       beforeAll(() => {
-        mockCarRepository.getById.mockReturnValue(inactiveCar)
+        mockCarRepository.getById.mockReturnValue(carInactive)
       })
 
       it('throws CarInactive exception', () => {
@@ -191,14 +191,14 @@ describe('CarService', () => {
   })
 
   describe('getAllAvailableCars', () => {
-    const {carExistentInstance, inactiveCar, rentedCar} = require('./fixtures')
+    const {car, carInactive, carRented} = require('./fixtures')
     let carsReturned
 
     beforeAll(() => {
       mockCarRepository.getAll.mockReturnValue([
-        carExistentInstance,
-        inactiveCar,
-        rentedCar,
+        car,
+        carInactive,
+        carRented,
       ])
       carsReturned = carService.getAllAvailableCars()
     })
@@ -208,20 +208,20 @@ describe('CarService', () => {
     })
 
     it('return only the availables cars', () => {
-      expect(carsReturned).toContain(carExistentInstance)
-      expect(carsReturned).not.toContain(inactiveCar)
-      expect(carsReturned).not.toContain(rentedCar)
+      expect(carsReturned).toContain(car)
+      expect(carsReturned).not.toContain(carInactive)
+      expect(carsReturned).not.toContain(carRented)
     })
 
     afterAll(jest.resetAllMocks)
   })
 
   describe('getRentedCars', () => {
-    const {carExistentInstance, rentedCar} = require('./fixtures')
+    const {car, carRented} = require('./fixtures')
     let carsReturned
 
     beforeAll(() => {
-      mockCarRepository.getAll.mockReturnValue([carExistentInstance, rentedCar])
+      mockCarRepository.getAll.mockReturnValue([car, carRented])
       carsReturned = carService.getRentedCars()
     })
 
@@ -230,8 +230,8 @@ describe('CarService', () => {
     })
 
     it('return only the rented cars', () => {
-      expect(carsReturned).not.toContain(carExistentInstance)
-      expect(carsReturned).toContain(rentedCar)
+      expect(carsReturned).not.toContain(car)
+      expect(carsReturned).toContain(carRented)
     })
 
     afterAll(jest.resetAllMocks)

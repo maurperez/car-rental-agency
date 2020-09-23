@@ -1,6 +1,6 @@
 const Car = require('../car.entity')
 
-const carExistentInstance = new Car(
+const car = new Car(
   1,
   'Honda',
   'Civic',
@@ -20,7 +20,7 @@ const carExistentInstance = new Car(
   '2020-09-08 16:56:34'
 )
 
-const nonRentedCar = new Car(
+const carAvailable = new Car(
   1,
   'Honda',
   'Civic',
@@ -40,7 +40,7 @@ const nonRentedCar = new Car(
   '2020-09-08 16:56:34'
 )
 
-const rentedCar = new Car(
+const carRented = new Car(
   2,
   'Honda',
   'Civic',
@@ -60,7 +60,7 @@ const rentedCar = new Car(
   '2020-09-08 16:56:34'
 )
 
-const inactiveCar = new Car(
+const carInactive = new Car(
   3,
   'Honda',
   'Civic',
@@ -80,7 +80,7 @@ const inactiveCar = new Car(
   '2020-09-08 16:56:34'
 )
 
-const carDto = {
+const carFromHttpDto = {
   brand: 'Honda',
   model: 'Civic',
   model_year: 2019,
@@ -132,11 +132,11 @@ const carCreation = new Car(
 )
 
 module.exports = {
-  carExistentInstance,
-  carDto,
-  nonRentedCar,
-  rentedCar,
-  inactiveCar,
-  carFromDbDto,
+  car,
+  carAvailable,
+  carRented,
+  carInactive,
   carCreation,
+  carFromHttpDto,
+  carFromDbDto,
 }

@@ -18,7 +18,8 @@ module.exports = {
    */
   configureNotFoundPage: app => {
     app.use((req, res) => {
-      res.status(404).render('car/view/not-found-404')
+      res.status(404)
+      res.render('car/view/not-found-404')
     })
   },
   /**

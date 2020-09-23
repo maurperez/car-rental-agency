@@ -21,4 +21,6 @@ configureHomePage(app, container)
 configureNotFoundPage(app)
 
 const port = process.env.PORT || 3000
-app.listen(port, console.log(`app listening on port ${port}`))
+app.listen(port, console.log('\x1b[96m',`app listening on port ${port}`))
+
+

@@ -1,9 +1,9 @@
-const Car = require('../car.entity')
+const Car = require('../../car.entity')
 const {fromDbToEntity, fromHttpRequestToEntity} = require('../car.mapper')
 
 describe('Car mappers', () => {
   describe('fromDbToEntity', () => {
-    const {carFromDbDto} = require('./fixtures')
+    const {carFromDbDto} = require('../../__tests__/general-fixtures')
     const carInstance = fromDbToEntity(carFromDbDto)
 
     it('returns an instance of Car', () => {
@@ -16,7 +16,7 @@ describe('Car mappers', () => {
   })
 
   describe('fromHttpRequestToEntity', () => {
-    const {carFromHttpDto} = require('./fixtures')
+    const {carFromHttpDto} = require('../../__tests__/general-fixtures')
     const carId = 3
     const imagePath = 'fake/image/path'
 

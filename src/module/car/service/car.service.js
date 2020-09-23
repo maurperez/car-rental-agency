@@ -1,5 +1,5 @@
-const {fromHttpRequestToEntity} = require('./car.mapper')
-const {CarAlredyRented, CarInactive} = require('./error/general-errors')
+const {fromHttpRequestToEntity} = require('../mapper/car.mapper')
+const {CarAlredyRented, CarInactive} = require('../error/general-errors')
 
 module.exports = class CarService {
   /**

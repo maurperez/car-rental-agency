@@ -1,8 +1,8 @@
-jest.mock('../car.mapper')
+jest.mock('../../mapper/car.mapper')
 const CarService = require('../car.service')
-const {CarAlredyRented, CarInactive} = require('../error/general-errors')
-const {fromHttpRequestToEntity} = require('../car.mapper')
-const Car = require('../car.entity')
+const {CarAlredyRented, CarInactive} = require('../../error/general-errors')
+const {fromHttpRequestToEntity} = require('../../mapper/car.mapper')
+const Car = require('../../car.entity')
 
 const mockCarRepository = {
   create: jest.fn(),
@@ -44,7 +44,7 @@ describe('CarService', () => {
   })
 
   describe('update', () => {
-    const {car} = require('./fixtures')
+    const {car} = require('../../__tests__/general-fixtures')
 
     const updatedInstance = car
     updatedInstance.mileage = 9000
@@ -100,7 +100,7 @@ describe('CarService', () => {
 
   describe('rent', () => {
     const carId = 1
-    const {carAvailable, carRented, carInactive} = require('./fixtures')
+    const {carAvailable, carRented, carInactive} = require('../../__tests__/general-fixtures')
 
     describe('rent sucessfully', () => {
       beforeAll(() => {
@@ -191,7 +191,7 @@ describe('CarService', () => {
   })
 
   describe('getAllAvailableCars', () => {
-    const {car, carInactive, carRented} = require('./fixtures')
+    const {car, carInactive, carRented} = require('../../__tests__/general-fixtures')
     let carsReturned
 
     beforeAll(() => {
@@ -217,7 +217,7 @@ describe('CarService', () => {
   })
 
   describe('getRentedCars', () => {
-    const {car, carRented} = require('./fixtures')
+    const {car, carRented} = require('../../__tests__/general-fixtures')
     let carsReturned
 
     beforeAll(() => {

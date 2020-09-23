@@ -1,4 +1,4 @@
-const Car = require('./car.entity')
+const Car = require('../car.entity')
 
 /**
  * @returns {Car}

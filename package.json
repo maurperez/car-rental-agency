@@ -8,7 +8,8 @@
     "start": "node src/main",
     "format": "npx prettier --config ./.prettierrc --write \"src/**/*.js\"",
     "test": "jest",
-    "test:cov": "jest --coverage"
+    "test:cov": "jest --coverage",
+    "test:dev": "jest --watch"
   },
   "repository": {
     "type": "git",

@@ -2,7 +2,7 @@ const fs = require('fs')
 const CarRepository = require('../car.repository')
 const {NonExistentCar} = require('../../../error/general-errors')
 const Sqlite3Database = require('better-sqlite3')
-const migration = fs.readFileSync('./src/config/setup.sqlite', 'utf-8')
+const migration = fs.readFileSync('./src/config/setup.tests.sqlite', 'utf-8')
 const {carCreation} = require('../../../__tests__/general-fixtures')
 const Car = require('../../../car.entity')
 

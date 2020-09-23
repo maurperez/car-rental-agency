@@ -15,7 +15,7 @@ function create(req, res) {
       data: {
         error: session.error,
         message: session.message,
-      }
+      },
     })
 
     this.cleanSessionErrorsAndMessages(session)

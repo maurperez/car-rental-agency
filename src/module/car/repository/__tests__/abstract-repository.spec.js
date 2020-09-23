@@ -4,11 +4,13 @@ const MethodNotImplemented = require('../error/method-not-implemented')
 
 describe('abstract repository', () => {
   it('throw an error if try to create instance of AbstractCarRepository directly', () => {
-    expect(() => new AbstractCarRepository()).toThrow(AbstractCarRepositoryError)
+    expect(() => new AbstractCarRepository()).toThrow(
+      AbstractCarRepositoryError
+    )
   })
 
   it('Allows you to create an instance of a class that inherits from AbstractCarRepository', () => {
-    const ConcreteRepository = class extends AbstractCarRepository{}
+    const ConcreteRepository = class extends AbstractCarRepository {}
     const concreteRepoInstance = new ConcreteRepository()
 
     expect(concreteRepoInstance).toBeInstanceOf(AbstractCarRepository)
@@ -16,7 +18,7 @@ describe('abstract repository', () => {
   })
 
   it('If an unimplemented method is called, it throws an error', () => {
-    const ConcreteRepository = class extends AbstractCarRepository{}
+    const ConcreteRepository = class extends AbstractCarRepository {}
     const concreteRepoInstance = new ConcreteRepository()
 
     expect(concreteRepoInstance.create).toThrow(MethodNotImplemented)

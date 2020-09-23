@@ -1,5 +1,5 @@
 const configureDI = require('../di')
-const { default: DIContainer } = require('rsdi')
+const {default: DIContainer} = require('rsdi')
 
 describe('dependency injection', () => {
   const container = configureDI()

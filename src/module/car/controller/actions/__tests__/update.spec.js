@@ -1,14 +1,14 @@
-const { update } = require('../update.action')
+const {update} = require('../update.action')
 const Joi = require('joi')
 
 const mockThisCarController = {
   ROUT_BASE: '/car',
-  cleanSessionErrorsAndMessages : jest.fn(),
+  cleanSessionErrorsAndMessages: jest.fn(),
   validateAndParseCarRequest: jest.fn(),
   carService: {
     getById: jest.fn(),
-    update: jest.fn()
-  }
+    update: jest.fn(),
+  },
 }
 
 const updateMethod = update.bind(mockThisCarController)
@@ -18,16 +18,16 @@ describe('update method', () => {
     const carID = 1
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
       path: '/url/path',
       method: 'GET',
       session: {
         error: 'someone error',
-        message: 'someone message'
-      }
+        message: 'someone message',
+      },
     }
-    const res = { render: jest.fn() }
+    const res = {render: jest.fn()}
     const oneCarResult = 'car'
 
     beforeAll(() => {
@@ -44,13 +44,15 @@ describe('update method', () => {
         data: {
           car: oneCarResult,
           error: req.session.error,
-          message: req.session.message
-        }
+          message: req.session.message,
+        },
       })
     })
 
     it('cleans the session after the render', () => {
-      expect(mockThisCarController.cleanSessionErrorsAndMessages).toBeCalledWith(req.session)
+      expect(
+        mockThisCarController.cleanSessionErrorsAndMessages
+      ).toBeCalledWith(req.session)
     })
 
     afterAll(jest.resetAllMocks)
@@ -60,31 +62,39 @@ describe('update method', () => {
     const carID = 1
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
       method: 'POST',
       path: '/url/path',
       session: {},
       file: {
-        path: 'image/path'
+        path: 'image/path',
       },
       body: {
-        brand: 'updateBrand'
-      }
+        brand: 'updateBrand',
+      },
     }
-    const res = { redirect: jest.fn() }
+    const res = {redirect: jest.fn()}
 
     beforeAll(() => {
-      mockThisCarController.validateAndParseCarRequest.mockImplementation(req => req)
+      mockThisCarController.validateAndParseCarRequest.mockImplementation(
+        req => req
+      )
       updateMethod(req, res)
     })
 
     it('validates the request', () => {
-      expect(mockThisCarController.validateAndParseCarRequest).toBeCalledWith(req.body)
+      expect(mockThisCarController.validateAndParseCarRequest).toBeCalledWith(
+        req.body
+      )
     })
 
     it('calls the update method of car service with the correct parameters', () => {
-      expect(mockThisCarController.carService.update).toBeCalledWith(carID, req.body, req.file.path)
+      expect(mockThisCarController.carService.update).toBeCalledWith(
+        carID,
+        req.body,
+        req.file.path
+      )
     })
 
     it('sets the message notification', () => {
@@ -102,27 +112,29 @@ describe('update method', () => {
     const carID = 1
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
       path: '/url/path',
       method: 'POST',
       session: {},
       file: {
-        path: 'image/path'
+        path: 'image/path',
       },
       body: {
-        mileage: -100
-      }
+        mileage: -100,
+      },
     }
-    const res = { redirect: jest.fn() }
+    const res = {redirect: jest.fn()}
     const validationError = new Joi.ValidationError('', [
-      new Error('mileage invalid')
+      new Error('mileage invalid'),
     ])
 
     beforeAll(() => {
-      mockThisCarController.validateAndParseCarRequest.mockImplementation(() => {
-        throw validationError
-      })
+      mockThisCarController.validateAndParseCarRequest.mockImplementation(
+        () => {
+          throw validationError
+        }
+      )
       updateMethod(req, res)
     })
 
@@ -142,24 +154,26 @@ describe('update method', () => {
     const carID = 1
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
       method: 'POST',
       session: {},
       file: {
-        path: 'image/path'
+        path: 'image/path',
       },
       path: '/url/path',
       body: {
-        mileage: -100
-      }
+        mileage: -100,
+      },
     }
-    const res = { redirect: jest.fn() }
+    const res = {redirect: jest.fn()}
 
     beforeAll(() => {
-      mockThisCarController.validateAndParseCarRequest.mockImplementation(() => {
-        throw new Error('unkown error')
-      })
+      mockThisCarController.validateAndParseCarRequest.mockImplementation(
+        () => {
+          throw new Error('unkown error')
+        }
+      )
       updateMethod(req, res)
     })
 

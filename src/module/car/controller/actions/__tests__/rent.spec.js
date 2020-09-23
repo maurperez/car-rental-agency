@@ -1,12 +1,12 @@
-const { rent } = require('../rent.action')
+const {rent} = require('../rent.action')
 const {CarAlredyRented, CarInactive} = require('../../../error/general-errors')
 
 const mockThisCarController = {
   ROUT_BASE: '/car',
-  cleanSessionErrorsAndMessages : jest.fn(),
+  cleanSessionErrorsAndMessages: jest.fn(),
   carService: {
-    rent: jest.fn()
-  }
+    rent: jest.fn(),
+  },
 }
 
 describe('rent method', () => {
@@ -14,23 +14,26 @@ describe('rent method', () => {
     const carID = 1
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
       session: {},
       body: {
-        'rent-days': '5'
-      }
+        'rent-days': '5',
+      },
     }
     const res = {
-      redirect: jest.fn()
+      redirect: jest.fn(),
     }
 
     beforeAll(() => {
       rent.apply(mockThisCarController, [req, res])
     })
 
-    it('calls rent method of car service with the id and days to rent',() => {
-      expect(mockThisCarController.carService.rent).toBeCalledWith(carID, Number(req.body["rent-days"]))
+    it('calls rent method of car service with the id and days to rent', () => {
+      expect(mockThisCarController.carService.rent).toBeCalledWith(
+        carID,
+        Number(req.body['rent-days'])
+      )
     })
 
     it('sets the message notification', () => {
@@ -38,7 +41,9 @@ describe('rent method', () => {
     })
 
     it('redirects to the car page', () => {
-      expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
+      expect(res.redirect).toBeCalledWith(
+        `${mockThisCarController.ROUT_BASE}/${carID}`
+      )
     })
 
     afterAll(jest.resetAllMocks)
@@ -48,16 +53,16 @@ describe('rent method', () => {
     const carID = 5
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
       session: {},
       body: {
-        'rent-days': '5'
-      }
+        'rent-days': '5',
+      },
     }
     const res = {
       redirect: jest.fn(),
-      status: jest.fn()
+      status: jest.fn(),
     }
     const carAlredyRentedError = new CarAlredyRented()
 
@@ -77,7 +82,9 @@ describe('rent method', () => {
     })
 
     it('redirects to the car page', () => {
-      expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
+      expect(res.redirect).toBeCalledWith(
+        `${mockThisCarController.ROUT_BASE}/${carID}`
+      )
     })
 
     afterAll(jest.clearAllMocks)
@@ -87,16 +94,16 @@ describe('rent method', () => {
     const carID = 5
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
       session: {},
       body: {
-        'rent-days': '3'
-      }
+        'rent-days': '3',
+      },
     }
     const res = {
       redirect: jest.fn(),
-      status: jest.fn()
+      status: jest.fn(),
     }
     const carInactiveError = new CarInactive()
 
@@ -116,7 +123,9 @@ describe('rent method', () => {
     })
 
     it('redirects to the car page', () => {
-      expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
+      expect(res.redirect).toBeCalledWith(
+        `${mockThisCarController.ROUT_BASE}/${carID}`
+      )
     })
 
     afterAll(jest.resetAllMocks)
@@ -126,16 +135,16 @@ describe('rent method', () => {
     const carID = 5
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
       session: {},
       body: {
-        'rent-days': '3'
-      }
+        'rent-days': '3',
+      },
     }
     const res = {
       redirect: jest.fn(),
-      status: jest.fn()
+      status: jest.fn(),
     }
 
     beforeAll(() => {
@@ -155,10 +164,11 @@ describe('rent method', () => {
     })
 
     it('redirects to the car page', () => {
-      expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
+      expect(res.redirect).toBeCalledWith(
+        `${mockThisCarController.ROUT_BASE}/${carID}`
+      )
     })
 
     afterAll(jest.resetAllMocks)
-
   })
 })

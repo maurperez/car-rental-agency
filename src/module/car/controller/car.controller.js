@@ -45,7 +45,7 @@ module.exports = class CarController extends AbstractController {
     )
     app.get(
       `${this.ROUT_BASE}/:id`,
-     this.validateExistentClub.bind(this),
+      this.validateExistentClub.bind(this),
       this.getById
     )
     app.get(

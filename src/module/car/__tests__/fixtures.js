@@ -1,4 +1,4 @@
-const Car = require("../car.entity");
+const Car = require('../car.entity')
 
 const carExistentInstance = new Car(
   1,
@@ -90,7 +90,7 @@ const carDto = {
   number_passengers: 4,
   automatic: 0,
   price_per_week_in_dollars: 500,
-  price_per_day_in_dollars: 100
+  price_per_day_in_dollars: 100,
 }
 
 const carFromDbDto = {
@@ -110,7 +110,7 @@ const carFromDbDto = {
   price_per_week_in_cents: 50000,
   price_per_day_in_cents: 10000,
   created_at: '2020-09-08 16:56:34',
-  updated_at: '2020-09-08 16:56:34'
+  updated_at: '2020-09-08 16:56:34',
 }
 
 const carCreation = new Car(
@@ -131,7 +131,6 @@ const carCreation = new Car(
   7500
 )
 
-
 module.exports = {
   carExistentInstance,
   carDto,
@@ -139,5 +138,5 @@ module.exports = {
   rentedCar,
   inactiveCar,
   carFromDbDto,
-  carCreation
+  carCreation,
 }

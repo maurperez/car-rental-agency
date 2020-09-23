@@ -1,26 +1,25 @@
-const { deleteCar } = require('../delete.action')
+const {deleteCar} = require('../delete.action')
 
 const mockThisCarController = {
   ROUT_BASE: '/car',
-  cleanSessionErrorsAndMessages : jest.fn(),
+  cleanSessionErrorsAndMessages: jest.fn(),
   carService: {
-    delete: jest.fn()
-  }
+    delete: jest.fn(),
+  },
 }
 
 describe('delete method', () => {
-
   describe('POST: delete car', () => {
     const carID = 1
     const req = {
       params: {
-        id: carID
+        id: carID,
       },
-      session: {}
+      session: {},
     }
     const res = {
       status: jest.fn(),
-      redirect: jest.fn()
+      redirect: jest.fn(),
     }
 
     beforeAll(() => {
@@ -41,8 +40,9 @@ describe('delete method', () => {
     })
 
     it('redirects to the availables cars page', () => {
-      expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/available`)
+      expect(res.redirect).toBeCalledWith(
+        `${mockThisCarController.ROUT_BASE}/available`
+      )
     })
   })
-
 })

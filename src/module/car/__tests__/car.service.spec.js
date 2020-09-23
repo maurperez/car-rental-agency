@@ -1,7 +1,7 @@
 jest.mock('../car.mapper')
 const CarService = require('../car.service')
 const {CarAlredyRented, CarInactive} = require('../error/general-errors')
-const { fromHttpRequestToEntity } = require('../car.mapper')
+const {fromHttpRequestToEntity} = require('../car.mapper')
 const Car = require('../car.entity')
 
 const mockCarRepository = {
@@ -9,13 +9,12 @@ const mockCarRepository = {
   getById: jest.fn(),
   update: jest.fn(),
   delete: jest.fn(),
-  getAll: jest.fn()
+  getAll: jest.fn(),
 }
 
 const carService = new CarService(mockCarRepository)
 
 describe('CarService', () => {
-
   describe('constructor', () => {
     it('sets the passed dependencies correctly', () => {
       expect(carService.carRepository).toBe(mockCarRepository)
@@ -45,8 +44,8 @@ describe('CarService', () => {
   })
 
   describe('update', () => {
-    const { carExistentInstance } = require('./fixtures')
-    
+    const {carExistentInstance} = require('./fixtures')
+
     const updatedInstance = carExistentInstance
     updatedInstance.mileage = 9000
     updatedInstance.numberOfPassengers = 5
@@ -75,7 +74,9 @@ describe('CarService', () => {
 
       expect(carPassed).toBeDefined()
       expect(carPassed.mileage).toBe(updatedInstance.mileage)
-      expect(carPassed.numberOfPassengers).toBe(updatedInstance.numberOfPassengers)
+      expect(carPassed.numberOfPassengers).toBe(
+        updatedInstance.numberOfPassengers
+      )
     })
 
     it('doesnt alter the id', () => {
@@ -99,10 +100,9 @@ describe('CarService', () => {
 
   describe('rent', () => {
     const carId = 1
-    const { nonRentedCar, rentedCar, inactiveCar } = require('./fixtures')
+    const {nonRentedCar, rentedCar, inactiveCar} = require('./fixtures')
 
     describe('rent sucessfully', () => {
-
       beforeAll(() => {
         mockCarRepository.getById.mockReturnValue(nonRentedCar)
         carService.rent(carId, 3)
@@ -132,7 +132,9 @@ describe('CarService', () => {
       })
 
       it('throws CarAlredyRented exception', () => {
-        expect(carService.rent.bind(carService, carId, 5)).toThrow(CarAlredyRented)
+        expect(carService.rent.bind(carService, carId, 5)).toThrow(
+          CarAlredyRented
+        )
       })
 
       afterAll(jest.resetAllMocks)
@@ -149,7 +151,6 @@ describe('CarService', () => {
 
       afterAll(jest.resetAllMocks)
     })
-
   })
 
   describe('getById', () => {
@@ -190,11 +191,15 @@ describe('CarService', () => {
   })
 
   describe('getAllAvailableCars', () => {
-    const { carExistentInstance, inactiveCar, rentedCar} = require('./fixtures')
+    const {carExistentInstance, inactiveCar, rentedCar} = require('./fixtures')
     let carsReturned
 
     beforeAll(() => {
-      mockCarRepository.getAll.mockReturnValue([carExistentInstance, inactiveCar, rentedCar])
+      mockCarRepository.getAll.mockReturnValue([
+        carExistentInstance,
+        inactiveCar,
+        rentedCar,
+      ])
       carsReturned = carService.getAllAvailableCars()
     })
 
@@ -212,7 +217,7 @@ describe('CarService', () => {
   })
 
   describe('getRentedCars', () => {
-    const { carExistentInstance, rentedCar} = require('./fixtures')
+    const {carExistentInstance, rentedCar} = require('./fixtures')
     let carsReturned
 
     beforeAll(() => {
@@ -231,6 +236,4 @@ describe('CarService', () => {
 
     afterAll(jest.resetAllMocks)
   })
-
 })
-

@@ -1,29 +1,28 @@
 const Joi = require('joi')
-const  {create} = require('../create.action')
+const {create} = require('../create.action')
 
 const mockThisCarController = {
   ROUT_BASE: '/car',
-  cleanSessionErrorsAndMessages : jest.fn(),
+  cleanSessionErrorsAndMessages: jest.fn(),
   validateAndParseCarRequest: jest.fn(),
   carService: {
-    create: jest.fn()
-  }
+    create: jest.fn(),
+  },
 }
 
 const createMethod = create.bind(mockThisCarController)
 
 describe('create method', () => {
-
   describe('GET', () => {
     const render = jest.fn()
     const req = {
       method: 'GET',
       session: {
-        error:  'this is a an error',
-        message: 'this is a message'
-      }
+        error: 'this is a an error',
+        message: 'this is a message',
+      },
     }
-    
+
     beforeAll(() => {
       createMethod(req, {render})
     })
@@ -33,13 +32,15 @@ describe('create method', () => {
       expect(render).toBeCalledWith('car/view/car-form', {
         data: {
           error: req.session.error,
-          message: req.session.message
-        }
+          message: req.session.message,
+        },
       })
-    }) 
-    
+    })
+
     it('clean the session', () => {
-      expect(mockThisCarController.cleanSessionErrorsAndMessages).toBeCalledTimes(1)
+      expect(
+        mockThisCarController.cleanSessionErrorsAndMessages
+      ).toBeCalledTimes(1)
     })
 
     afterAll(jest.resetAllMocks)
@@ -54,22 +55,29 @@ describe('create method', () => {
       method: 'POST',
       file: {path: 'fake/path'},
       body: {brand: 'fakeBrand'},
-      session: {}
+      session: {},
     }
 
     beforeAll(() => {
-      mockThisCarController.validateAndParseCarRequest.mockReturnValue(bodyReqValidated)
+      mockThisCarController.validateAndParseCarRequest.mockReturnValue(
+        bodyReqValidated
+      )
       mockThisCarController.carService.create.mockReturnValue({id: idOfNewCar})
 
       createMethod(req, {redirect})
     })
 
     it('validates the request', () => {
-      expect(mockThisCarController.validateAndParseCarRequest).toBeCalledWith(req.body)
+      expect(mockThisCarController.validateAndParseCarRequest).toBeCalledWith(
+        req.body
+      )
     })
 
     it('calls create method of car service with the request body validated and image path', () => {
-      expect(mockThisCarController.carService.create).toBeCalledWith(bodyReqValidated, req.file.path)
+      expect(mockThisCarController.carService.create).toBeCalledWith(
+        bodyReqValidated,
+        req.file.path
+      )
     })
 
     it('sets notification message', () => {
@@ -77,7 +85,9 @@ describe('create method', () => {
     })
 
     it('redirects to the car page', () => {
-      expect(redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${idOfNewCar}`)
+      expect(redirect).toBeCalledWith(
+        `${mockThisCarController.ROUT_BASE}/${idOfNewCar}`
+      )
     })
 
     afterAll(jest.resetAllMocks)
@@ -89,21 +99,23 @@ describe('create method', () => {
       path: 'fake/url/path',
       file: {path: 'fake/image/path'},
       body: {brand: 'fakeBadBody'},
-      session: {}
+      session: {},
     }
     const res = {
       redirect: jest.fn(),
-      status: jest.fn()
+      status: jest.fn(),
     }
     const validationError = new Joi.ValidationError('', [
       new Error('oneValidationError'),
-      new Error('anotherValidationError')
+      new Error('anotherValidationError'),
     ])
 
     beforeAll(() => {
-      mockThisCarController.validateAndParseCarRequest.mockImplementation(() => {
-        throw validationError
-      })
+      mockThisCarController.validateAndParseCarRequest.mockImplementation(
+        () => {
+          throw validationError
+        }
+      )
     })
 
     beforeEach(() => {
@@ -124,17 +136,17 @@ describe('create method', () => {
     afterAll(jest.resetAllMocks)
   })
 
-  describe('POST: internal server error',() => {
+  describe('POST: internal server error', () => {
     const req = {
       method: 'POST',
       path: 'fake/url/path',
       file: {path: 'fake/image/path'},
       body: {brand: 'fakeBadBody'},
-      session: {}
+      session: {},
     }
     const res = {
       redirect: jest.fn(),
-      status: jest.fn()
+      status: jest.fn(),
     }
 
     beforeAll(() => {
@@ -154,5 +166,4 @@ describe('create method', () => {
       expect(typeof req.session.error).toBe('string')
     })
   })
-
 })

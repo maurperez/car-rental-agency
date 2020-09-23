@@ -1,11 +1,11 @@
 const CarController = require('../car.controller')
-const { NonExistentCar } = require('../../error/general-errors')
+const {NonExistentCar} = require('../../error/general-errors')
 const Joi = require('joi')
 
 const mockUploadMultipartMiddleware = {single: jest.fn()}
 const mockUrlEncodedParser = jest.fn()
 const mockCarService = {
-  getById: jest.fn()
+  getById: jest.fn(),
 }
 
 const carController = new CarController(
@@ -16,15 +16,15 @@ const carController = new CarController(
 
 const mockExpressApp = {
   get: jest.fn(),
-  post: jest.fn()
+  post: jest.fn(),
 }
 
 describe('car controller', () => {
-
   describe('constructor', () => {
-
     it('sets the necessary dependencies correctly', () => {
-      expect(carController.uploadMultipartMiddleware).toBe(mockUploadMultipartMiddleware)
+      expect(carController.uploadMultipartMiddleware).toBe(
+        mockUploadMultipartMiddleware
+      )
       expect(carController.urlencodedParser).toBe(mockUrlEncodedParser)
       expect(carController.carService).toBe(mockCarService)
     })
@@ -47,7 +47,11 @@ describe('car controller', () => {
     })
 
     it('sets the index route', () => {
-      expect(mockExpressApp.get).nthCalledWith(1, carController.ROUT_BASE, carController.index)
+      expect(mockExpressApp.get).nthCalledWith(
+        1,
+        carController.ROUT_BASE,
+        carController.index
+      )
     })
 
     it('sets the rented cars route', () => {
@@ -89,7 +93,9 @@ describe('car controller', () => {
         carController.getById
       )
 
-      expect(mockExpressApp.get.mock.calls[4][1].name).toBe('bound validateExistentClub')
+      expect(mockExpressApp.get.mock.calls[4][1].name).toBe(
+        'bound validateExistentClub'
+      )
     })
 
     it('sets the update car route', () => {
@@ -108,8 +114,12 @@ describe('car controller', () => {
         carController.update
       )
 
-      expect(mockExpressApp.post.mock.calls[2][1].name).toBe('bound validateExistentClub')
-      expect(mockExpressApp.get.mock.calls[5][1].name).toBe('bound validateExistentClub')
+      expect(mockExpressApp.post.mock.calls[2][1].name).toBe(
+        'bound validateExistentClub'
+      )
+      expect(mockExpressApp.get.mock.calls[5][1].name).toBe(
+        'bound validateExistentClub'
+      )
     })
 
     it('sets the delete route', () => {
@@ -119,7 +129,9 @@ describe('car controller', () => {
         expect.any(Function),
         carController.delete
       )
-      expect(mockExpressApp.post.mock.calls[2][1].name).toBe('bound validateExistentClub')
+      expect(mockExpressApp.post.mock.calls[2][1].name).toBe(
+        'bound validateExistentClub'
+      )
     })
 
     it('sets the rent route', () => {
@@ -130,20 +142,21 @@ describe('car controller', () => {
         carController.urlencodedParser,
         carController.rent
       )
-      expect(mockExpressApp.post.mock.calls[3][1].name).toBe('bound validateExistentClub')
+      expect(mockExpressApp.post.mock.calls[3][1].name).toBe(
+        'bound validateExistentClub'
+      )
     })
 
     afterAll(jest.clearAllMocks)
   })
 
   describe('validateExistentClub', () => {
-
     describe('get a club that exists', () => {
       const carID = 1
       const req = {
         params: {
-          id: carID
-        }
+          id: carID,
+        },
       }
       const res = {}
       const next = jest.fn()
@@ -167,12 +180,12 @@ describe('car controller', () => {
       const carID = 1
       const req = {
         params: {
-          id: carID
-        }
+          id: carID,
+        },
       }
       const res = {
         status: jest.fn(),
-        render: jest.fn()
+        render: jest.fn(),
       }
       const next = jest.fn()
 
@@ -184,7 +197,7 @@ describe('car controller', () => {
         carController.validateExistentClub(req, res, next)
       })
 
-      it('renders not-found-404 and set status code to 404',() => {
+      it('renders not-found-404 and set status code to 404', () => {
         expect(res.status).toBeCalledWith(404)
         expect(res.render).toBeCalledWith('car/view/not-found-404')
       })
@@ -195,12 +208,14 @@ describe('car controller', () => {
 
       afterAll(jest.clearAllMocks)
     })
-    
   })
 
   describe('validateAndParseCarRequest', () => {
     const joiObjectSpy = jest.spyOn(Joi, 'object')
-    const { validCarHttpReq, invalidCarHttpReq } = require('./car-http-request.fixture')
+    const {
+      validCarHttpReq,
+      invalidCarHttpReq,
+    } = require('./car-http-request.fixture')
 
     afterEach(joiObjectSpy.mockClear)
 
@@ -209,7 +224,7 @@ describe('car controller', () => {
         carController.validateAndParseCarRequest(validCarHttpReq)
       })
 
-      it('calls Joi.object with the corresponding properties',()=>{
+      it('calls Joi.object with the corresponding properties', () => {
         const objectToValidate = joiObjectSpy.mock.calls[0][0]
         expect(joiObjectSpy).toBeCalledTimes(1)
 
@@ -230,7 +245,9 @@ describe('car controller', () => {
       let validatedCarReq
 
       beforeEach(() => {
-        validatedCarReq = carController.validateAndParseCarRequest(validCarHttpReq)
+        validatedCarReq = carController.validateAndParseCarRequest(
+          validCarHttpReq
+        )
       })
 
       it('returns the parsed request', () => {
@@ -251,9 +268,9 @@ describe('car controller', () => {
     describe('doesnt pass the validation with invalid car request', () => {
       let errorThrowed
       beforeAll(() => {
-        try{
+        try {
           carController.validateAndParseCarRequest(invalidCarHttpReq)
-        }catch(error){
+        } catch (error) {
           errorThrowed = error
         }
       })
@@ -262,14 +279,14 @@ describe('car controller', () => {
         expect(errorThrowed).toBeInstanceOf(Joi.ValidationError)
       })
     })
-  
+
     afterAll(jest.clearAllMocks)
   })
 
   describe('cleanSessionErrorsAndMessages', () => {
     const someSession = {
       error: 'someone error',
-      message: 'someone message'
+      message: 'someone message',
     }
 
     beforeAll(() => {

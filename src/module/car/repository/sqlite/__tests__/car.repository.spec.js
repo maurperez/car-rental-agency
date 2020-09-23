@@ -3,9 +3,8 @@ const CarRepository = require('../car.repository')
 const {NonExistentCar} = require('../../../error/general-errors')
 const Sqlite3Database = require('better-sqlite3')
 const migration = fs.readFileSync('./src/config/setup.sqlite', 'utf-8')
-const { carCreation } = require('../../../__tests__/fixtures')
+const {carCreation} = require('../../../__tests__/fixtures')
 const Car = require('../../../car.entity')
-
 
 let mockDb = new Sqlite3Database(':memory:')
 
@@ -57,7 +56,7 @@ describe('CarRepository', () => {
 
     it('deletes the created car', () => {
       carRepository.delete(car.id)
-      
+
       try {
         carRepository.getById(car.id)
       } catch (error) {
@@ -97,7 +96,7 @@ describe('CarRepository', () => {
     let carsCreated
     beforeAll(() => {
       mockDb.exec(migration)
-      
+
       for (let idx = 0; idx < carsToCreate; idx++) {
         carRepository.create(carCreation)
       }
@@ -109,7 +108,7 @@ describe('CarRepository', () => {
       expect(Array.isArray(carsCreated)).toBe(true)
       expect(carsCreated.length).toBe(carsToCreate)
     })
- 
+
     it('every element in the returned array it is an instance of Car class', () => {
       expect(carsCreated.every(car => car instanceof Car)).toBe(true)
     })

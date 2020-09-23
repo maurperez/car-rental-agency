@@ -8,7 +8,7 @@ const validCarHttpReq = {
   number_passengers: '4',
   automatic: '0',
   price_per_week_in_dollars: '500',
-  price_per_day_in_dollars: '100'
+  price_per_day_in_dollars: '100',
 }
 
 const invalidCarHttpReq = {
@@ -21,11 +21,10 @@ const invalidCarHttpReq = {
   number_passengers: '320',
   automatic: '0',
   price_per_week_in_dollars: '-100',
-  price_per_day_in_dollars: '-20'
+  price_per_day_in_dollars: '-20',
 }
-
 
 module.exports = {
   validCarHttpReq,
-  invalidCarHttpReq
+  invalidCarHttpReq,
 }

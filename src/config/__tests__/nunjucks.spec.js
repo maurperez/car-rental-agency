@@ -1,14 +1,14 @@
 const configureNunjucks = require('../nunjucks')
 
 const mockExpressApp = {
-  set: jest.fn()
+  set: jest.fn(),
 }
 const mockDiContainer = {
-  get: jest.fn()
+  get: jest.fn(),
 }
 const mockNunjucksEnv = {
   express: jest.fn(),
-  addFilter: jest.fn()
+  addFilter: jest.fn(),
 }
 
 describe('nunjuck configuration', () => {
@@ -16,7 +16,7 @@ describe('nunjuck configuration', () => {
     mockDiContainer.get.mockReturnValue(mockNunjucksEnv)
 
     configureNunjucks(mockExpressApp, mockDiContainer)
-  });
+  })
 
   it('calls the container to get the NunjucksEnv', () => {
     expect(mockDiContainer.get).toBeCalledWith('NunjucksEnv')
@@ -30,9 +30,12 @@ describe('nunjuck configuration', () => {
   it('adds isarray filter', () => {
     const isArrayFilterFunc = mockNunjucksEnv.addFilter.mock.calls[0][1]
 
-    expect(mockNunjucksEnv.addFilter).toBeCalledWith('isarray', isArrayFilterFunc)
+    expect(mockNunjucksEnv.addFilter).toBeCalledWith(
+      'isarray',
+      isArrayFilterFunc
+    )
 
-    expect(isArrayFilterFunc([1,2])).toBe(true)
+    expect(isArrayFilterFunc([1, 2])).toBe(true)
     expect(isArrayFilterFunc('non array')).toBe(false)
   })
 })

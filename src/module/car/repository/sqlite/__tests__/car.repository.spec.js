@@ -113,4 +113,6 @@ describe('CarRepository', () => {
       expect(carsCreated.every(car => car instanceof Car)).toBe(true)
     })
   })
+
+  afterAll(mockDb.close)
 })

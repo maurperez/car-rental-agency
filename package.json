@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
-    "start:dev": "nodemon src/main",
+    "start:dev": "npx nodemon src/main",
     "start": "node src/main",
     "format": "npx prettier --config ./.prettierrc --write \"src/**/*.js\"",
-    "test": "jest",
-    "test:cov": "jest --coverage",
-    "test:dev": "jest --watch"
+    "test": "npx jest",
+    "test:cov": "npx jest --coverage",
+    "test:dev": "npx jest --watch"
   },
   "repository": {
     "type": "git",

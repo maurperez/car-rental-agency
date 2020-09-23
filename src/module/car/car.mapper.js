@@ -37,6 +37,10 @@ function fromDbToEntity(carDto) {
  * @returns {Car}
  */
 function fromHttpRequestToEntity(carDto, imageUrl, id) {
+  if (!carDto) {
+    throw new Error('empty car data')
+  }
+
   return new Car(
     id,
     carDto.brand,

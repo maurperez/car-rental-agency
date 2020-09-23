@@ -1,5 +1,3 @@
-const nunjucks = require('nunjucks')
-
 /**
  * @param {import('express').Application} expressApp
  * @param {import('rsdi').IDIContainer} container

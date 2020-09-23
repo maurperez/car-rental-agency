@@ -10,7 +10,7 @@ function deleteCar(req, res) {
   this.carService.delete(id)
 
   session.message = `car with id ${id} deleted sucessfully`
-  res.status(202)
+  res.status(204)
   res.redirect(`${this.ROUT_BASE}/available`)
 }
 

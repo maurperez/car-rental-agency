@@ -15,7 +15,7 @@ function initializeDatabaseAdapter() {
   return new Sqlite3Database(process.env.DB_PATH)
 }
 
-function initializeMulter() {
+function configureMulter() {
   const storage = multer.diskStorage({
     destination: (req, file, cb) => {
       cb(null, process.env.IMAGE_UPLOAD_DIR)
@@ -25,7 +25,7 @@ function initializeMulter() {
   return multer({storage})
 }
 
-function initializeUrlEncodedParser() {
+function configureUrlEncodedParser() {
   const urlencodedParser = bodyParser.urlencoded({
     extended: false,
   })
@@ -33,7 +33,7 @@ function initializeUrlEncodedParser() {
   return urlencodedParser
 }
 
-function initializeSession() {
+function configureSession() {
   const ONE_WEEK_IN_SECONDS = 604800000
 
   const sessionOptions = {
@@ -67,9 +67,9 @@ function configurationNunjucksEnvironment() {
 function addCommonDefinitions(container) {
   container.addDefinitions({
     MainDatabaseAdapter: factory(initializeDatabaseAdapter),
-    Multer: factory(initializeMulter),
-    UrlencodedParser: factory(initializeUrlEncodedParser),
-    Session: factory(initializeSession),
+    Multer: factory(configureMulter),
+    UrlencodedParser: factory(configureUrlEncodedParser),
+    Session: factory(configureSession),
   })
 }
 

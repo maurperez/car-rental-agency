@@ -3,7 +3,7 @@ const Joi = require('joi')
 /**
  * @param {import('express').Request} req
  * @param {import('express').Response} res
- * @this {import('./car.controller')}
+ * @this {import('../car.controller')}
  */
 function create(req, res) {
   const path = req.path
@@ -21,15 +21,17 @@ function create(req, res) {
     this.cleanSessionErrorsAndMessages(session)
   } else if (method === 'POST') {
     try {
-      const carDto = this.validateCarRequest(req.body)
+      const carDto = this.validateAndParseCarRequest(req.body)
       const imagePath = req.file.path
       const carInstance = this.carService.create(carDto, imagePath)
       session.message = 'Car created sucessfully'
       res.redirect(`${this.ROUT_BASE}/${carInstance.id}`)
     } catch (error) {
       if (error instanceof Joi.ValidationError) {
+        res.status(400)
         session.error = error.details.map(error => error.message)
       } else {
+        res.status(500)
         session.error = 'Internal Server Error, please try later'
       }
       res.redirect(path)

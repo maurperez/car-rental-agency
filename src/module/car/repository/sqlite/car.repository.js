@@ -2,7 +2,7 @@ const AbstractCarRepository = require('../abstract-repository')
 const {NonExistentCar} = require('../../error/general-errors')
 const {fromDbToEntity} = require('../../car.mapper')
 
-module.exports = class ClubRepository extends AbstractCarRepository {
+module.exports = class CarRepository extends AbstractCarRepository {
   /**
    * @param {import('better-sqlite3').Database} databaseAdapter
    */

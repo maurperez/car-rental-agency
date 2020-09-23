@@ -3,7 +3,7 @@ const Joi = require('joi')
 /**
  * @param {import('express').Request} req
  * @param {import('express').Response} res
- * @this {import('./car.controller')}
+ * @this {import('../car.controller')}
  */
 function update(req, res) {
   const id = req.params.id
@@ -25,11 +25,11 @@ function update(req, res) {
     this.cleanSessionErrorsAndMessages(session)
   } else if (method === 'POST') {
     try {
-      const carDto = this.validateCarRequest(req.body)
+      const carDto = this.validateAndParseCarRequest(req.body)
       const carImagePath = req.file?.path
       this.carService.update(id, carDto, carImagePath)
       session.message = 'Car updated sucessfully'
-      res.redirect(`${this.ROUT_BASE}/${id}`)
+      res.redirect(path)
     } catch (error) {
       if (error instanceof Joi.ValidationError) {
         session.error = error.details.map(error => error.message)

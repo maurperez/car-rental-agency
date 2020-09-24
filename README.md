@@ -5,6 +5,8 @@ A monolithic app about a car rental agency
 
 ## Installation
 
+:warning: **This project requires a Node.js version greater than or equal to 14.0.0**
+
 ```bash
 $ npm install
 ```

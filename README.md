@@ -1,4 +1,4 @@
-# car-rental-agency
+# Car Rental Agency
 
 ## Description
 A monolithic app about a car rental agency
@@ -48,7 +48,7 @@ $ npm run test:cov
 
 | Route                            | Explanation                                                                                   |
 | -------------------------------- | ----------------------------------------------------------------------------------------------|
-| public                           | contain their own public and static files, this includes css, js and images                   |
+| public                           | contain public and static files, this includes css, js and images                             |
 | src                              | contain the app                                                                               |
 | src/app.js                       | entry point of the app                                                                        |
 | src/config                       | application configuration                                                                     | 
@@ -56,8 +56,8 @@ $ npm run test:cov
 | src/module/car                   | everything related to the car module                                                          |
 | src/module/car/car.entity.js     | Car base entity                                                                               |
 | src/module/car/controller        | controller of the module, handles HTTP request                                                |
-| src/module/car/mapper            | maps flat objects to the Car entity                                                            |
-| src/module/car/repository        | Interacts with the database                                                                    |
-| src/module/car/service           | Business logic                                                                                 |
-| src/module/car/view              | UI corresponding to the module                                                                 |
-| src/module/car/module.js         | entry point of the module                                                                      |
+| src/module/car/mapper            | maps flat objects to the Car entity                                                           |
+| src/module/car/repository        | Interacts with the database                                                                   |
+| src/module/car/service           | Business logic                                                                                |
+| src/module/car/view              | UI corresponding to the module                                                                |
+| src/module/car/module.js         | entry point of the module                                                                     |

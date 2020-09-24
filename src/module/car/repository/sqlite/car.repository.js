@@ -1,6 +1,6 @@
 const AbstractCarRepository = require('../abstract-repository')
 const {NonExistentCar} = require('../../error/general-errors')
-const {fromDbToEntity} = require('../../car.mapper')
+const {fromDbToEntity} = require('../../mapper/car.mapper')
 
 module.exports = class CarRepository extends AbstractCarRepository {
   /**

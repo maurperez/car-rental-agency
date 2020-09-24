@@ -1,6 +1,6 @@
 require('./types/car.dto')
 const CarController = require('./controller/car.controller')
-const CarService = require('./car.service')
+const CarService = require('./service/car.service')
 const CarRepository = require('./repository/sqlite/car.repository')
 
 /**

@@ -4,6 +4,10 @@ const {default: DIContainer} = require('rsdi')
 describe('dependency injection', () => {
   const container = configureDI()
 
+  beforeAll(() => {
+    process.env.SESSION_SECRET = 'someone session secret'
+  });
+
   it('container is an instance of DIContainer', () => {
     expect(container).toBeInstanceOf(DIContainer)
   })

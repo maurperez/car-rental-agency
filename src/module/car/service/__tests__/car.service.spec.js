@@ -100,7 +100,11 @@ describe('CarService', () => {
 
   describe('rent', () => {
     const carId = 1
-    const {carAvailable, carRented, carInactive} = require('../../__tests__/general-fixtures')
+    const {
+      carAvailable,
+      carRented,
+      carInactive,
+    } = require('../../__tests__/general-fixtures')
 
     describe('rent sucessfully', () => {
       beforeAll(() => {
@@ -191,15 +195,15 @@ describe('CarService', () => {
   })
 
   describe('getAllAvailableCars', () => {
-    const {car, carInactive, carRented} = require('../../__tests__/general-fixtures')
+    const {
+      car,
+      carInactive,
+      carRented,
+    } = require('../../__tests__/general-fixtures')
     let carsReturned
 
     beforeAll(() => {
-      mockCarRepository.getAll.mockReturnValue([
-        car,
-        carInactive,
-        carRented,
-      ])
+      mockCarRepository.getAll.mockReturnValue([car, carInactive, carRented])
       carsReturned = carService.getAllAvailableCars()
     })
 

@@ -20,7 +20,11 @@ describe('Car mappers', () => {
     const carId = 3
     const imagePath = 'fake/image/path'
 
-    const carInstance = fromHttpRequestToEntity(carFromHttpDto, imagePath, carId)
+    const carInstance = fromHttpRequestToEntity(
+      carFromHttpDto,
+      imagePath,
+      carId
+    )
 
     it('returns an instance of Car', () => {
       expect(carInstance).toBeInstanceOf(Car)

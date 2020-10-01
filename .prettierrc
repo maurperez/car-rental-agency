@@ -4,5 +4,6 @@
   "bracketSpacing": false,
   "singleQuote": true,
   "semi": false,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "core.autocrlf": true
 }

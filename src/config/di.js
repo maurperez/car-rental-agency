@@ -3,16 +3,29 @@ const multer = require('multer')
 const nunjucks = require('nunjucks')
 const bodyParser = require('body-parser')
 const session = require('express-session')
-const Sqlite3Database = require('better-sqlite3')
+const {Sequelize} = require('sequelize')
 
 const {
   CarController,
   CarService,
   CarRepository,
+  CarModel,
 } = require('../module/car/module')
 
-function initializeDatabaseAdapter() {
-  return new Sqlite3Database(process.env.DB_PATH)
+function configureSequelize() {
+  const sequelize = new Sequelize({
+    dialect: 'sqlite',
+    storage: process.env.DB_PATH,
+  })
+  sequelize.sync()
+  return sequelize
+}
+
+/**
+ * @param {DIContainer} container
+ */
+function configureCarModel(container) {
+  CarModel.setup(container.get('Sequelize'))
 }
 
 function configureMulter() {
@@ -66,7 +79,7 @@ function configurationNunjucksEnvironment() {
  */
 function addCommonDefinitions(container) {
   container.addDefinitions({
-    MainDatabaseAdapter: factory(initializeDatabaseAdapter),
+    Sequelize: factory(configureSequelize),
     Multer: factory(configureMulter),
     UrlencodedParser: factory(configureUrlEncodedParser),
     Session: factory(configureSession),
@@ -97,7 +110,8 @@ function addCarModuleDefinitions(container) {
       get('CarService')
     ),
     CarService: object(CarService).construct(get('CarRepository')),
-    CarRepository: object(CarRepository).construct(get('MainDatabaseAdapter')),
+    CarRepository: object(CarRepository).construct(get('CarModel')),
+    CarModel: factory(configureCarModel),
   })
 }
 

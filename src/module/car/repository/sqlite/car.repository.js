@@ -4,56 +4,29 @@ const {fromDbToEntity} = require('../../mapper/car.mapper')
 
 module.exports = class CarRepository extends AbstractCarRepository {
   /**
-   * @param {import('better-sqlite3').Database} databaseAdapter
+   * @param {import('../../model/car.model')} carModel
    */
-  constructor(databaseAdapter) {
+  constructor(carModel) {
     super()
-    this.databaseAdapter = databaseAdapter
+    this.carModel = carModel
   }
 
   /**
    * @param {import('../../car.entity')} car
    */
-  create(car) {
-    const statement = this.databaseAdapter.prepare(`
-      INSERT INTO cars (
-        brand,
-        model,
-        model_year,
-        image_url,
-        mileage,
-        color,
-        air_conditioning,
-        number_passengers,
-        automatic,
-        price_per_week_in_cents,
-        price_per_day_in_cents
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `)
+  async create(car) {
+    const carInstance = this.carModel.create(car)
 
-    const params = [
-      car.brand,
-      car.model,
-      car.yearOfModel,
-      car.imageUrl,
-      car.mileage,
-      car.color,
-      car.airConditioning,
-      car.numberOfPassengers,
-      car.automatic,
-      car.pricePerWeekInCents,
-      car.pricePerDayInCents,
-    ]
+    //terminar
+    //crear sequelize instance
 
-    const queryResult = statement.run(params)
-
-    return this.getById(queryResult.lastInsertRowid)
+    return carInstance
   }
 
   /**
    * @param {import('../../car.entity')} car
    */
-  update(car) {
+  async update(car) {
     const statement = this.databaseAdapter.prepare(`
       UPDATE cars SET
         brand = ?,

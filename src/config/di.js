@@ -16,6 +16,7 @@ function configureSequelize() {
   const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: process.env.DB_PATH,
+    logging: false
   })
   sequelize.sync()
   return sequelize
@@ -26,6 +27,7 @@ function configureSequelize() {
  */
 function configureCarModel(container) {
   CarModel.setup(container.get('Sequelize'))
+  return CarModel
 }
 
 function configureMulter() {
@@ -110,8 +112,8 @@ function addCarModuleDefinitions(container) {
       get('CarService')
     ),
     CarService: object(CarService).construct(get('CarRepository')),
-    CarRepository: object(CarRepository).construct(get('CarModel')),
     CarModel: factory(configureCarModel),
+    CarRepository: object(CarRepository).construct(get('CarModel'))
   })
 }
 

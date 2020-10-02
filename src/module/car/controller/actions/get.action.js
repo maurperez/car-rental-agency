@@ -3,9 +3,9 @@
  * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
-function index(req, res) {
+async function index(req, res) {
   const session = req.session
-  const cars = this.carService.getAll()
+  const cars = await this.carService.getAll()
 
   res.render('car/view/home', {
     data: {
@@ -23,9 +23,9 @@ function index(req, res) {
  * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
-function getAvailable(req, res) {
+async function getAvailable(req, res) {
   const session = req.session
-  const cars = this.carService.getAllAvailableCars()
+  const cars = await this.carService.getAllAvailableCars()
 
   res.render('car/view/car-list', {
     data: {
@@ -43,9 +43,9 @@ function getAvailable(req, res) {
  * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
-function getRented(req, res) {
+async function getRented(req, res) {
   const session = req.session
-  const cars = this.carService.getRentedCars()
+  const cars = await this.carService.getRentedCars()
 
   res.render('car/view/car-list', {
     data: {
@@ -63,10 +63,10 @@ function getRented(req, res) {
  * @param {import('express').Response} res
  * @this {import('./car.controller')}
  */
-function getById(req, res) {
+async function getById(req, res) {
   const id = req.params.id
   const session = req.session
-  const car = this.carService.getById(id)
+  const car = await this.carService.getById(id)
 
   res.render('car/view/view-one-car', {
     data: {

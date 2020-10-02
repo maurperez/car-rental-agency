@@ -22,5 +22,5 @@ CREATE TABLE IF NOT EXISTS "cars" (
 CREATE TRIGGER IF NOT EXISTS update_cars
 	BEFORE UPDATE ON cars
 BEGIN
-	UPDATE clubs SET updated_at = (datetime('now')) WHERE id = old.id;
+	UPDATE cars SET updated_at = (datetime('now')) WHERE id = old.id;
 END;

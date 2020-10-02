@@ -93,6 +93,7 @@ module.exports = class CarModel extends Model {
       },
       {
         sequelize: sequelizeInstance,
+        tableName: 'cars',
         modelName: 'Car',
         timestamps: false,
       }

@@ -4,7 +4,7 @@ const Car = require('../car.entity')
  * @returns {Car}
  * @param {CarFromDbDto} carDto
  */
-function fromDbToEntity(carDto) {
+function fromModelToEntity(carDto) {
   if (!carDto) {
     throw new Error('empty car data')
   }
@@ -13,20 +13,20 @@ function fromDbToEntity(carDto) {
     carDto.id,
     carDto.brand,
     carDto.model,
-    carDto.model_year,
-    carDto.image_url,
+    carDto.yearOfModel,
+    carDto.imageUrl,
     carDto.mileage,
     carDto.color,
-    carDto.air_conditioning,
-    carDto.number_passengers,
+    carDto.airConditioning,
+    carDto.numberOfPassengers,
     carDto.automatic,
     carDto.active,
     carDto.rented,
-    carDto.return_date,
-    carDto.price_per_week_in_cents,
-    carDto.price_per_day_in_cents,
-    carDto.created_at,
-    carDto.updated_at
+    carDto.returnDate,
+    carDto.pricePerWeekInCents,
+    carDto.pricePerDayInCents,
+    carDto.createdAt,
+    carDto.updatedAt
   )
 }
 
@@ -62,5 +62,5 @@ function fromHttpRequestToEntity(carDto, imageUrl, id) {
 
 module.exports = {
   fromHttpRequestToEntity,
-  fromDbToEntity,
+  fromModelToEntity,
 }

@@ -13,7 +13,7 @@ module.exports = class CarService {
    * @param {CarFromHttpRequestDto} carDto
    * @param {string} imagePath
    */
-  create(carDto, imagePath) {
+  async create(carDto, imagePath) {
     const car = fromHttpRequestToEntity(carDto, imagePath)
     return this.carRepository.create(car)
   }
@@ -23,21 +23,22 @@ module.exports = class CarService {
    * @param {CarFromHttpRequestDto} carDto
    * @param {string} imagePath
    */
-  update(id, carDto, imagePath) {
+  async update(id, carDto, imagePath) {
     const carUpdate = fromHttpRequestToEntity(carDto, imagePath, id)
-    const carInstance = this.getById(id)
+    const carInstance = await this.getById(id)
 
     Object.keys(carUpdate).forEach(key => {
       carUpdate[key] && (carInstance[key] = carUpdate[key])
     })
 
+    console.log(carUpdate)
     this.carRepository.update(carInstance)
   }
 
   /**
    * @param {Number} id
    */
-  delete(id) {
+  async delete(id) {
     this.carRepository.delete(id)
   }
 
@@ -45,8 +46,8 @@ module.exports = class CarService {
    * @param {number} id
    * @param {number} daysToRent
    */
-  rent(id, daysToRent) {
-    const carInstance = this.carRepository.getById(id)
+  async rent(id, daysToRent) {
+    const carInstance = await this.carRepository.getById(id)
 
     if (carInstance.rented === 1) {
       throw new CarAlredyRented()
@@ -77,7 +78,7 @@ module.exports = class CarService {
   /**
    * @param {Number} id
    */
-  getById(id) {
+  async getById(id) {
     return this.carRepository.getById(id)
   }
 
@@ -85,15 +86,15 @@ module.exports = class CarService {
    * @description return all cars: availables, rented, and inactives
    * @returns {Car[]}
    */
-  getAll() {
+  async getAll() {
     return this.carRepository.getAll()
   }
 
   /**
    * @returns {Car[]}
    */
-  getAllAvailableCars() {
-    const allCars = this.getAll()
+  async getAllAvailableCars() {
+    const allCars = await this.getAll()
     const allActiveCars = []
 
     allCars.forEach(car => {
@@ -103,8 +104,8 @@ module.exports = class CarService {
     return allActiveCars
   }
 
-  getRentedCars() {
-    const allCars = this.getAll()
+  async getRentedCars() {
+    const allCars = await this.getAll()
     const rentedCars = []
 
     allCars.forEach(car => {

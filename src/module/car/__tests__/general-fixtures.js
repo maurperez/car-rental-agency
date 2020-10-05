@@ -128,7 +128,7 @@ const carCreation = new Car(
   0,
   null,
   40000,
-  7500
+  7500,
 )
 
 module.exports = {

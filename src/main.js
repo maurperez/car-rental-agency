@@ -9,7 +9,6 @@ const {
   configureHomePage,
 } = require('./config/express')
 const {init: initCarModule} = require('./module/car/module')
-const { setupDatabase } = require('./config/database')
 
 const app = express()
 const container = configureDependencyInjection()
@@ -20,9 +19,6 @@ configureNunjucks(app, container)
 initCarModule(app, container)
 configureHomePage(app, container)
 configureNotFoundPage(app)
-setupDatabase(container.get('MainDatabaseAdapter'))
 
 const port = process.env.PORT || 3000
-app.listen(port, console.log('\x1b[96m',`app listening on port ${port}`))
-
-
+app.listen(port, console.log('\x1b[96m', `app listening on port ${port}`))

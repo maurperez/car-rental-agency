@@ -45,38 +45,38 @@ module.exports = class CarController extends AbstractController {
     )
     app.get(
       `${this.ROUT_BASE}/:id`,
-      this.validateExistentClub.bind(this),
+      this.validateExistentCar.bind(this),
       this.getById
     )
     app.get(
       `${this.ROUT_BASE}/:id/update`,
-      this.validateExistentClub.bind(this),
+      this.validateExistentCar.bind(this),
       this.update
     )
     app.post(
       `${this.ROUT_BASE}/:id/update`,
-      this.validateExistentClub.bind(this),
+      this.validateExistentCar.bind(this),
       this.uploadMultipartMiddleware.single('image-url'),
       this.update
     )
     app.post(
       `${this.ROUT_BASE}/:id/delete`,
-      this.validateExistentClub.bind(this),
+      this.validateExistentCar.bind(this),
       this.delete
     )
     app.post(
       `${this.ROUT_BASE}/:id/rent`,
-      this.validateExistentClub.bind(this),
+      this.validateExistentCar.bind(this),
       this.urlencodedParser,
       this.rent
     )
   }
 
-  validateExistentClub(req, res, next) {
+  async validateExistentCar(req, res, next) {
     const id = req.params.id
 
     try {
-      this.carService.getById(id)
+      await this.carService.getById(id)
       next()
     } catch (error) {
       if (error instanceof NonExistentCar) {

@@ -120,11 +120,11 @@ function addCarModuleDefinitions(container) {
 module.exports = function configureDi() {
   const container = new DIContainer()
   addCommonDefinitions(container)
-  console.log('\x1b[93m', 'Initialized common dependencies')
+  console.log('Initialized common dependencies'.green)
   addNunjucksDefinitions(container)
-  console.log('\x1b[93m', 'Initialized nunjucks')
+  console.log('Initialized nunjucks'.green)
   addCarModuleDefinitions(container)
-  console.log('\x1b[93m', 'Initialized Car module')
+  console.log('Initialized Car module'.green)
 
   return container
 }

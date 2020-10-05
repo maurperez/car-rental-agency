@@ -13,7 +13,7 @@ function fromModelToEntity(carDto) {
     carDto.id,
     carDto.brand,
     carDto.model,
-    carDto.modelYear,
+    carDto.yearOfModel,
     carDto.imageUrl,
     carDto.mileage,
     carDto.color,

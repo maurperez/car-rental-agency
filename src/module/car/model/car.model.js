@@ -22,7 +22,7 @@ module.exports = class CarModel extends Model {
           type: DataTypes.TEXT,
           allowNull: false,
         },
-        modelYear: {
+        yearOfModel: {
           type: DataTypes.NUMBER,
           allowNull: false,
           field: 'model_year',
@@ -74,20 +74,20 @@ module.exports = class CarModel extends Model {
           field: 'price_per_week_in_cents',
         },
         pricePerDayInCents: {
-          type: DataTypes.TEXT,
+          type: DataTypes.INTEGER,
           allowNull: false,
           field: 'price_per_day_in_cents',
         },
         createdAt: {
           type: DataTypes.TEXT,
           allowNull: false,
-          defaultValue: DataTypes.NOW,
+          defaultValue: new Date().toISOString(),
           field: 'created_at',
         },
         updatedAt: {
           type: DataTypes.TEXT,
           allowNull: false,
-          defaultValue: DataTypes.NOW,
+          defaultValue: new Date().toISOString(),
           field: 'updated_at',
         },
       },

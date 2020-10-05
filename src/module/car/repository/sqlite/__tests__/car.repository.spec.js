@@ -1,107 +1,120 @@
-const fs = require('fs')
 const CarRepository = require('../car.repository')
+const CarModel = require('../../../model/car.model')
+const { Sequelize } = require('sequelize')
 const {NonExistentCar} = require('../../../error/general-errors')
-const Sqlite3Database = require('better-sqlite3')
-const migration = fs.readFileSync('./src/config/setup.tests.sqlite', 'utf-8')
 const {carCreation} = require('../../../__tests__/general-fixtures')
 const Car = require('../../../car.entity')
 
-let mockDb = new Sqlite3Database(':memory:')
-
-const carRepository = new CarRepository(mockDb)
 
 describe('CarRepository', () => {
+  let carRepository = new CarRepository(CarModel)
+
+  beforeAll(async () => {
+    const sequelize = new Sequelize('sqlite::memory', {logging: false})
+    CarModel.setup(sequelize)
+    await sequelize.sync()
+  })
+
   describe('constructor', () => {
-    it('sets the database adapter', () => {
-      expect(carRepository.databaseAdapter).toBe(mockDb)
+    it('sets the car model', () => {
+      expect(carRepository.carModel).toBe(CarModel)
     })
   })
 
   describe('create', () => {
     let car
-    beforeAll(() => {
-      mockDb.exec(migration)
-      car = carRepository.create(carCreation)
+    beforeAll(async () => {
+      car = await carRepository.create(carCreation)
     })
 
-    it('applies the id and timestamps to the new club', () => {
-      expect(car.id).toBe(1)
-      expect(typeof car.createdAt).toBe('string')
-      expect(typeof car.updatedAt).toBe('string')
+    it('returns an instance of the Car', async () => {
+      expect(car).toBeInstanceOf(Car)
     })
-  })
+
+    it('sets the id and timestamps', () => {
+      expect(car.id).toBeDefined()
+      expect(car.createdAt).toBeDefined()
+      expect(car.updatedAt).toBeDefined()
+    })
+
+    it('exists in the database',async () => {
+      expect(await CarModel.findByPk(car.id)).toBeTruthy()
+    })
+
+    afterAll(() => CarModel.destroy({where: {}}))
+  }) 
 
   describe('update', () => {
-    let car
-    beforeAll(() => {
-      mockDb.exec(migration)
-      car = carRepository.create(carCreation)
+    let carModelInstance
+    beforeAll( async () => {
+      carModelInstance = await CarModel.create(carCreation, {isNewRecord: true})
     })
 
-    it('updates the model year of the car', () => {
-      car.yearOfModel = 2015
-      carRepository.update(car)
-      const carUpdated = carRepository.getById(car.id)
+    it('updates persist', async () => {
+      const NEW_COLOR = 'red'
+      await carRepository.update({...carCreation, id: carModelInstance.id, color: NEW_COLOR})
 
-      expect(carUpdated.yearOfModel).toBe(2015)
+      const carUpdated = await CarModel.findByPk(carModelInstance.id)
+      expect(carUpdated.color).toBe(NEW_COLOR)
     })
+
+    afterAll(() => CarModel.destroy({where: {}}))
   })
 
+  
   describe('delete', () => {
-    let car
-    beforeAll(() => {
-      mockDb.exec(migration)
-      car = carRepository.create(carCreation)
+    let carModelInstance
+    beforeAll(async () => {
+      carModelInstance = await CarModel.create(carCreation, {isNewRecord: true})
     })
 
-    it('deletes the created car', () => {
-      carRepository.delete(car.id)
+    it('deletes the created car', async () => {
+      await carRepository.delete(carModelInstance.id)
 
-      try {
-        carRepository.getById(car.id)
-      } catch (error) {
-        expect(error).toBeInstanceOf(NonExistentCar)
-      }
+      CarModel.findByPk(carModelInstance.id)
+        .then(car => expect(car).toBeNull())
     })
+
+    afterAll(() => CarModel.destroy({where: {}}))
   })
 
+  
   describe('getById', () => {
-    let car
-    beforeAll(() => {
-      mockDb.exec(migration)
-      car = carRepository.create(carCreation)
+    let carModelInstance
+    beforeAll(async () => {
+      carModelInstance = await CarModel.create(carCreation, {isNewRecord: true})
     })
 
-    it('gets the created car', () => {
-      const carCreated = carRepository.getById(car.id)
-      expect(carCreated.id).toBe(car.id)
+    it('gets the created car', async () => {
+      const carCreated = await carRepository.getById(carModelInstance.id)
+      expect(carCreated).toBeTruthy()
     })
 
-    it('returns a instance of Car class', () => {
-      const carCreated = carRepository.getById(car.id)
+    it('returns a instance of Car class', async () => {
+      const carCreated = await carRepository.getById(carModelInstance.id)
       expect(carCreated).toBeInstanceOf(Car)
     })
 
-    it('tries to get non-exsitent car throw an error', () => {
+    it('tries to get non-exsitent car throw an error',async () => {
       try {
-        carRepository.getById(-500)
+        await carRepository.getById(-500)
       } catch (error) {
         expect(error).toBeInstanceOf(NonExistentCar)
       }
     })
+
+    afterAll(() => CarModel.destroy({where: {}}))
   })
 
   describe('getAll', () => {
     const carsToCreate = 5
     let carsCreated
-    beforeAll(() => {
-      mockDb.exec(migration)
-
+    beforeAll(async () => {
       for (let idx = 0; idx < carsToCreate; idx++) {
-        carRepository.create(carCreation)
+        await CarModel.create(carCreation, {isNewRecord: true})
       }
 
-      carsCreated = carRepository.getAll()
+      carsCreated = await carRepository.getAll()
     })
 
     it('returns an array with all cars', () => {
@@ -114,5 +127,5 @@ describe('CarRepository', () => {
     })
   })
 
-  afterAll(mockDb.close)
+  afterAll(() => CarModel.destroy({where: {}}))
 })

@@ -14,4 +14,9 @@ module.exports.Customer = class Customer {
     this.email = customerInfo.email,
     this.brithDate = customerInfo.birthdate
   }
+
+  static getLeagalAgeToDrive (){
+    return 18
+  }
+
 }

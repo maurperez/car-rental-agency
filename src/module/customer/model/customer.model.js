@@ -17,17 +17,19 @@ module.exports = class CustomerModel extends Model {
         type: DataTypes.TEXT,
         allowNull: false
       },
-      lastName: {
+      lastname: {
         type: DataTypes.TEXT,
         allowNull: false
       },
       documentType: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: false,
+        field: 'document_type'
       },
       documentNumber: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: false,
+        field: 'document_number'
       },
       nationality: {
         type: DataTypes.TEXT,
@@ -39,7 +41,8 @@ module.exports = class CustomerModel extends Model {
       },
       phoneNumber: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: false,
+        field: 'phone_number'
       },
       email: {
         type: DataTypes.TEXT,
@@ -51,16 +54,17 @@ module.exports = class CustomerModel extends Model {
       },
       createdAt: {
         type: DataTypes.DATE,
-        defaultValue: new Date().toISOString()
+        defaultValue: new Date().toISOString(),
+        field: 'created_at'
       },
       updatedAt: {
         type: DataTypes.DATE,
         defaultValue: new Date().toISOString(),
+        field: 'updated_at'
       }
     }, {
       sequelize: sequelizeInstance,
       tableName: 'customers',
-      modelName: 'Customer',
       timestamps: false
     })
   }

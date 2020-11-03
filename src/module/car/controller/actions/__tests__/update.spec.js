@@ -102,7 +102,7 @@ describe('update method', () => {
     })
 
     it('redirects to the car page after update', () => {
-      expect(res.redirect).toBeCalledWith(req.path)
+      expect(res.redirect).toBeCalledWith(`${mockThisCarController.ROUT_BASE}/${carID}`)
     })
 
     afterAll(jest.resetAllMocks)

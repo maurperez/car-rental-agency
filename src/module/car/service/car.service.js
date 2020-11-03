@@ -31,7 +31,6 @@ module.exports = class CarService {
       carUpdate[key] && (carInstance[key] = carUpdate[key])
     })
 
-    console.log(carUpdate)
     this.carRepository.update(carInstance)
   }
 

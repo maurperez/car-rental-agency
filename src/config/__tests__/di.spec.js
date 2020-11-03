@@ -1,5 +1,7 @@
 const configureDI = require('../di')
 const {default: DIContainer} = require('rsdi')
+global.console = {log: jest.fn()}
+
 
 describe('dependency injection', () => {
   const container = configureDI()
@@ -13,7 +15,7 @@ describe('dependency injection', () => {
   })
 
   it('contains common definitions', () => {
-    expect(container.get('MainDatabaseAdapter')).toBeDefined()
+    expect(container.get('Sequelize')).toBeDefined()
     expect(container.get('Multer')).toBeDefined()
     expect(container.get('UrlencodedParser')).toBeDefined()
     expect(container.get('Session')).toBeDefined()

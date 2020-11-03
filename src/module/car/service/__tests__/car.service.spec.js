@@ -127,30 +127,29 @@ describe('CarService', () => {
         expect(carPassedToUpdate.rented).toBe(1)
         expect(carPassedToUpdate.returnDate).toMatch(dateISOformatRegex)
       })
+
       afterAll(jest.resetAllMocks)
     })
 
-    describe('try to update alredy rented car', () => {
+    describe('try to rent alredy rented car', () => {
       beforeAll(() => {
-        mockCarRepository.getById.mockReturnValue(carRented)
+        mockCarRepository.getById.mockResolvedValue(carRented)
       })
 
       it('throws CarAlredyRented exception', () => {
-        expect(carService.rent.bind(carService, carId, 5)).toThrow(
-          CarAlredyRented
-        )
+        expect(carService.rent.bind(carService, carId, 5)).rejects.toBeInstanceOf(CarAlredyRented)
       })
 
       afterAll(jest.resetAllMocks)
     })
 
-    describe('try to update inactive car', () => {
+    describe('try to rent inactive car', () => {
       beforeAll(() => {
         mockCarRepository.getById.mockReturnValue(carInactive)
       })
 
       it('throws CarInactive exception', () => {
-        expect(carService.rent.bind(carService, carId, 5)).toThrow(CarInactive)
+        expect(carService.rent.bind(carService, carId, 5)).rejects.toBeInstanceOf(CarInactive)
       })
 
       afterAll(jest.resetAllMocks)
@@ -160,9 +159,9 @@ describe('CarService', () => {
   describe('getById', () => {
     const carId = 5
     let carReturned
-    beforeAll(() => {
+    beforeAll(async () => {
       mockCarRepository.getById.mockReturnValue('someone car')
-      carReturned = carService.getById(carId)
+      carReturned = await carService.getById(carId)
     })
 
     it('calls the getById method of car repository with the id', () => {
@@ -178,9 +177,9 @@ describe('CarService', () => {
 
   describe('getAll', () => {
     let carsReturned
-    beforeAll(() => {
+    beforeAll(async () => {
       mockCarRepository.getAll.mockReturnValue(['someone car', 'another car'])
-      carsReturned = carService.getAll()
+      carsReturned = await carService.getAll()
     })
 
     it('calls the getAll method of car repository', () => {
@@ -202,9 +201,9 @@ describe('CarService', () => {
     } = require('../../__tests__/general-fixtures')
     let carsReturned
 
-    beforeAll(() => {
+    beforeAll( async () => {
       mockCarRepository.getAll.mockReturnValue([car, carInactive, carRented])
-      carsReturned = carService.getAllAvailableCars()
+      carsReturned = await carService.getAllAvailableCars()
     })
 
     it('calls the getAll method of carRepository', () => {
@@ -224,9 +223,9 @@ describe('CarService', () => {
     const {car, carRented} = require('../../__tests__/general-fixtures')
     let carsReturned
 
-    beforeAll(() => {
+    beforeAll( async () => {
       mockCarRepository.getAll.mockReturnValue([car, carRented])
-      carsReturned = carService.getRentedCars()
+      carsReturned = await carService.getRentedCars()
     })
 
     it('call the getAll method of carRepositor', () => {

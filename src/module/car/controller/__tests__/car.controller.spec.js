@@ -94,7 +94,7 @@ describe('car controller', () => {
       )
 
       expect(mockExpressApp.get.mock.calls[4][1].name).toBe(
-        'bound validateExistentClub'
+        'bound validateExistentCar'
       )
     })
 
@@ -115,10 +115,10 @@ describe('car controller', () => {
       )
 
       expect(mockExpressApp.post.mock.calls[2][1].name).toBe(
-        'bound validateExistentClub'
+        'bound validateExistentCar'
       )
       expect(mockExpressApp.get.mock.calls[5][1].name).toBe(
-        'bound validateExistentClub'
+        'bound validateExistentCar'
       )
     })
 
@@ -130,7 +130,7 @@ describe('car controller', () => {
         carController.delete
       )
       expect(mockExpressApp.post.mock.calls[2][1].name).toBe(
-        'bound validateExistentClub'
+        'bound validateExistentCar'
       )
     })
 
@@ -143,15 +143,15 @@ describe('car controller', () => {
         carController.rent
       )
       expect(mockExpressApp.post.mock.calls[3][1].name).toBe(
-        'bound validateExistentClub'
+        'bound validateExistentCar'
       )
     })
 
     afterAll(jest.clearAllMocks)
   })
 
-  describe('validateExistentClub', () => {
-    describe('get a club that exists', () => {
+  describe('validateExistentCar', () => {
+    describe('get a car that exists', () => {
       const carID = 1
       const req = {
         params: {
@@ -162,7 +162,7 @@ describe('car controller', () => {
       const next = jest.fn()
 
       beforeAll(() => {
-        carController.validateExistentClub(req, res, next)
+        carController.validateExistentCar(req, res, next)
       })
 
       it('calls the getById method of car service', () => {
@@ -194,7 +194,7 @@ describe('car controller', () => {
           throw new NonExistentCar()
         })
 
-        carController.validateExistentClub(req, res, next)
+        carController.validateExistentCar(req, res, next)
       })
 
       it('renders not-found-404 and set status code to 404', () => {

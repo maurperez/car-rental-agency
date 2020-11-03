@@ -1,17 +1,17 @@
 const Car = require('../../car.entity')
-const {fromDbToEntity, fromHttpRequestToEntity} = require('../car.mapper')
+const {fromModelToEntity, fromHttpRequestToEntity} = require('../car.mapper')
 
 describe('Car mappers', () => {
   describe('fromDbToEntity', () => {
-    const {carFromDbDto} = require('../../__tests__/general-fixtures')
-    const carInstance = fromDbToEntity(carFromDbDto)
+    const { carFromDbDto } = require('../../__tests__/general-fixtures')
+    const carInstance = fromModelToEntity(carFromDbDto)
 
     it('returns an instance of Car', () => {
       expect(carInstance).toBeInstanceOf(Car)
     })
 
     it('throw an error if pass falsy argument', () => {
-      expect(fromDbToEntity).toThrow()
+      expect(fromModelToEntity).toThrow()
     })
   })
 

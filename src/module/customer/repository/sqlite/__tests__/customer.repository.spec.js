@@ -3,6 +3,7 @@ const CustomerModel = require('../../../model/customer.model')
 const Customer = require('../../../customer.entity')
 const { Sequelize } = require('sequelize')
 const fixtures = require('./customer.repository.fixtures')
+const { NonExistentCustomer } = require('../../../error/general-errors')
 
 describe('Customer repository', () => {
   const customerRepository = new CustomerRepostory(CustomerModel)
@@ -99,6 +100,12 @@ describe('Customer repository', () => {
       expect(customer).toBeInstanceOf(Customer)
     })
 
+    it('throws an error when try to get a non existent customer', () => {
+      const invalidCustomerId = -5
+
+      return expect(customerRepository.getById(invalidCustomerId)).rejects.toBeInstanceOf(NonExistentCustomer)
+    })
+
     afterAll(() => CustomerModel.destroy({where: {}}))
   })
 
@@ -112,6 +119,12 @@ describe('Customer repository', () => {
 
     it('returns an instance of Customer class', () => {
       expect(customer).toBeInstanceOf(Customer)
+    })
+
+    it('throws an error when try to get a non existent customer', () => {
+      const invalidName = 'qweasd', invalidLastname = 'iopjkl'
+
+      return expect(customerRepository.getByName(invalidName, invalidLastname)).rejects.toBeInstanceOf(NonExistentCustomer)
     })
 
     afterAll(() => CustomerModel.destroy({where: {}}))

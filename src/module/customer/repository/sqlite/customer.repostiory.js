@@ -1,5 +1,6 @@
 const AbstractCustomerRepostory = require('../abstract-repostiory')
 const { mapFromDbToEntity } = require('../../mappers/customer.mapper')
+const { NonExistentCustomer } = require('../../error/general-errors')
 
 /**
  * @typedef {import('../../customer.entity')} CustomerEntity
@@ -26,6 +27,8 @@ module.exports = class CustomerRepository extends AbstractCustomerRepostory{
    * @param {CustomerEntity} customer 
    */
   async update(customer){
+    if(!customer.id){ throw new NonExistentCustomer()}
+
     const customerInstance = this.customerModel.build(customer, { isNewRecord: false })
     await customerInstance.save()
     return mapFromDbToEntity(customerInstance)
@@ -45,7 +48,10 @@ module.exports = class CustomerRepository extends AbstractCustomerRepostory{
    */
   async getById(id){
     const customerInstance = await this.customerModel.findByPk(id)
-    return mapFromDbToEntity(customerInstance)
+
+    if(customerInstance){
+      return mapFromDbToEntity(customerInstance)
+    }else { throw new NonExistentCustomer()}
   }
 
   /**
@@ -59,7 +65,10 @@ module.exports = class CustomerRepository extends AbstractCustomerRepostory{
         lastname
       }
     })
-    return mapFromDbToEntity(customersInstance)
+    
+    if(customersInstance.length > 0){
+      return mapFromDbToEntity(customersInstance)
+    }else { throw new NonExistentCustomer() }
   }
 
   async getAll(){

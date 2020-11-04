@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const AbstractCustomerRepositoryError = require('./error/abstract-car-repository')
 const MethodNotImplementedError = require('./error/method-not-implemented')
 

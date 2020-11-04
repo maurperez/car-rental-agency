@@ -1,4 +1,5 @@
 const AbstractCustomerRepostory = require('../abstract-repostiory')
+const { mapFromDbToEntity } = require('../../mappers/customer.mapper')
 
 /**
  * @typedef {import('../../customer.entity').Customer} CustomerEntity
@@ -18,7 +19,7 @@ module.exports = class CustomerRepository extends AbstractCustomerRepostory{
    */
   async create(customer){
     const customerInstance = await this.customerModel.create(customer, { isNewRecord: true })
-    return customerInstance
+    return mapFromDbToEntity(customerInstance)
   }
 
   /**
@@ -27,7 +28,7 @@ module.exports = class CustomerRepository extends AbstractCustomerRepostory{
   async update(customer){
     const customerInstance = this.customerModel.build(customer, { isNewRecord: false })
     await customerInstance.save()
-    return customerInstance
+    return mapFromDbToEntity(customerInstance)
   }
 
   /**
@@ -44,7 +45,7 @@ module.exports = class CustomerRepository extends AbstractCustomerRepostory{
    */
   async getById(id){
     const customerInstance = await this.customerModel.findByPk(id)
-    return customerInstance
+    return mapFromDbToEntity(customerInstance)
   }
 
   /**
@@ -58,11 +59,11 @@ module.exports = class CustomerRepository extends AbstractCustomerRepostory{
         lastname
       }
     })
-    return customersInstance
+    return mapFromDbToEntity(customersInstance)
   }
 
   async getAll(){
     const customersInstance = await this.customerModel.findAll()
-    return customersInstance
+    return customersInstance.map(customer => mapFromDbToEntity(customer))
   }
 }

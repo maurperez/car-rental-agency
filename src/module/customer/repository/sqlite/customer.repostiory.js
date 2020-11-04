@@ -2,7 +2,7 @@ const AbstractCustomerRepostory = require('../abstract-repostiory')
 const { mapFromDbToEntity } = require('../../mappers/customer.mapper')
 
 /**
- * @typedef {import('../../customer.entity').Customer} CustomerEntity
+ * @typedef {import('../../customer.entity')} CustomerEntity
  */
 
 module.exports = class CustomerRepository extends AbstractCustomerRepostory{

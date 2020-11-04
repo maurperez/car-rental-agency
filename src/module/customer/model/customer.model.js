@@ -52,13 +52,17 @@ module.exports = class CustomerModel extends Model {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      active: {
+        type: DataTypes.NUMBER,
+        defaultValue: 1
+      },
       createdAt: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         defaultValue: new Date().toISOString(),
         field: 'created_at'
       },
       updatedAt: {
-        type: DataTypes.DATE,
+        type: DataTypes.STRING,
         defaultValue: new Date().toISOString(),
         field: 'updated_at'
       }

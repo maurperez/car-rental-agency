@@ -6,7 +6,7 @@ module.exports = class Customer {
    *  name: string,
    *  lastname: string,
    *  documentType: string,
-   *  nroDocument: string,
+   *  documentNumber: string,
    *  nationality: string,
    *  address: string,
    *  phoneNumber: string,
@@ -22,12 +22,12 @@ module.exports = class Customer {
     this.name = customerInfo.name
     this.lastname = customerInfo.lastname,
     this.documentType = customerInfo.documentType,
-    this.nroDocument = customerInfo.nroDocument,
+    this.documentNumber = customerInfo.documentNumber,
     this.nationality = customerInfo.nationality,
     this.address = customerInfo.address,
     this.phoneNumber = customerInfo.phoneNumber,
     this.email = customerInfo.email,
-    this.brithDate = customerInfo.birthdate,
+    this.birthdate = customerInfo.birthdate,
     this.active = customerInfo.active,
     this.createdAt = customerInfo.createdAt,
     this.updatedAt = customerInfo.updatedAt

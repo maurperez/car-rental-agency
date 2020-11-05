@@ -3,13 +3,13 @@
  *  name: string,
  *  lastName: string,
  *  documentType: string,
- *  nroDocument: string,
+ *  documentNumber: string,
  *  nationality: string,
  *  address: string,
  *  phoneNumber: string,
  *  email: string,
  *  birthdate: Date
- * }} customerFromHttpRequestDto
+ * }} customerFromHttpRequest
  */
 
  /**

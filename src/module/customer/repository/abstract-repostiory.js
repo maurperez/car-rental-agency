@@ -3,7 +3,7 @@ const AbstractCustomerRepositoryError = require('./error/abstract-car-repository
 const MethodNotImplementedError = require('./error/method-not-implemented')
 
 /**
- * @typedef {import('../customer.entity').Customer} CustomerEntity
+ * @typedef {import('../customer.entity')} CustomerEntity
  */
 module.exports = class AbstractCustomerRepostory {
   constructor() {

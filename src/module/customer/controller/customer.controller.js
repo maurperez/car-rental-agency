@@ -1,6 +1,6 @@
 const Joi = require("joi");
 const AbstractController = require("../../abstract-controller");
-const { Customer } = require("../customer.entity");
+const Customer = require("../customer.entity");
 
 module.exports.CustomerController = class extends AbstractController{
   constructor(urlencodedParser, customerService){

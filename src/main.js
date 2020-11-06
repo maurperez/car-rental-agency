@@ -10,6 +10,7 @@ const {
   configureHomePage,
 } = require('./config/express')
 const {init: initCarModule} = require('./module/car/module')
+const {init: initCustomerModule} = require('./module/customer/module')
 
 const app = express()
 const container = configureDependencyInjection()
@@ -18,6 +19,7 @@ configureExpressSession(app, container)
 configureStaticsFiles(app)
 configureNunjucks(app, container)
 initCarModule(app, container)
+initCustomerModule(app, container)
 configureHomePage(app, container)
 configureNotFoundPage(app)
 

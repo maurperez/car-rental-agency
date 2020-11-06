@@ -57,7 +57,7 @@
 
       <footer class="card-footer">
         {% if data.car.active === 1 and data.car.rented === 0 %}
-          <a href="#" class="card-footer-item button is-link" id="rent-button">Rent</a>
+          <button class="card-footer-item button is-link" id="rent-button">Rent</button>
         {% elif data.car.active === 0 %}
           <p class="card-footer-item">
             <span>This car is inactive for the moment</span>

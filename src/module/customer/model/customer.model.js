@@ -2,7 +2,7 @@ const {Model, DataTypes} = require('sequelize')
 
 module.exports = class CustomerModel extends Model {
   /**
-   * @param {Sequelize} sequelizeInstance
+   * @param {import('sequelize').Sequelize} sequelizeInstance
    */
   static setup(sequelizeInstance){
     CustomerModel.init({

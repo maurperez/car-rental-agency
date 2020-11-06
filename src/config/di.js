@@ -12,6 +12,13 @@ const {
   CarModel,
 } = require('../module/car/module')
 
+const {
+  CustomerController,
+  CustomerModel,
+  CustomerRepository,
+  CustomerService
+} = require('../module/customer/module')
+
 function configureSequelize() {
   const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -28,6 +35,11 @@ function configureSequelize() {
 function configureCarModel(container) {
   CarModel.setup(container.get('Sequelize'))
   return CarModel
+}
+
+function configureCustomerModel(container) {
+  CustomerModel.setup(container.get('Sequelize'))
+  return CustomerModel
 }
 
 function configureMulter() {
@@ -101,9 +113,7 @@ function addNunjucksDefinitions(container) {
   })
 }
 
-/**
- * @param {DIContainer} container
- */
+/** @param {DIContainer} container */
 function addCarModuleDefinitions(container) {
   container.addDefinitions({
     CarController: object(CarController).construct(
@@ -117,6 +127,19 @@ function addCarModuleDefinitions(container) {
   })
 }
 
+/** @param {DIContainer} container */
+function addCustomerModuleDefinitions(container) {
+  container.addDefinitions({
+    CustomerController: object(CustomerController).construct(
+      get('UrlencodedParser'),
+      get('CustomerService')
+    ),
+    CustomerService: object(CustomerService).construct(get('CustomerRepository')),
+    CustomerRepository: object(CustomerRepository).construct(get('CustomerModel')),
+    CustomerModel: factory(configureCustomerModel)
+  })
+}
+
 module.exports = function configureDi() {
   const container = new DIContainer()
   addCommonDefinitions(container)
@@ -125,6 +148,8 @@ module.exports = function configureDi() {
   console.log('Initialized nunjucks'.green)
   addCarModuleDefinitions(container)
   console.log('Initialized Car module'.green)
+  addCustomerModuleDefinitions(container)
+  console.log('Initialized Customer module'.green)
 
   return container
 }

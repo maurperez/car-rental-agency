@@ -1,14 +1,14 @@
 /**
  * @typedef {{
  *  name: string,
- *  lastName: string,
+ *  lastname: string,
  *  documentType: string,
  *  documentNumber: string,
  *  nationality: string,
  *  address: string,
  *  phoneNumber: string,
  *  email: string,
- *  birthdate: Date
+ *  birthdate: string
  * }} customerFromHttpRequest
  */
 

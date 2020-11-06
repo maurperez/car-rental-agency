@@ -23,7 +23,7 @@ const mapFromDbToEntity = (customerInstance) => {
 const mapFromHttpRequestToEntity  = (plainCustomer) => {
   return new Customer({
     name: plainCustomer.name,
-    lastname: plainCustomer.lastName,
+    lastname: plainCustomer.lastname,
     documentType: plainCustomer.documentType,
     documentNumber: plainCustomer.documentNumber,
     nationality: plainCustomer.nationality,

@@ -1,6 +1,7 @@
 const Joi = require("joi");
 const AbstractController = require("../../abstract-controller");
 const Customer = require("../customer.entity");
+const { NonExistentCustomer } = require("../error/general-errors");
 
 const { create } = require('./actions/create.action')
 
@@ -37,7 +38,7 @@ module.exports = class extends AbstractController{
       tooLong: (field, length) => `the ${field} cant have more than ${length} characters`,
       isntEmail: 'the email is invalid',
       veryOldBirthDate: (minDate) => `ths bithdate is invalid because this is very old, please introduce a vale equal or grater than ${minDate}`,
-      veryYoung: (maxDate) => `the birthdate is invalid because the customer is very young, please introduce a value equal or less than ${maxDate}`
+      veryYoung: (maxDate) => `the birthdate is invalid because the customer is very young, please introduce a value less than ${maxDate}`
     }
 
     const customerSchema = Joi.object({
@@ -74,6 +75,32 @@ module.exports = class extends AbstractController{
       throw error
     } else {
       return value
+    }
+  }
+
+
+  /**
+   * @param {import('express').Request} req 
+   * @param {import('express').Response} res 
+   * @param {import('express').NextFunction} next 
+   */
+  async validateExistentCustomer(req, res, next){
+    const name = req.query.name, lastname = req.query.lastname
+    const id = req.params.id
+
+    try {
+      id ? 
+        await this.customerService.getById(id) :
+        await this.customerService.getByName(name, lastname)
+
+      next()
+    } catch (error) {
+      if(error instanceof NonExistentCustomer){
+        res.status(404)
+      }else{ 
+        res.status(500) 
+        console.error(error)
+      }
     }
   }
 

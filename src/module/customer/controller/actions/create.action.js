@@ -1,3 +1,5 @@
+const Joi = require('joi')
+
 /**
  * @param {import('express').Request} req 
  * @param {import('express').Response} res
@@ -13,7 +15,9 @@ async function create(req, res) {
 
       res.json(customer).status(201).end()
     } catch (error) {
-      console.log(error);
+      if(error instanceof Joi.ValidationError){
+        res.json(error.details).status(400).end()
+      }
     }
   }
 }

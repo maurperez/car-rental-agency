@@ -13,8 +13,8 @@ module.exports = class Customer {
    *  email: string,
    *  birthdate: string,
    *  active?: (1 | 0),
-   *  createdAt?: Date,
-   *  updatedAt?: Date
+   *  createdAt?: string,
+   *  updatedAt?: string
    * }} customerInfo 
    */
   constructor(customerInfo){

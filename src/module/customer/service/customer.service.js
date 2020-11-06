@@ -1,3 +1,6 @@
+/**
+ * @typedef {import('../customer.entity')} CustomerEntity
+ */
 const { mapFromHttpRequestToEntity } = require('../mappers/customer.mapper')
 
 module.exports = class CustomerService {
@@ -8,7 +11,7 @@ module.exports = class CustomerService {
 
   /**
    *  @param {customerFromHttpRequest} plainCustomer
-   *  @returns {import('../customer.entity')}
+   *  @returns {Promise<CustomerEntity>}
    */
   async create(plainCustomer){
     const customer = await this.customerRepository.create(
@@ -20,7 +23,7 @@ module.exports = class CustomerService {
   /**
    * @param {(number|string)} id
    * @param {customerFromHttpRequest} plainCustomer
-   * @returns {import('../customer.entity')}
+   * @returns {Promise<CustomerEntity>}
    */
   async update(id, plainCustomer){
     const customer = await this.customerRepository.getById(id)
@@ -28,6 +31,7 @@ module.exports = class CustomerService {
     Object.keys(plainCustomer).forEach(key => {
       customer[key] = plainCustomer[key]
     })
+    customer.updatedAt = new Date().toISOString()
 
     const updatedCustomer = await this.customerRepository.update(customer)
     return updatedCustomer
@@ -40,7 +44,7 @@ module.exports = class CustomerService {
 
   /**
    * @param {(number | string)} id
-   * @returns {import('../customer.entity')}
+   * @returns {Promise<CustomerEntity>}
   */
   async getById(id){
     return this.customerRepository.getById(id)
@@ -49,13 +53,13 @@ module.exports = class CustomerService {
   /**
    * @param {string} name 
    * @param {string} lastname 
-   * @returns {import('../customer.entity')[]}
+   * @returns {Promise<CustomerEntity[]>}
    */
   async getByName(name, lastname){
     return this.customerRepository.getByName(name, lastname)
   }
 
-  /** @returns {import('../customer.entity')[]} */
+  /** @returns {Promise<CustomerEntity[]>} */
   async getAll(){
     return this.customerRepository.getAll()
   }

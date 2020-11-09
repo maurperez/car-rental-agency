@@ -12,7 +12,7 @@ const {
 const { update } = require('./actions/update.action')
 const { deleteCustomer } = require('./actions/delete.action')
 
-module.exports = class extends AbstractController{
+module.exports = class CustomerController extends AbstractController{
   /**
    * @param {import('body-parser')} urlencodedParser 
    * @param {import('../service/customer.service')} customerService 

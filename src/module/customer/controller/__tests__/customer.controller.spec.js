@@ -1,7 +1,10 @@
 const Joi = require('joi');
-const { CustomerController } = require('../customer.controller')
+const { NonExistentCustomer } = require('../../error/general-errors');
+const CustomerController = require('../customer.controller')
 
-const mockCustomerService = {}
+const mockCustomerService = {
+  getById: jest.fn()
+}
 const mockUrlEncodedParser = jest.fn()
 
 const customerController = new CustomerController(mockUrlEncodedParser, mockCustomerService)
@@ -27,8 +30,8 @@ describe('CustmerController', () => {
         reqValidated = customerController.validateAndParseCustomerRequest(validCreationHttpReq)
       })
 
-      it('parses the birth_date field to Date object', () => {
-        expect(reqValidated.birth_date).toBeInstanceOf(Date)
+      it('parses the birthdate field to ISO format', () => {
+        expect(reqValidated.birthdate).toMatch(/\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+([+-][0-2]\d:[0-5]\d|Z)/)
       })
     })
 
@@ -40,14 +43,14 @@ describe('CustmerController', () => {
 
       it('returns the parsed req', () => {
         expect(reqValidated.name).toBeDefined()
-        expect(reqValidated.last_name).toBeDefined()
-        expect(reqValidated.document_type).toBeDefined()
-        expect(reqValidated.nro_document).toBeDefined()
+        expect(reqValidated.lastname).toBeDefined()
+        expect(reqValidated.documentType).toBeDefined()
+        expect(reqValidated.documentNumber).toBeDefined()
         expect(reqValidated.nationality).toBeDefined()
         expect(reqValidated.address).toBeDefined()
-        expect(reqValidated.phone_number).toBeDefined()
+        expect(reqValidated.phoneNumber).toBeDefined()
         expect(reqValidated.email).toBeDefined()
-        expect(reqValidated.birth_date).toBeDefined()
+        expect(reqValidated.birthdate).toBeDefined()
       })
     })
 
@@ -68,4 +71,84 @@ describe('CustmerController', () => {
       })
     })
   })
+
+  describe('validateExistentCustomer', () => {
+    const req = {params: {id: 1}}
+    const next = jest.fn()
+    const res = {
+      render: jest.fn(),
+      status: jest.fn()
+    }
+
+    describe('validation of a existent customer', () => {
+      beforeAll(() => {
+        mockCustomerService.getById.mockResolvedValue(true)
+        customerController.validateExistentCustomer(req, res, next)
+      })
+
+      it('calls the get by id method of the customer service with the corresponding id', () => {
+        expect(mockCustomerService.getById.mock.calls[0][0]).toBe(req.params.id)
+      })
+
+      it('calls next function', () => {
+        expect(next).toBeCalledTimes(1)
+      })
+
+      it('doesnt call the render or status method', () => {
+        expect(res.render).toBeCalledTimes(0)
+        expect(res.status).toBeCalledTimes(0)
+      })
+
+      afterAll(jest.resetAllMocks)
+    })
+
+    describe('validation of a non existent customer', () => {
+      beforeAll(() => {
+        global.console.error = jest.fn()
+        mockCustomerService.getById.mockRejectedValue(new NonExistentCustomer())
+        customerController.validateExistentCustomer(req, res, next)
+      })
+
+      it('calls the get by id method of the customer service with the corresponding id', () => {
+        expect(mockCustomerService.getById.mock.calls[0][0]).toBe(req.params.id)
+      })
+
+      it('calls the status method with 404 code', () => {
+        expect(res.status).toBeCalledWith(404)
+      })
+
+      afterAll(jest.resetAllMocks)
+    })
+
+    describe('in case an unexpected error occurs', () => {
+      beforeAll(() => {
+        mockCustomerService.getById.mockRejectedValue(new Error('unexpected error'))
+        customerController.validateExistentCustomer(req, res, next)
+      })
+
+      it('calls the status method with a 500 code', () => {
+        expect(res.status).toBeCalledWith(500)
+      })
+
+      it('prints in the console the error', () => {
+        expect(global.console.error).toBeCalledTimes(1)
+      })
+
+
+      afterAll(() => {
+        jest.resetAllMocks()
+        global.console.error.mockRestore()
+      })
+
+    })
+
+
+
+  })
 })
+
+
+
+
+
+

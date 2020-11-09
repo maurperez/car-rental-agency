@@ -4,10 +4,17 @@ const Customer = require("../customer.entity");
 const { NonExistentCustomer } = require("../error/general-errors");
 
 const { create } = require('./actions/create.action')
+const {
+  getAll,
+  getById,
+  getByName
+} = require('./actions/get.action')
+const { update } = require('./actions/update.action')
+const { deleteCustomer } = require('./actions/delete.action')
 
 module.exports = class extends AbstractController{
   /**
-   * @param {import('body-parser').OptionsUrlencoded} urlencodedParser 
+   * @param {import('body-parser')} urlencodedParser 
    * @param {import('../service/customer.service')} customerService 
    */
   constructor(urlencodedParser, customerService){
@@ -17,11 +24,24 @@ module.exports = class extends AbstractController{
     this.ROUTE_BASE = '/customer'
 
     this.create = create.bind(this)
+    this.getById = getById.bind(this)
+    this.getByName = getByName.bind(this)
+    this.getAll = getAll.bind(this)
+    this.update = update.bind(this)
+    this.delete = deleteCustomer.bind(this)
   }
 
-  /** @param {import('express').Application} app*/
+  /** @param {import('express').Application} app */
   configureRoutes(app){
-    app.post(`${this.ROUTE_BASE}/create`, this.urlencodedParser, this.create)
+    app
+      .get(this.ROUTE_BASE, this.getAll)
+      .get(`${this.ROUTE_BASE}/search`, this.getByName)
+      .get(`${this.ROUTE_BASE}/create`, this.create)
+      .post(`${this.ROUTE_BASE}/create`, this.urlencodedParser, this.create)
+      .get(`${this.ROUTE_BASE}/update/:id`, this.validateExistentCustomer, this.update)
+      .post(`${this.ROUTE_BASE}/update/:id`, this.validateExistentCustomer, this.urlencodedParser, this.update)
+      .post(`${this.ROUTE_BASE}/delete/:id`, this.validateExistentCustomer, this.delete)
+      .get(`${this.ROUTE_BASE}/:id`, this.validateExistentCustomer, this.getById)
   }
 
 
@@ -85,14 +105,10 @@ module.exports = class extends AbstractController{
    * @param {import('express').NextFunction} next 
    */
   async validateExistentCustomer(req, res, next){
-    const name = req.query.name, lastname = req.query.lastname
     const id = req.params.id
 
     try {
-      id ? 
-        await this.customerService.getById(id) :
-        await this.customerService.getByName(name, lastname)
-
+      await this.customerService.getById(id)
       next()
     } catch (error) {
       if(error instanceof NonExistentCustomer){

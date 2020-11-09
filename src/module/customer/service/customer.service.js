@@ -37,9 +37,12 @@ module.exports = class CustomerService {
     return updatedCustomer
   }
 
-  /** @param {(number | string)} id */
-  delete(id){
-    this.customerRepository.delete(id)
+  /**
+   *  @param {(number | string)} id 
+   *  @returns {Promise<void>}
+   */
+  async delete(id){
+    return this.customerRepository.delete(id)
   }
 
   /**

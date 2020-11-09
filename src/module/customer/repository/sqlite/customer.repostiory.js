@@ -1,6 +1,7 @@
 const AbstractCustomerRepostory = require('../abstract-repostiory')
 const { mapFromDbToEntity } = require('../../mappers/customer.mapper')
 const { NonExistentCustomer } = require('../../error/general-errors')
+const { Op } = require('sequelize')
 
 /**
  * @typedef {import('../../customer.entity')} CustomerEntity
@@ -61,13 +62,17 @@ module.exports = class CustomerRepository extends AbstractCustomerRepostory{
   async getByName(name, lastname){
     const customersInstance = await this.customerModel.findAll({
       where: {
-        name,
-        lastname
+        name: {
+          [Op.like]: `%${name}%` 
+        },
+        lastname: {
+          [Op.like]: `%${lastname}%`
+        }
       }
     })
-    
+
     if(customersInstance.length > 0){
-      return mapFromDbToEntity(customersInstance)
+      return customersInstance.map(customer => mapFromDbToEntity(customer.toJSON()))
     }else { throw new NonExistentCustomer() }
   }
 
